@@ -20,8 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="@color/temaBir"
-            android:textColor="@color/white"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnPrimary"
             android:text="@string/next"/>
     </LinearLayout>
 </RelativeLayout>
