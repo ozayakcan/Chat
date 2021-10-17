@@ -6,7 +6,6 @@
 *.dex
 
 *.class
-
 *.hprof
 
 bin/
