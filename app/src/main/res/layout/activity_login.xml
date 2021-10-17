@@ -15,11 +15,17 @@
         android:layout_centerInParent="true"
         android:layout_alignParentStart="true"
         android:animateLayoutChanges="true">
-        <EditText
+        <br.com.sapereaude.maskedEditText.MaskedEditText
             android:id="@+id/telefonNumarasi"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="phone"/>
+            android:inputType="phone"
+            android:textAlignment="center"
+            app:allowed_chars="1234567890"
+            android:hint="12345678901"
+            app:keep_hint="true"
+            app:mask="+#(###)###-##-##"
+            tools:ignore="HardcodedText" />
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"
@@ -40,11 +46,17 @@
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
         android:animateLayoutChanges="true">
-        <EditText
+        <br.com.sapereaude.maskedEditText.MaskedEditText
             android:id="@+id/onayKodu"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textAlignment="center"
+            app:allowed_chars="1234567890"
+            android:hint="123456"
+            app:keep_hint="true"
+            app:mask="###-###"
+            tools:ignore="HardcodedText" />
         <Button
             android:id="@+id/onayBtn"
             android:layout_width="match_parent"
