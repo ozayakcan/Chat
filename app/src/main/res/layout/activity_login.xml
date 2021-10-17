@@ -17,6 +17,7 @@
         android:animateLayoutChanges="true">
         <br.com.sapereaude.maskedEditText.MaskedEditText
             android:id="@+id/telefonNumarasi"
+            android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:inputType="phone"
@@ -25,7 +26,8 @@
             android:hint="12345678901"
             app:keep_hint="true"
             app:mask="+#(###)###-##-##"
-            tools:ignore="HardcodedText" />
+            android:maxLines="1"
+            tools:ignore="HardcodedText"/>
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"
@@ -48,6 +50,7 @@
         android:animateLayoutChanges="true">
         <br.com.sapereaude.maskedEditText.MaskedEditText
             android:id="@+id/onayKodu"
+            android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:inputType="number"
@@ -56,6 +59,7 @@
             android:hint="123456"
             app:keep_hint="true"
             app:mask="###-###"
+            android:maxLines="1"
             tools:ignore="HardcodedText" />
         <Button
             android:id="@+id/onayBtn"
