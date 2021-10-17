@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         //Telefon
         girisLayout = findViewById(R.id.girisLayout);
         telefonNumarasi = findViewById(R.id.telefonNumarasi);
+        telefonNumarasi.requestFocus();
+        KlavyeGoster(telefonNumarasi);
         telefonNumarasi.setOnEditorActionListener((v, actionId, event) -> {
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 Giris();
