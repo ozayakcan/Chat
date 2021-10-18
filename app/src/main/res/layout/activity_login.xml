@@ -9,26 +9,34 @@
         android:id="@+id/girisLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingEnd="50dp"
-        android:paddingStart="50dp"
+        android:paddingEnd="40dp"
+        android:paddingStart="40dp"
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:layout_alignParentStart="true"
         android:animateLayoutChanges="true">
-        <br.com.sapereaude.maskedEditText.MaskedEditText
-            android:id="@+id/telefonNumarasi"
-            android:imeOptions="actionDone"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:theme="@style/EditTextThemeDefault"
-            android:inputType="phone"
-            android:textAlignment="center"
-            app:allowed_chars="1234567890"
-            android:hint="12345678901"
-            app:keep_hint="true"
-            app:mask="+#(###)###-##-##"
-            android:maxLines="1"
-            tools:ignore="HardcodedText"/>
+            android:layout_height="50dp">
+            <com.hbb20.CountryCodePicker
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAlignment="textStart"
+                app:ccp_autoDetectCountry="true"
+                app:ccp_autoDetectLanguage="true"/>
+            <EditText
+                android:id="@+id/telefonNumarasi"
+                android:imeOptions="actionDone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/EditTextThemeDefault"
+                android:inputType="phone"
+                android:textAlignment="center"
+                app:allowed_chars="1234567890"
+                android:maxLength="13"
+                android:maxLines="1"
+                tools:ignore="HardcodedText"/>
+        </LinearLayout>
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"
@@ -43,8 +51,8 @@
         android:id="@+id/onayLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingEnd="50dp"
-        android:paddingStart="50dp"
+        android:paddingEnd="70dp"
+        android:paddingStart="70dp"
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
@@ -58,7 +66,7 @@
             android:inputType="number"
             android:textAlignment="center"
             app:allowed_chars="1234567890"
-            android:hint="123456"
+            android:hint="555555"
             app:keep_hint="true"
             app:mask="###-###"
             android:maxLines="1"
