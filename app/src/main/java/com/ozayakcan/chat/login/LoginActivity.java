@@ -305,6 +305,9 @@ public class LoginActivity extends AppCompatActivity {
             asama++;
         }
         if (asama == 2){
+            OnayButonDurumu(true);
+            TekrarGonderButonDurumu(false);
+            GirisButonDurumu(true);
             YatayGecisAnimasyonu(girisLayout, onayLayout);
             onayKodu.requestFocus();
             KlavyeGoster(onayKodu);
