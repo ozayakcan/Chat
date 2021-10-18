@@ -254,6 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                            overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
                             finish();
                         }else{
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
