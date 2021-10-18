@@ -1,8 +1,9 @@
-package com.ozayakcan.chat;
+package com.ozayakcan.chat.login;
 
 import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -33,6 +34,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.hbb20.CountryCodePicker;
+import com.ozayakcan.chat.R;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private FirebaseUser firebaseUser;
     private String dogrulamaID = "";
     private LinearLayout girisLayout, onayLayout;
     private EditText telefonNumarasi, onayKodu;
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private String tamNumara = "";
     private int asama = 1;
     //Gerisayım
-    private static long BASLANGIC_SURESI_MILISANIYE = 120000;
+    private static final long BASLANGIC_SURESI_MILISANIYE = 120000;
     private CountDownTimer countDownTimer;
     private long kalanSure = BASLANGIC_SURESI_MILISANIYE;
 
@@ -102,7 +103,9 @@ public class LoginActivity extends AppCompatActivity {
         onayLayout = findViewById(R.id.onayLayout);
         onayKodu = findViewById(R.id.onayKodu);
         onayKodu.setOnEditorActionListener((v, actionId, event) -> {
-            //Henüz Eklenmedi
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                OnayKodunuDogrula(onayKodu.getText().toString());
+            }
             return false;
         });
         onayKoduHata = findViewById(R.id.onayKoduHata);
@@ -125,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         onayBtn = findViewById(R.id.onayBtn);
         onayBtn.setOnClickListener(v -> {
-            //Henüz Eklenmedi
+            OnayKodunuDogrula(onayKodu.getText().toString());
         });
         tekrarGonderBtn = findViewById(R.id.tekrarGonderBtn);
         TekrarGonderButonDurumu(false);
@@ -169,7 +172,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
             String kod = phoneAuthCredential.getSmsCode();
-            Toast.makeText(getApplicationContext(), "Onay Kodu:"+kod, Toast.LENGTH_LONG).show();
             if (kod != null){
                 OnayKodunuDogrula(kod);
                 onayKodu.setText(kod);
@@ -251,12 +253,10 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            //Onay kodu doğrulandı
-                            firebaseUser = task.getResult().getUser();
-                            Toast.makeText(getApplicationContext(), "Onay kodu doğrulandı.", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                            finish();
                         }else{
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
-                                //Onay kodu yanlış
                                 onayKoduHata.setText(getResources().getString(R.string.confirmation_code_is_wrong));
                             }else{
                                 onayKoduHata.setText(getResources().getString(R.string.something_went_wrong));
