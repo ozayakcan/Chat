@@ -3,4 +3,10 @@
     <string name="app_name">Chat</string>
     <string name="next">İleri</string>
     <string name="confirm">Onayla</string>
+    <string name="confirm_phone_number">Telefon Numarasını Onayla</string>
+    <string name="are_you_sure_phone_number">Bu telefon numarasını kullanmak istediğinize emin misiniz?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="change">Değiştir</string>
+    <string name="phone_number_can_not_be_empty">Telefon numarası boş olamaz!</string>
 </resources>

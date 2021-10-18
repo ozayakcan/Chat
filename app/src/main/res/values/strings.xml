@@ -2,4 +2,10 @@
     <string name="app_name">Chat</string>
     <string name="next">Next</string>
     <string name="confirm">Confirm</string>
+    <string name="confirm_phone_number">Confirm Phone Number</string>
+    <string name="are_you_sure_phone_number">Are you sure you want to use this phone number?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="change">Change</string>
+    <string name="phone_number_can_not_be_empty">Phone number can not be empty!</string>
 </resources>

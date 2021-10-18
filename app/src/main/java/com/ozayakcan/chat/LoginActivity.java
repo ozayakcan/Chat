@@ -3,37 +3,31 @@ package com.ozayakcan.chat;
 import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
 
 import android.content.Context;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private LinearLayout girisLayout, onayLayout;
+    private LinearLayout girisLayout, bosNumaraUyari, onayLayout;
     private EditText telefonNumarasi, onayKodu;
     private CountryCodePicker ulkeKodu;
     private Button girisBtn, onayBtn;
+    private String tamNumara = "";
     private int asama = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //Telefon
         girisLayout = findViewById(R.id.girisLayout);
+        bosNumaraUyari = findViewById(R.id.bosNumaraUyari);
         ulkeKodu = findViewById(R.id.ulkeKodu);
         telefonNumarasi = findViewById(R.id.telefonNumarasi);
         telefonNumarasi.requestFocus();
@@ -51,6 +46,22 @@ public class LoginActivity extends AppCompatActivity {
                 Giris();
             }
             return false;
+        });
+        telefonNumarasi.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                bosNumaraUyari.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
         girisBtn = findViewById(R.id.girisBtn);
         girisBtn.setOnClickListener(v -> Giris());
@@ -68,7 +79,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Giris(){
-        Ileri();
+        String ulke = ulkeKodu.getSelectedCountryCodeWithPlus();
+        String numara = telefonNumarasi.getText().toString();
+        tamNumara = ulke+numara;
+        if (numara.isEmpty()){
+            bosNumaraUyari.setVisibility(View.VISIBLE);
+        }else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.confirm_phone_number);
+            builder.setMessage(tamNumara+"\n"+getResources().getString(R.string.are_you_sure_phone_number));
+            builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                Ileri();
+            });
+            builder.setNegativeButton(R.string.change, (dialog, which) -> {
+                dialog.cancel();
+                telefonNumarasi.requestFocus();
+                telefonNumarasi.selectAll();
+                KlavyeGoster(telefonNumarasi);
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
     private void Ileri(){
         if (asama == 2){

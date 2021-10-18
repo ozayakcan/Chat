@@ -38,6 +38,19 @@
                 android:maxLines="1"
                 tools:ignore="HardcodedText"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/bosNumaraUyari"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/warningColor"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:text="@string/phone_number_can_not_be_empty"/>
+        </LinearLayout>
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"
