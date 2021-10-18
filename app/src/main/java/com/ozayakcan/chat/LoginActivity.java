@@ -145,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         if (numara.isEmpty()){
             bosNumaraUyari.setVisibility(View.VISIBLE);
         }else{
+            KlavyeGizle();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
             builder.setTitle(R.string.confirm_phone_number);
@@ -329,6 +330,13 @@ public class LoginActivity extends AppCompatActivity {
     private void KlavyeGoster(View view){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+    private void KlavyeGizle(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
     @Override
     public void onBackPressed() {
