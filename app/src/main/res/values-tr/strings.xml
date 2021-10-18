@@ -9,4 +9,8 @@
     <string name="no">Hayır</string>
     <string name="change">Değiştir</string>
     <string name="phone_number_can_not_be_empty">Telefon numarası boş olamaz!</string>
+    <string name="resend">Tekrar Gönder</string>
+    <string name="too_many_requests">Çok fazla istek gönderildi! Lütfen daha sonra tekrar deneyin!</string>
+    <string name="something_went_wrong">Bir hata oluştu! Lütfen daha sonra tekrar deneyin!</string>
+    <string name="confirmation_code_is_wrong">Onay kodu geçersiz!</string>
 </resources>

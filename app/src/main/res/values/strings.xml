@@ -8,4 +8,8 @@
     <string name="no">No</string>
     <string name="change">Change</string>
     <string name="phone_number_can_not_be_empty">Phone number can not be empty!</string>
+    <string name="resend">Resend</string>
+    <string name="too_many_requests">Too many requests! Please try again later!</string>
+    <string name="something_went_wrong">Something went wrong! Please try again later!</string>
+    <string name="confirmation_code_is_wrong">Confirmation code is wrong!</string>
 </resources>

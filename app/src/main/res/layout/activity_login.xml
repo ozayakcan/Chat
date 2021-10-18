@@ -38,19 +38,24 @@
                 android:maxLines="1"
                 tools:ignore="HardcodedText"/>
         </LinearLayout>
-        <LinearLayout
+        <TextView
             android:id="@+id/bosNumaraUyari"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:visibility="gone">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="@color/warningColor"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:text="@string/phone_number_can_not_be_empty"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:textColor="@color/warningColor"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="@string/phone_number_can_not_be_empty"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/dogrulamaHataMesaji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/warningColor"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="@string/phone_number_can_not_be_empty"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"
@@ -85,11 +90,36 @@
             app:mask="###-###"
             android:maxLines="1"
             tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/geriSayimText"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="@color/warningColor"
+            android:text="02:00"
+            android:gravity="center"
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/onayKoduHata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/warningColor"
+            android:gravity="center"
+            android:textAlignment="center"
+            tools:ignore="HardcodedText" />
+        <Button
+            android:id="@+id/tekrarGonderBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/disabledBackground"
+            android:textColor="@color/disabledText"
+            android:text="@string/resend"/>
         <Button
             android:id="@+id/onayBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
