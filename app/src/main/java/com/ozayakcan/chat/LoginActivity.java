@@ -15,17 +15,26 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.hbb20.CountryCodePicker;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private LinearLayout girisLayout, onayLayout;
     private EditText telefonNumarasi, onayKodu;
+    private CountryCodePicker ulkeKodu;
     private Button girisBtn, onayBtn;
-    private boolean telefonOnayi = false;
+    private int asama = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //Telefon
         girisLayout = findViewById(R.id.girisLayout);
+        ulkeKodu = findViewById(R.id.ulkeKodu);
         telefonNumarasi = findViewById(R.id.telefonNumarasi);
         telefonNumarasi.requestFocus();
         KlavyeGoster(telefonNumarasi);
@@ -61,16 +71,28 @@ public class LoginActivity extends AppCompatActivity {
         Ileri();
     }
     private void Ileri(){
-        YatayGecisAnimasyonu(girisLayout, onayLayout);
-        telefonOnayi = true;
-        onayKodu.requestFocus();
-        KlavyeGoster(onayKodu);
+        if (asama == 2){
+            return;
+        }else{
+            asama++;
+        }
+        if (asama == 2){
+            YatayGecisAnimasyonu(girisLayout, onayLayout);
+            onayKodu.requestFocus();
+            KlavyeGoster(onayKodu);
+        }
     }
     private void Geri(){
-        YatayGecisAnimasyonu(onayLayout, girisLayout);
-        telefonOnayi = false;
-        telefonNumarasi.requestFocus();
-        KlavyeGoster(telefonNumarasi);
+        if (asama == 1){
+            return;
+        }else{
+            asama--;
+        }
+        if (asama == 1){
+            YatayGecisAnimasyonu(onayLayout, girisLayout);
+            telefonNumarasi.requestFocus();
+            KlavyeGoster(telefonNumarasi);
+        }
     }
     private void KlavyeGoster(View view){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -78,21 +100,21 @@ public class LoginActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if(telefonOnayi){
-            Geri();
-        }else{
+        if(asama == 1){
             super.onBackPressed();
+        }else{
+            Geri();
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (telefonOnayi){
+            if (asama == 1){
+                return super.onKeyDown(keyCode, event);
+            } else{
                 Geri();
                 return false;
-            } else{
-                return super.onKeyDown(keyCode, event);
             }
         }else{
             return super.onKeyDown(keyCode, event);
