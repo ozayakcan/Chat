@@ -170,9 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             String kod = phoneAuthCredential.getSmsCode();
             Toast.makeText(getApplicationContext(), "Onay Kodu:"+kod, Toast.LENGTH_LONG).show();
             if (kod != null){
-                Ileri();
                 OnayKodunuDogrula(kod);
-                SureyiBaslat();
                 onayKodu.setText(kod);
             }
         }
@@ -191,6 +189,8 @@ public class LoginActivity extends AppCompatActivity {
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             dogrulamaID = s;
+            Ileri();
+            SureyiBaslat();
         }
     };
     private void OnayKoduGonder() {
@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
         countDownTimer = new CountDownTimer(kalanSure, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                kalanSure = 1;
+                kalanSure = millisUntilFinished;
                 GeriSayimYazisiniGuncelle();
             }
 
@@ -221,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                 OnayButonDurumu(false);
                 TekrarGonderButonDurumu(true);
             }
-        };
+        }.start();
     }
     private void GeriSayimYazisiniGuncelle(){
         int dakika = (int) (kalanSure / 1000) / 60;
@@ -270,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
         girisBtn.setEnabled(durum);
         if (durum){
             girisBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            girisBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+            girisBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
             girisBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
             girisBtn.setTextColor(getResources().getColor(R.color.disabledText));
@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
         onayBtn.setEnabled(durum);
         if (durum){
             onayBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            onayBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+            onayBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
             onayBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
             onayBtn.setTextColor(getResources().getColor(R.color.disabledText));
@@ -291,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
         tekrarGonderBtn.setEnabled(durum);
         if (durum){
             tekrarGonderBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            tekrarGonderBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+            tekrarGonderBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
             tekrarGonderBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
             tekrarGonderBtn.setTextColor(getResources().getColor(R.color.disabledText));
