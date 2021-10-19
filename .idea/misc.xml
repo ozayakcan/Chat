@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/backgroundtint_disabled.xml" value="0.14270833333333333" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/backgroundtint_enabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default.xml" value="1.215625" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default_selector.xml" value="0.2703125" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_pressed.xml" value="0.2703125" />

@@ -2,8 +2,10 @@ package com.ozayakcan.chat.login;
 
 import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -268,34 +271,37 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void GirisButonDurumu(boolean durum){
         girisBtn.setEnabled(durum);
         if (durum){
-            girisBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
             girisBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
-            girisBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
+            girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
             girisBtn.setTextColor(getResources().getColor(R.color.disabledText));
         }
     }
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void OnayButonDurumu(boolean durum){
         onayBtn.setEnabled(durum);
         if (durum){
-            onayBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
             onayBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
-            onayBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
+            onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
             onayBtn.setTextColor(getResources().getColor(R.color.disabledText));
         }
     }
 
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void TekrarGonderButonDurumu(boolean durum){
         tekrarGonderBtn.setEnabled(durum);
         if (durum){
-            tekrarGonderBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
             tekrarGonderBtn.setTextColor(getResources().getColor(R.color.white));
         }else{
-            tekrarGonderBtn.setBackgroundColor(getResources().getColor(R.color.disabledBackground));
+            tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
             tekrarGonderBtn.setTextColor(getResources().getColor(R.color.disabledText));
         }
     }
