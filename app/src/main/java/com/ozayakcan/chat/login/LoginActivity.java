@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private CountryCodePicker ulkeKodu;
     private Button girisBtn, onayBtn, tekrarGonderBtn;
     private String tamNumara = "";
-    private int asama = 1;
+    private boolean telefonDogrulamasi = false;
     //Gerisayım
     private static final long BASLANGIC_SURESI_MILISANIYE = 61000;
     private CountDownTimer countDownTimer;
@@ -111,10 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                onayKoduHata.setVisibility(View.GONE);
-                onayKoduHata.setText("");
-                dogrulamaHataMesaji.setVisibility(View.GONE);
-                dogrulamaHataMesaji.setText("");
+                OnayKoduHatalariniGizle();
             }
 
             @Override
@@ -207,6 +204,7 @@ public class LoginActivity extends AppCompatActivity {
     private void TekrarGonder(){
         OnayButonDurumu(true);
         TekrarGonderButonDurumu(false);
+        OnayKoduHatalariniGizle();
         kalanSure = BASLANGIC_SURESI_MILISANIYE;
         GeriSayimYazisiniGuncelle();
         OnayKoduGonder();
@@ -314,13 +312,14 @@ public class LoginActivity extends AppCompatActivity {
             tekrarGonderBtn.setTextColor(getResources().getColor(R.color.disabledText));
         }
     }
+    private void OnayKoduHatalariniGizle(){
+        dogrulamaHataMesaji.setVisibility(View.GONE);
+        dogrulamaHataMesaji.setText("");
+        onayKoduHata.setVisibility(View.GONE);
+        onayKoduHata.setText("");
+    }
     private void Ileri(){
-        if (asama == 2){
-            return;
-        }else{
-            asama++;
-        }
-        if (asama == 2){
+        if (!telefonDogrulamasi) {
             OnayButonDurumu(true);
             TekrarGonderButonDurumu(false);
             GirisButonDurumu(true);
@@ -330,27 +329,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void Geri(){
-        if (asama == 1){
-            return;
-        }else{
-            asama--;
+        OnayButonDurumu(true);
+        TekrarGonderButonDurumu(false);
+        GirisButonDurumu(true);
+        kalanSure = BASLANGIC_SURESI_MILISANIYE;
+        if(countDownTimer != null){
+            countDownTimer.cancel();
         }
-        if (asama == 1){
-            OnayButonDurumu(true);
-            TekrarGonderButonDurumu(false);
-            GirisButonDurumu(true);
-            kalanSure = BASLANGIC_SURESI_MILISANIYE;
-            if(countDownTimer != null){
-                countDownTimer.cancel();
-            }
-            onayKoduHata.setVisibility(View.GONE);
-            onayKoduHata.setText("");
-            dogrulamaHataMesaji.setVisibility(View.GONE);
-            dogrulamaHataMesaji.setText("");
-            YatayGecisAnimasyonu(onayLayout, girisLayout);
-            telefonNumarasi.requestFocus();
-            KlavyeGoster(telefonNumarasi);
-        }
+        OnayKoduHatalariniGizle();
+        YatayGecisAnimasyonu(onayLayout, girisLayout);
+        telefonNumarasi.requestFocus();
+        KlavyeGoster(telefonNumarasi);
     }
     private void KlavyeGoster(View view){
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -365,21 +354,21 @@ public class LoginActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if(asama == 1){
-            super.onBackPressed();
-        }else{
+        if(telefonDogrulamasi){
             Geri();
+        }else{
+            super.onBackPressed();
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (asama == 1){
-                return super.onKeyDown(keyCode, event);
-            } else{
+            if (telefonDogrulamasi){
                 Geri();
                 return false;
+            }else{
+                return super.onKeyDown(keyCode, event);
             }
         }else{
             return super.onKeyDown(keyCode, event);
