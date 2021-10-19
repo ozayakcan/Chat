@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
             builder.setTitle(R.string.confirm_phone_number);
-            builder.setMessage(tamNumara+"\n"+getResources().getString(R.string.are_you_sure_phone_number));
+            builder.setMessage(tamNumara+"\n"+getString(R.string.are_you_sure_phone_number));
             builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                 OnayKoduGonder();
             });
@@ -170,9 +170,9 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             if (e instanceof FirebaseTooManyRequestsException) {
-                dogrulamaHataMesaji.setText(getResources().getString(R.string.too_many_requests));
+                dogrulamaHataMesaji.setText(getString(R.string.too_many_requests));
             }else{
-                dogrulamaHataMesaji.setText(getResources().getString(R.string.something_went_wrong));
+                dogrulamaHataMesaji.setText(getString(R.string.something_went_wrong));
             }
             dogrulamaHataMesaji.setVisibility(View.VISIBLE);
             if(countDownTimer != null){
@@ -269,9 +269,9 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }else{
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
-                            onayKoduHata.setText(getResources().getString(R.string.confirmation_code_is_wrong));
+                            onayKoduHata.setText(getString(R.string.confirmation_code_is_wrong));
                         }else{
-                            onayKoduHata.setText(getResources().getString(R.string.something_went_wrong));
+                            onayKoduHata.setText(getString(R.string.something_went_wrong));
                         }
                         onayKoduHata.setVisibility(View.VISIBLE);
                     }
@@ -282,22 +282,22 @@ public class LoginActivity extends AppCompatActivity {
     private void GirisButonDurumu(boolean durum){
         girisBtn.setEnabled(durum);
         if (durum){
-            girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
-            girisBtn.setTextColor(getResources().getColor(R.color.white));
+            girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+            girisBtn.setTextColor(getColor(R.color.white));
         }else{
-            girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
-            girisBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+            girisBtn.setTextColor(getColor(R.color.disabledText));
         }
     }
     @SuppressLint("UseCompatLoadingForColorStateLists")
     private void OnayButonDurumu(boolean durum){
         onayBtn.setEnabled(durum);
         if (durum){
-            onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
-            onayBtn.setTextColor(getResources().getColor(R.color.white));
+            onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+            onayBtn.setTextColor(getColor(R.color.white));
         }else{
-            onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
-            onayBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+            onayBtn.setTextColor(getColor(R.color.disabledText));
         }
     }
 
@@ -305,11 +305,11 @@ public class LoginActivity extends AppCompatActivity {
     private void TekrarGonderButonDurumu(boolean durum){
         tekrarGonderBtn.setEnabled(durum);
         if (durum){
-            tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
-            tekrarGonderBtn.setTextColor(getResources().getColor(R.color.white));
+            tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+            tekrarGonderBtn.setTextColor(getColor(R.color.white));
         }else{
-            tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
-            tekrarGonderBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+            tekrarGonderBtn.setTextColor(getColor(R.color.disabledText));
         }
     }
     private void OnayKoduHatalariniGizle(){
