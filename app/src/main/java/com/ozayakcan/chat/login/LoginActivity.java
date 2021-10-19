@@ -278,7 +278,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void GirisButonDurumu(boolean durum){
         girisBtn.setEnabled(durum);
         if (durum){
@@ -289,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
             girisBtn.setTextColor(getColor(R.color.disabledText));
         }
     }
-    @SuppressLint("UseCompatLoadingForColorStateLists")
+
     private void OnayButonDurumu(boolean durum){
         onayBtn.setEnabled(durum);
         if (durum){
@@ -301,7 +300,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void TekrarGonderButonDurumu(boolean durum){
         tekrarGonderBtn.setEnabled(durum);
         if (durum){
