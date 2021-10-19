@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat">
         <activity
-            android:name=".login.RegisterActivity"
+            android:name=".Login.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".Login.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"

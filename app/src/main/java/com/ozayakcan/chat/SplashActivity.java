@@ -2,12 +2,10 @@ package com.ozayakcan.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.safetynet.SafetyNetClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
@@ -18,10 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ozayakcan.chat.login.LoginActivity;
-import com.ozayakcan.chat.login.RegisterActivity;
-
-import java.util.HashMap;
+import com.ozayakcan.chat.Login.LoginActivity;
+import com.ozayakcan.chat.Login.RegisterActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

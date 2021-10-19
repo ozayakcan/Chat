@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.login;
+package com.ozayakcan.chat.Login;
 
 import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
 
