@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -31,14 +34,14 @@ public class E2EE {
         return mInstance;
     }
 
-    public SecretKey KeyOlustur() throws UnsupportedEncodingException {
-        if (SharedPreference.getInstance(mInstance.mContext).GetirString("E2EEKEY", "None").equals("None")) {
+    public SecretKey KeyOlustur(String kimlik) throws UnsupportedEncodingException {
+        if (SharedPreference.getInstance(mInstance.mContext).GetirString("E2EEKEY_"+kimlik, "None").equals("None")) {
             byte[] b = new byte[16];
             new Random().nextBytes(b);
             String key = Base64.encodeToString(b, Base64.DEFAULT);
-            SharedPreference.getInstance(mInstance.mContext).KaydetString("E2EEKEY", key);
+            SharedPreference.getInstance(mInstance.mContext).KaydetString("E2EEKEY_"+kimlik, key);
         }
-        return new SecretKeySpec(Base64.decode(SharedPreference.getInstance(mContext).GetirString("E2EEKEY", "NONE"), Base64.DEFAULT), "AES");
+        return new SecretKeySpec(Base64.decode(SharedPreference.getInstance(mContext).GetirString("E2EEKEY_"+kimlik, "NONE"), Base64.DEFAULT), "AES");
     }
 
     @SuppressLint("GetInstance")
@@ -58,18 +61,16 @@ public class E2EE {
         cipher.init(Cipher.DECRYPT_MODE, key);
         return new String(cipher.doFinal(sifreliMesaj), StandardCharsets.UTF_8);
     }
-
     /* Test Kodları
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     try {
-        SecretKey key = E2EE.getInstance(this).KeyOlustur();
+        SecretKey key = E2EE.getInstance(this).KeyOlustur(user.getPhoneNumber());
         String denemeMesaj = "Mehaba bu bir test Mesajıdır.";
         byte[] sifreliMesaj = E2EE.getInstance(RegisterActivity.this).Sifrele(denemeMesaj, key);
         String normalMesaj = E2EE.getInstance(this).Coz(sifreliMesaj, key);
         testE2EE.setText("Şifreli Mesaj:"+ Arrays.toString(sifreliMesaj) +"\nNormal Mesaj:"+normalMesaj);
     } catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
         testE2EE.setText(e.getMessage());
-    }
 
      */
 }
