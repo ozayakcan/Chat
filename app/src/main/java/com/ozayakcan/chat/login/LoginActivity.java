@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -107,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         onayKodu = findViewById(R.id.onayKodu);
         onayKodu.setOnEditorActionListener((v, actionId, event) -> {
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                OnayKodunuDogrula(onayKodu.getText().toString());
+                OnayKodunuDogrula();
             }
             return false;
         });
@@ -131,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         onayBtn = findViewById(R.id.onayBtn);
         onayBtn.setOnClickListener(v -> {
-            OnayKodunuDogrula(onayKodu.getText().toString());
+            OnayKodunuDogrula();
         });
         tekrarGonderBtn = findViewById(R.id.tekrarGonderBtn);
         TekrarGonderButonDurumu(false);
@@ -195,8 +196,6 @@ public class LoginActivity extends AppCompatActivity {
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             dogrulamaID = s;
-            Ileri();
-            SureyiBaslat();
         }
     };
     private void OnayKoduGonder() {
@@ -208,8 +207,16 @@ public class LoginActivity extends AppCompatActivity {
                 .setCallbacks(mCallbacks)
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(phoneAuthOptions);
+        Ileri();
+        SureyiBaslat();
+    }
+    private void OnayKodunuDogrula(){
+        Log.d("Onay Kodu", onayKodu.getText().toString());
+        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, onayKodu.getText().toString());
+        GirisYap(phoneAuthCredential);
     }
     private void OnayKodunuDogrula(String kod){
+        Log.d("Onay Kodu", kod);
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);
         GirisYap(phoneAuthCredential);
     }
@@ -252,21 +259,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void GirisYap(PhoneAuthCredential phoneAuthCredential) {
         mAuth.signInWithCredential(phoneAuthCredential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                            overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
-                            finish();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()){
+                        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                        overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
+                        finish();
+                    }else{
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
+                            onayKoduHata.setText(getResources().getString(R.string.confirmation_code_is_wrong));
                         }else{
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
-                                onayKoduHata.setText(getResources().getString(R.string.confirmation_code_is_wrong));
-                            }else{
-                                onayKoduHata.setText(getResources().getString(R.string.something_went_wrong));
-                            }
-                            onayKoduHata.setVisibility(View.VISIBLE);
+                            onayKoduHata.setText(getResources().getString(R.string.something_went_wrong));
                         }
+                        onayKoduHata.setVisibility(View.VISIBLE);
                     }
                 });
     }
