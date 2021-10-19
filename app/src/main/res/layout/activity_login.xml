@@ -33,22 +33,11 @@
                 android:theme="@style/EditTextThemeDefault"
                 android:inputType="phone"
                 android:textAlignment="center"
-                app:allowed_chars="1234567890"
                 android:maxLength="13"
-                android:maxLines="1"
-                tools:ignore="HardcodedText"/>
+                android:maxLines="1"/>
         </LinearLayout>
         <TextView
             android:id="@+id/bosNumaraUyari"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/warningColor"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:text="@string/phone_number_can_not_be_empty"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/dogrulamaHataMesaji"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/warningColor"
@@ -76,7 +65,7 @@
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
         android:animateLayoutChanges="true">
-        <br.com.sapereaude.maskedEditText.MaskedEditText
+        <EditText
             android:id="@+id/onayKodu"
             android:imeOptions="actionDone"
             android:layout_width="match_parent"
@@ -84,10 +73,7 @@
             android:theme="@style/EditTextThemeDefault"
             android:inputType="number"
             android:textAlignment="center"
-            app:allowed_chars="1234567890"
             android:hint="555555"
-            app:keep_hint="true"
-            app:mask="###-###"
             android:maxLines="1"
             tools:ignore="HardcodedText" />
         <TextView
@@ -107,6 +93,15 @@
             android:gravity="center"
             android:textAlignment="center"
             tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/dogrulamaHataMesaji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/warningColor"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="@string/phone_number_can_not_be_empty"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/tekrarGonderBtn"
             android:layout_width="match_parent"

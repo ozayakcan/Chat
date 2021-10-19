@@ -5,12 +5,10 @@ import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,21 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -55,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private String tamNumara = "";
     private int asama = 1;
     //Gerisayım
-    private static final long BASLANGIC_SURESI_MILISANIYE = 120000;
+    private static final long BASLANGIC_SURESI_MILISANIYE = 61000;
     private CountDownTimer countDownTimer;
     private long kalanSure = BASLANGIC_SURESI_MILISANIYE;
 
@@ -89,8 +81,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 bosNumaraUyari.setVisibility(View.GONE);
-                dogrulamaHataMesaji.setVisibility(View.GONE);
-                dogrulamaHataMesaji.setText("");
             }
 
             @Override
@@ -123,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 onayKoduHata.setVisibility(View.GONE);
                 onayKoduHata.setText("");
+                dogrulamaHataMesaji.setVisibility(View.GONE);
+                dogrulamaHataMesaji.setText("");
             }
 
             @Override
@@ -137,11 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         tekrarGonderBtn = findViewById(R.id.tekrarGonderBtn);
         TekrarGonderButonDurumu(false);
         tekrarGonderBtn.setOnClickListener(v -> {
-            OnayButonDurumu(true);
-            TekrarGonderButonDurumu(false);
-            kalanSure = BASLANGIC_SURESI_MILISANIYE;
-            GeriSayimYazisiniGuncelle();
-            OnayKoduGonder();
+            TekrarGonder();
         });
     }
 
@@ -190,6 +178,12 @@ public class LoginActivity extends AppCompatActivity {
                 dogrulamaHataMesaji.setText(getResources().getString(R.string.something_went_wrong));
             }
             dogrulamaHataMesaji.setVisibility(View.VISIBLE);
+            if(countDownTimer != null){
+                countDownTimer.cancel();
+            }
+            geriSayimText.setText("");
+            TekrarGonderButonDurumu(true);
+            OnayButonDurumu(false);
         }
 
         @Override
@@ -202,7 +196,7 @@ public class LoginActivity extends AppCompatActivity {
         TekrarGonderButonDurumu(false);
         PhoneAuthOptions phoneAuthOptions = PhoneAuthOptions.newBuilder(mAuth)
                 .setPhoneNumber(tamNumara)
-                .setTimeout(BASLANGIC_SURESI_MILISANIYE/1000, TimeUnit.SECONDS)
+                .setTimeout(BASLANGIC_SURESI_MILISANIYE, TimeUnit.MILLISECONDS)
                 .setActivity(this)
                 .setCallbacks(mCallbacks)
                 .build();
@@ -210,18 +204,27 @@ public class LoginActivity extends AppCompatActivity {
         Ileri();
         SureyiBaslat();
     }
+    private void TekrarGonder(){
+        OnayButonDurumu(true);
+        TekrarGonderButonDurumu(false);
+        kalanSure = BASLANGIC_SURESI_MILISANIYE;
+        GeriSayimYazisiniGuncelle();
+        OnayKoduGonder();
+    }
     private void OnayKodunuDogrula(){
-        Log.d("Onay Kodu", onayKodu.getText().toString());
-        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, onayKodu.getText().toString());
+        String kod = onayKodu.getText().toString().trim();
+        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);
         GirisYap(phoneAuthCredential);
     }
     private void OnayKodunuDogrula(String kod){
-        Log.d("Onay Kodu", kod);
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);
         GirisYap(phoneAuthCredential);
     }
     //Gerisayım
     private void SureyiBaslat(){
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
         countDownTimer = new CountDownTimer(kalanSure, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -229,10 +232,12 @@ public class LoginActivity extends AppCompatActivity {
                 GeriSayimYazisiniGuncelle();
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onFinish() {
                 OnayButonDurumu(false);
                 TekrarGonderButonDurumu(true);
+                geriSayimText.setText("00:00");
             }
         }.start();
     }
@@ -335,7 +340,13 @@ public class LoginActivity extends AppCompatActivity {
             TekrarGonderButonDurumu(false);
             GirisButonDurumu(true);
             kalanSure = BASLANGIC_SURESI_MILISANIYE;
-            countDownTimer.cancel();
+            if(countDownTimer != null){
+                countDownTimer.cancel();
+            }
+            onayKoduHata.setVisibility(View.GONE);
+            onayKoduHata.setText("");
+            dogrulamaHataMesaji.setVisibility(View.GONE);
+            dogrulamaHataMesaji.setText("");
             YatayGecisAnimasyonu(onayLayout, girisLayout);
             telefonNumarasi.requestFocus();
             KlavyeGoster(telefonNumarasi);
