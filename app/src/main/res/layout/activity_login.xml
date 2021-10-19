@@ -15,6 +15,12 @@
         android:layout_centerInParent="true"
         android:layout_alignParentStart="true"
         android:animateLayoutChanges="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="@string/please_enter_your_phone_number"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -65,6 +71,12 @@
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
         android:animateLayoutChanges="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="@string/please_enter_the_confirmation_code"/>
         <EditText
             android:id="@+id/onayKodu"
             android:imeOptions="actionDone"
