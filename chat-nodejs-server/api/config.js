@@ -7,7 +7,7 @@ const requiredParams = [
 ].filter(name => !process.env[name]);
 
 if (requiredParams.length > 0) {
-    throw new Error(`Invalid configuration. Missing: ${requiredParams.join(', ')} in .env file`);
+    throw new Error(`Geçersiz Ayar. .env dosyasındaki ${requiredParams.join(', ')} parametresi/leri eksik.`);
 }
 
 module.exports = {
