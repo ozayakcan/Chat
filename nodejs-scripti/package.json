@@ -1,0 +1,23 @@
+{
+  "name": "demo-backend-nodejs",
+  "version": "2.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha -t 10000 -r dotenv/config ./tests/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "express": "~4.16.0",
+    "virgil-crypto": "^4.0.0",
+    "virgil-sdk": "^6.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "cross-fetch": "^2.2.3",
+    "mocha": "^7.1.1",
+    "supertest": "^3.3.0"
+  }
+}
