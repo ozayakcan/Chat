@@ -40,9 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        //** Her Activity'de çağırılacak (LoginActivity dışındaki)
-        chatApp = ChatApp.getInstance(this);
-        chatApp.Init();
+        //** Çoğu Activity'de çağırılacak
+        //chatApp = ChatApp.getInstance(this);
+        //chatApp.Init();
         //**
         profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
