@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.R;
+import com.ozayakcan.chat.Utils.ChatApp;
 import com.ozayakcan.chat.Utils.Veritabani;
 import com.squareup.picasso.Picasso;
 
@@ -33,11 +34,16 @@ public class RegisterActivity extends AppCompatActivity {
     private CircleImageView profilResmi, kamera;
     private EditText isimTW, hakkimdaTW;
     private Button bitirBtn;
+    private ChatApp chatApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //** Her Activity'de çağırılacak (LoginActivity dışındaki)
+        chatApp = ChatApp.getInstance(this);
+        chatApp.Init();
+        //**
         profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
         isimTW = findViewById(R.id.isimTW);
