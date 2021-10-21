@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class SharedPreference {
 
+    public static final String kullaniciKaydedildi = "Kayit";
+
     private static SharedPreference mInstance;
     private final Context mContext;
     private static final String SHARED_PREF_ADI = "Chat";

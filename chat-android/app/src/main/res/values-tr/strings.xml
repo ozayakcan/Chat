@@ -17,4 +17,5 @@
     <string name="please_enter_the_confirmation_code">Lütfen kısa süre içinde size gönderilecek olan onay kodunu girin.</string>
     <string name="finish">Bitir</string>
     <string name="name">İsim</string>
+    <string name="about_me">Hakkımda</string>
 </resources>
