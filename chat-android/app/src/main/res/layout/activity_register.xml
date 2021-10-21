@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             android:textSize="20sp"
             android:hint="@string/name"
-            android:maxLength="100"
+            android:maxLength="20"
             android:maxLines="1"/>
         <EditText
             android:id="@+id/hakkimdaTW"
@@ -49,7 +49,7 @@
             android:theme="@style/EditTextThemeDefault"
             android:textSize="20sp"
             android:hint="@string/about_me"
-            android:maxLength="400"
+            android:maxLength="100"
             android:maxLines="5"/>
         <Button
             android:id="@+id/bitirBtn"
