@@ -14,7 +14,7 @@
     <string name="confirmation_code_is_wrong">Confirmation code is wrong!</string>
     <string name="please_enter_your_phone_number">Please enter your phone number.</string>
     <string name="please_enter_the_confirmation_code">Please enter the confirmation code that will be sent to you shortly.</string>
-    <string name="finish">Finish</string>
     <string name="name">Name</string>
     <string name="about_me">About Me</string>
+    <string name="done">Done</string>
 </resources>

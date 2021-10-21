@@ -15,7 +15,7 @@
     <string name="confirmation_code_is_wrong">Onay kodu geçersiz!</string>
     <string name="please_enter_your_phone_number">Lütfen telefon numaranızı girin.</string>
     <string name="please_enter_the_confirmation_code">Lütfen kısa süre içinde size gönderilecek olan onay kodunu girin.</string>
-    <string name="finish">Bitir</string>
     <string name="name">İsim</string>
     <string name="about_me">Hakkımda</string>
+    <string name="done">Bitti</string>
 </resources>

@@ -59,7 +59,7 @@
             android:background="@drawable/rounded_corners"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
-            android:text="@string/finish"/>
+            android:text="@string/done"/>
     </LinearLayout>
 
 </RelativeLayout>
