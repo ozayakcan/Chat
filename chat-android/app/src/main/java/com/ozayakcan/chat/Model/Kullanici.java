@@ -1,16 +1,18 @@
 package com.ozayakcan.chat.Model;
 
+import com.ozayakcan.chat.Utils.Veritabani;
+
 public class Kullanici {
 
-    private String ID;
+    private String ID = "";
 
-    private String isim;
+    private String isim = "";
 
-    private String profilResmi;
+    private String profilResmi = Veritabani.VarsayilanDeger;
 
-    private String telefon;
+    private String telefon = "";
 
-    private String hakkimda;
+    private String hakkimda = "";
 
     public Kullanici() {
     }

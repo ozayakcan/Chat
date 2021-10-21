@@ -71,8 +71,11 @@ public class RegisterActivity extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("Database Kullanıcı", snapshot.toString());
                 Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                assert kullanici != null;
+                if(kullanici == null){
+                    return;
+                }
                 isimTW.setText(kullanici.getIsim());
                 hakkimdaTW.setText(kullanici.getHakkimda());
                 if (!kullanici.getIsim().isEmpty()){
