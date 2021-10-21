@@ -187,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             dogrulamaID = s;
+            Ileri();
+            SureyiBaslat();
         }
     };
     private void OnayKoduGonder() {
@@ -198,8 +200,6 @@ public class LoginActivity extends AppCompatActivity {
                 .setCallbacks(mCallbacks)
                 .build();
         PhoneAuthProvider.verifyPhoneNumber(phoneAuthOptions);
-        Ileri();
-        SureyiBaslat();
     }
     private void TekrarGonder(){
         OnayButonDurumu(true);
@@ -208,6 +208,7 @@ public class LoginActivity extends AppCompatActivity {
         kalanSure = BASLANGIC_SURESI_MILISANIYE;
         GeriSayimYazisiniGuncelle();
         OnayKoduGonder();
+        SureyiBaslat();
     }
     private void OnayKodunuDogrula(){
         String kod = onayKodu.getText().toString().trim();
