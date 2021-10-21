@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.R;
 import com.ozayakcan.chat.Utils.Veritabani;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +71,9 @@ public class RegisterActivity extends AppCompatActivity {
                 hakkimdaTW.setText(kullanici.getHakkimda());
                 if (!kullanici.getIsim().isEmpty()){
                     isimTW.setSelection(isimTW.getText().length());
+                }
+                if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
+                    Picasso.get().load(kullanici.getProfilResmi()).into(profilResmi);
                 }
             }
 

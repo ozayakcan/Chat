@@ -6,20 +6,19 @@ public class Kullanici {
 
     private String isim;
 
-    private String profiResmi;
+    private String profilResmi;
 
     private String telefon;
 
     private String hakkimda;
 
     public Kullanici() {
-
     }
 
-    public Kullanici(String ID, String isim, String profiResmi, String telefon, String hakkimda) {
+    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda) {
         this.ID = ID;
         this.isim = isim;
-        this.profiResmi = profiResmi;
+        this.profilResmi = profilResmi;
         this.telefon = telefon;
         this.hakkimda = hakkimda;
     }
@@ -40,12 +39,12 @@ public class Kullanici {
         this.isim = isim;
     }
 
-    public String getProfiResmi() {
-        return profiResmi;
+    public String getProfilResmi() {
+        return profilResmi;
     }
 
-    public void setProfiResmi(String profiResmi) {
-        this.profiResmi = profiResmi;
+    public void setProfilResmi(String profilResmi) {
+        this.profilResmi = profilResmi;
     }
 
     public String getTelefon() {
