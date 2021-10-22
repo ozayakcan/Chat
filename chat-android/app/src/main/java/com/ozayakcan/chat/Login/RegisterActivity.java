@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         profilResmi.setOnClickListener(v -> ProfilResmiDegistir());
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getUid());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity {
             isimHata.setVisibility(View.VISIBLE);
         }else{
             bitirBtn.setEnabled(false);
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
             databaseReference.keepSynced(true);
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
