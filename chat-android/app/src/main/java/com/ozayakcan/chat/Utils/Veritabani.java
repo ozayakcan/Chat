@@ -6,4 +6,6 @@ public class Veritabani {
 
     public static String VarsayilanDeger = "varsayilan";
 
+    public static String TarihSaatFormati = "dd/MM/yyyy HH:mm:ss.SSS";
+
 }

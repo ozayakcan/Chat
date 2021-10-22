@@ -30,6 +30,9 @@ public class SSActivity extends AppCompatActivity {
             //Giriş Yapıldı
             if (SharedPreference.getInstance(this).GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                 //Kaydedildi
+                startActivity(new Intent(SSActivity.this, MainActivity.class));
+                overridePendingTransition(0,0);
+                finish();
             }else{
                 //Kaydedilmedi
                 startActivity(new Intent(SSActivity.this, RegisterActivity.class));

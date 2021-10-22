@@ -2,6 +2,8 @@ package com.ozayakcan.chat.Model;
 
 import com.ozayakcan.chat.Utils.Veritabani;
 
+import java.util.Date;
+
 public class Kullanici {
 
     private String ID = "";
@@ -14,15 +16,33 @@ public class Kullanici {
 
     private String hakkimda = "";
 
+    private long kayitZamani = 0;
+
     public Kullanici() {
+        kayitZamani = new Date().getTime();
     }
 
-    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda) {
+    public Kullanici(String ID, String isim, String telefon, String hakkimda) {
+        this.ID = ID;
+        this.isim = isim;
+        this.telefon = telefon;
+        this.hakkimda = hakkimda;
+    }
+    public Kullanici(String ID, String isim, String telefon, String hakkimda, long kayitZamani) {
+        this.ID = ID;
+        this.isim = isim;
+        this.telefon = telefon;
+        this.hakkimda = hakkimda;
+        this.kayitZamani = kayitZamani;
+    }
+
+    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
         this.telefon = telefon;
         this.hakkimda = hakkimda;
+        this.kayitZamani = kayitZamani;
     }
 
     public String getID() {
@@ -63,5 +83,13 @@ public class Kullanici {
 
     public void setHakkimda(String hakkimda) {
         this.hakkimda = hakkimda;
+    }
+
+    public long getKayitZamani() {
+        return kayitZamani;
+    }
+
+    public void setKayitZamani(long kayitZamani) {
+        this.kayitZamani = kayitZamani;
     }
 }

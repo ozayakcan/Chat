@@ -31,23 +31,33 @@
                 android:src="@drawable/ic_kamera"/>
         </RelativeLayout>
         <EditText
-            android:id="@+id/isimTW"
+            android:id="@+id/isimET"
             android:layout_width="match_parent"
             android:imeOptions="actionNext"
             android:theme="@style/EditTextThemeDefault"
             android:layout_height="50dp"
             android:textSize="20sp"
+            android:inputType="textCapSentences"
             android:hint="@string/name"
             android:maxLength="20"
             android:maxLines="1"/>
+        <TextView
+            android:id="@+id/isimHata"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="20sp"
+            android:textColor="@color/warningColor"
+            android:text="@string/name_cannot_be_empty"
+            android:visibility="gone"/>
         <EditText
-            android:id="@+id/hakkimdaTW"
+            android:id="@+id/hakkimdaET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
             android:imeOptions="actionDone"
             android:theme="@style/EditTextThemeDefault"
             android:textSize="20sp"
+            android:inputType="textCapSentences"
             android:hint="@string/about_me"
             android:maxLength="100"
             android:maxLines="5"/>

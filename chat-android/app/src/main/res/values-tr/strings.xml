@@ -18,4 +18,5 @@
     <string name="name">İsim</string>
     <string name="about_me">Hakkımda</string>
     <string name="done">Bitti</string>
+    <string name="name_cannot_be_empty">İsim boş olamaz!</string>
 </resources>
