@@ -18,4 +18,8 @@
     <string name="about_me">About Me</string>
     <string name="done">Done</string>
     <string name="name_cannot_be_empty">Name cannot be empty!</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="you_must_grant_required_permissions">You must grant required permission(s) for the application to work fully functional. If you are seeing this error without seeing the permission box, please try clearing the app data</string>
+    <string name="grant">Grant</string>
+    <string name="quit">Quit</string>
 </resources>

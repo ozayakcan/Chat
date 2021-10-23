@@ -19,4 +19,8 @@
     <string name="about_me">Hakkımda</string>
     <string name="done">Bitti</string>
     <string name="name_cannot_be_empty">İsim boş olamaz!</string>
+    <string name="permission_denied">İzin Reddedildi</string>
+    <string name="you_must_grant_required_permissions">Uygulamanın düzgün çalışabilmesi için gerekli izinleri vermelisin. Eğer bu hatayı izin kutusu çıkmadan görüyorsan lütfen uygulama verilerini temizlemeyi dene.</string>
+    <string name="grant">İzin Ver</string>
+    <string name="quit">Çıkış</string>
 </resources>
