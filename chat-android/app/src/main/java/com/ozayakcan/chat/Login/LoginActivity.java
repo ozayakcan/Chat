@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         KlavyeGoster(telefonNumarasi);
         telefonNumarasi.setOnEditorActionListener((v, actionId, event) -> {
             if(actionId == EditorInfo.IME_ACTION_DONE){
+                GirisButonDurumu(false);
                 Giris();
             }
             return false;
@@ -319,6 +320,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void Ileri(){
         if (!telefonDogrulamasi) {
+            telefonDogrulamasi = true;
             OnayButonDurumu(true);
             TekrarGonderButonDurumu(false);
             GirisButonDurumu(true);
@@ -328,6 +330,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void Geri(){
+        telefonDogrulamasi = false;
         OnayButonDurumu(true);
         TekrarGonderButonDurumu(false);
         GirisButonDurumu(true);
