@@ -19,7 +19,7 @@ public class Kullanici {
     private long kayitZamani = 0;
 
     public Kullanici() {
-        kayitZamani = new Date().getTime();
+        kayitZamani = System.currentTimeMillis();
     }
 
     public Kullanici(String ID, String isim, String telefon, String hakkimda) {
@@ -27,6 +27,7 @@ public class Kullanici {
         this.isim = isim;
         this.telefon = telefon;
         this.hakkimda = hakkimda;
+        kayitZamani = System.currentTimeMillis();
     }
     public Kullanici(String ID, String isim, String telefon, String hakkimda, long kayitZamani) {
         this.ID = ID;

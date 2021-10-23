@@ -12,6 +12,11 @@ import com.ozayakcan.chat.R;
 
 public class Izinler {
 
+    public static final int PROFIL_RESMI_KAMERA_IZIN_KODU = 1920;
+    public static final int PROFIL_RESMI_DOSYA_IZIN_KODU = 1453;
+
+    public static final int RESIM_YUKLE_SONUC = 1923;
+
     private final Context mContext;
 
     public Izinler(Context context) {mContext = context;}
