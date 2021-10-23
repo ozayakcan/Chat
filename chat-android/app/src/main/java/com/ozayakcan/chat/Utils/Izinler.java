@@ -28,8 +28,8 @@ public class Izinler {
             return false;
         }
     }
-    public void Sor(String izinler, int IZIN_KODU){
-        ActivityCompat.requestPermissions((Activity) mContext, new String[]{izinler}, IZIN_KODU);
+    public void Sor(String izin, int IZIN_KODU){
+        ActivityCompat.requestPermissions((Activity) mContext, new String[]{izin}, IZIN_KODU);
     }
     public void ZorunluIzinUyariKutusu(String izinler, int IZIN_KODU){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -39,9 +39,8 @@ public class Izinler {
         builder.setPositiveButton(R.string.grant, (dialog, which) -> {
             Sor(izinler, IZIN_KODU);
         });
-        builder.setNegativeButton(R.string.quit, (dialog, which) -> {
-            ((Activity) mContext).finish();
-            System.exit(0);
+        builder.setNegativeButton(R.string.dismiss, (dialog, which) -> {
+            dialog.dismiss();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
