@@ -8,17 +8,10 @@ import com.squareup.picasso.Picasso;
 
 public class ChatApp {
 
-    private static ChatApp mInstance;
     private final Context mContext;
 
-    private ChatApp(Context context) {mContext = context;}
+    public ChatApp(Context context) {mContext = context;}
 
-    public static synchronized ChatApp getInstance(Context context) {
-        if(mInstance == null){
-            mInstance = new ChatApp(context);
-        }
-        return mInstance;
-    }
 
     public void Init(){
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);

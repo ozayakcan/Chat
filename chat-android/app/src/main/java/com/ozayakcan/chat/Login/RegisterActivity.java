@@ -49,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView isimHata;
     private Button bitirBtn;
     private ChatApp chatApp;
+    private SharedPreference sharedPreference;
     FirebaseUser firebaseUser;
 
     @Override
@@ -56,9 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //** Çoğu Activity'de çağırılacak
-        //chatApp = ChatApp.getInstance(this);
+        //chatApp = new ChatApp(this);
         //chatApp.Init();
         //**
+        sharedPreference = new SharedPreference(RegisterActivity.this);
         profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
@@ -156,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString());
                         databaseReference.setValue(kullaniciEkle);
                     }
-                    SharedPreference.getInstance(RegisterActivity.this).KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
+                    sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
                     overridePendingTransition(0,0);
                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     finish();

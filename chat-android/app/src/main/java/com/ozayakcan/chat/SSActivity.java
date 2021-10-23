@@ -36,6 +36,7 @@ public class SSActivity extends AppCompatActivity {
 
     private final int KISILER_IZIN_KODU = 1453;
     private final int DOSYA_IZIN_KODU = 1081;
+    private SharedPreference sharedPreference;
     private Izinler izinler;
 
     @Override
@@ -47,6 +48,7 @@ public class SSActivity extends AppCompatActivity {
         firebaseAppCheck.installAppCheckProviderFactory(
                 SafetyNetAppCheckProviderFactory.getInstance());
         izinler = new Izinler(SSActivity.this);
+        sharedPreference = new SharedPreference(SSActivity.this);
         if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
             DosyaIzniniKontrolEt();
         }else{
@@ -83,7 +85,7 @@ public class SSActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             //Giriş Yapıldı
-            if (SharedPreference.getInstance(this).GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
+            if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                 //Kaydedildi
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(user.getPhoneNumber());
                 databaseReference.keepSynced(true);

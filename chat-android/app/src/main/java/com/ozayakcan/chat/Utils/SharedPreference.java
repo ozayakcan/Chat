@@ -10,19 +10,11 @@ import java.util.Map;
 public class SharedPreference {
 
     public static final String kullaniciKaydedildi = "Kayit";
-
-    private static SharedPreference mInstance;
     private final Context mContext;
     private static final String SHARED_PREF_ADI = "Chat";
 
-    private SharedPreference(Context context) {mContext = context;}
+    public SharedPreference(Context context) {mContext = context;}
 
-    public static synchronized SharedPreference getInstance(Context context) {
-        if(mInstance == null){
-            mInstance = new SharedPreference(context);
-        }
-        return mInstance;
-    }
 
     public void KaydetString(String key, String value){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
