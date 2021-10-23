@@ -29,9 +29,9 @@
     <string name="remove">Kaldır</string>
     <string name="remove_photo">Fotoğrafı Kaldır</string>
     <string name="crop_profile_photo">Profil Fotoğrafını Kırp</string>
-    <string name="upload_in_progress">Upload in progress</string>
-    <string name="uploading">Uploading</string>
-    <string name="no_image_selected">No Image Selected</string>
-    <string name="failed">Failed!</string>
-    <string name="could_not_connect_to_database">Could not connect to database. Please try again later!</string>
+    <string name="upload_in_progress">Şuanda bir yükleme işlemi mevcut.</string>
+    <string name="uploading">Yükleniyor</string>
+    <string name="no_image_selected">Resim Seçilmedi</string>
+    <string name="failed">Başarısız!</string>
+    <string name="could_not_connect_to_database">Veritabanına bağlanılamadı. Lütfen daha sonra tekrar deneyin!</string>
 </resources>
