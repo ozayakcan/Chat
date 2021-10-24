@@ -145,7 +145,8 @@ public class Resimler {
         options.setHideBottomControls(false);
         options.setFreeStyleCropEnabled(false);
         options.setStatusBarColor(mContext.getColor(R.color.colorPrimary));
-        options.setToolbarColor(mContext.getColor(R.color.colorPrimary));;
+        options.setToolbarColor(mContext.getColor(R.color.colorPrimary));
+        options.setToolbarWidgetColor(mContext.getColor(R.color.white));
         options.setToolbarTitle(mContext.getString(R.string.crop_profile_photo));
         return options;
     }
