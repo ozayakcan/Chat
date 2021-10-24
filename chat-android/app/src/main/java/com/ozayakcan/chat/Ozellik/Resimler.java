@@ -29,6 +29,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ozayakcan.chat.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
@@ -44,7 +46,17 @@ public class Resimler {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void ResimGoster(String resim, ImageView resimIW, int varsayilanResimID){
-        Picasso.get().load(resim).error(varsayilanResimID).into(resimIW);
+        Picasso.get().load(resim).networkPolicy(NetworkPolicy.OFFLINE).error(varsayilanResimID).into(resimIW, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Picasso.get().load(resim).error(varsayilanResimID).into(resimIW);
+            }
+        });
     }
 
     public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum){
