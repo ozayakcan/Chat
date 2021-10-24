@@ -36,7 +36,7 @@ public class KisilerFragment extends Fragment {
         if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
             KisileriBul();
         }else{
-            izinler.SorYeniApi(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
+            izinler.Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
         }
         return view;
     }
@@ -52,7 +52,7 @@ public class KisilerFragment extends Fragment {
             });
 
     private void KisiIzniUyariKutusu() {
-        izinler.ZorunluIzinUyariKutusuYeniApi(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
+        izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
     }
 
     private void KisileriBul(){

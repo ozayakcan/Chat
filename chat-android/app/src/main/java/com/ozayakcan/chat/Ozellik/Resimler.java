@@ -86,7 +86,12 @@ public class Resimler {
             }
         }
     }
-    public void ProfilResmiDegistir(FirebaseUser firebaseUser, String resimBaglantisi, ImageView resimIW, ActivityResultLauncher<Intent> activityResultLauncher) {
+    public void ProfilResmiDegistir(FirebaseUser firebaseUser,
+                                    String resimBaglantisi,
+                                    ImageView resimIW,
+                                    ActivityResultLauncher<Intent> activityResultLauncher,
+                                    ActivityResultLauncher<String> kameraIzniResultLauncher,
+                                    ActivityResultLauncher<String> dosyaIzniResultLauncher) {
         Izinler izinler = new Izinler(mContext);
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.AltMenuTema);
         View altMenuView = LayoutInflater.from(mContext).inflate(R.layout.layout_resim_sec, (LinearLayout) ((Activity) mContext).findViewById(R.id.altMenuLayout));
@@ -94,7 +99,7 @@ public class Resimler {
             if (izinler.KontrolEt(Manifest.permission.CAMERA)){
                 KameradanYukle(activityResultLauncher);
             }else{
-                izinler.Sor(Manifest.permission.CAMERA, Izinler.PROFIL_RESMI_KAMERA_IZIN_KODU);
+                izinler.Sor(Manifest.permission.CAMERA, kameraIzniResultLauncher);
             }
             bottomSheetDialog.dismiss();
         });
@@ -102,7 +107,7 @@ public class Resimler {
             if (izinler.KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
                 GaleridenYukle(activityResultLauncher);
             }else{
-                izinler.Sor(Manifest.permission.READ_EXTERNAL_STORAGE, Izinler.PROFIL_RESMI_DOSYA_IZIN_KODU);
+                izinler.Sor(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
             }
             bottomSheetDialog.dismiss();
         });

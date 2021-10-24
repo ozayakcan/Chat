@@ -133,27 +133,40 @@ public class BilgilerActivity extends AppCompatActivity {
     }
 
     private void ProfilResmiDegistir() {
-        resimler.ProfilResmiDegistir(firebaseUser, resimBaglantisi, profilResmi, resimYukleActivityResult);
+        resimler.ProfilResmiDegistir(firebaseUser, resimBaglantisi, profilResmi, resimYukleActivityResult, kameraIzniResultLauncher, dosyaIzniResultLauncher);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Izinler.PROFIL_RESMI_KAMERA_IZIN_KODU){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                resimler.KameradanYukle(resimYukleActivityResult);
-            }else{
-                izinler.ZorunluIzinUyariKutusu(Manifest.permission.CAMERA, Izinler.PROFIL_RESMI_KAMERA_IZIN_KODU);
-            }
-        }else if(requestCode == Izinler.PROFIL_RESMI_DOSYA_IZIN_KODU){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                resimler.GaleridenYukle(resimYukleActivityResult);
-            }else{
-                izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, Izinler.PROFIL_RESMI_DOSYA_IZIN_KODU);
-            }
-        }
-    }
+    ActivityResultLauncher<String> kameraIzniResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result){
+                    KameraIzniVerildi();
+                }else{
+                    KameraIzniVerilmedi();
+                }
+            });
 
+    private void KameraIzniVerildi(){
+        resimler.KameradanYukle(resimYukleActivityResult);
+    }
+    private void KameraIzniVerilmedi(){
+        izinler.ZorunluIzinUyariKutusu(Manifest.permission.CAMERA, kameraIzniResultLauncher);
+    }
+    ActivityResultLauncher<String> dosyaIzniResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result){
+                    DosyaIzniVerildi();
+                }else{
+                    DosyaIzniVerilmedi();
+                }
+            });
+    private void DosyaIzniVerildi(){
+        resimler.GaleridenYukle(resimYukleActivityResult);
+    }
+    private void DosyaIzniVerilmedi(){
+        izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
+    }
     ActivityResultLauncher<Intent> resimYukleActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
