@@ -73,15 +73,30 @@ public class BilgilerActivity extends AppCompatActivity {
         //chatApp = new ChatApp(this);
         //chatApp.Init();
         //**
-        izinler = new Izinler(BilgilerActivity.this);
+        Intent intent = getIntent();
+        String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
+        String isimString = intent.getStringExtra(Veritabani.IsimKey);
+        String hakkimdaString = intent.getStringExtra(Veritabani.HakkimdaKey);
         resimler = new Resimler(BilgilerActivity.this);
+        profilResmi = findViewById(R.id.profilResmi);
+        if (profilResmiString != null){
+            resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+        }
+        izinler = new Izinler(BilgilerActivity.this);
         veritabani = new Veritabani(BilgilerActivity.this);
         sharedPreference = new SharedPreference(BilgilerActivity.this);
-        profilResmi = findViewById(R.id.profilResmi);
+
         kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
+        if (isimString != null){
+            isimET.setText(isimString);
+            isimET.setSelection(isimET.getText().length());
+        }
         isimHata = findViewById(R.id.isimHata);
         hakkimdaET = findViewById(R.id.hakkimdaET);
+        if (hakkimdaString != null){
+            hakkimdaET.setText(hakkimdaString);
+        }
         bitirBtn = findViewById(R.id.bitirBtn);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         profilResmi.setOnClickListener(v -> ProfilResmiDegistir());
@@ -115,32 +130,6 @@ public class BilgilerActivity extends AppCompatActivity {
             return false;
         });
         bitirBtn.setOnClickListener(v -> Kaydet());
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("Database Kullanıcı", snapshot.toString());
-                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                if(kullanici == null){
-                    return;
-                }
-                isimET.setText(kullanici.getIsim());
-                hakkimdaET.setText(kullanici.getHakkimda());
-                if (!kullanici.getIsim().isEmpty()){
-                    isimET.setSelection(isimET.getText().length());
-                }
-                if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-                    resimBaglantisi = kullanici.getProfilResmi();
-                    resimler.ResimGoster(resimBaglantisi, profilResmi, R.drawable.ic_profil_resmi);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(BilgilerActivity.this, getString(R.string.could_not_connect_to_database), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void ProfilResmiDegistir() {

@@ -44,37 +44,42 @@ public class SSActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             //Giriş Yapıldı
-            if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
-                //Kaydedildi
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(user.getPhoneNumber());
-                databaseReference.keepSynced(true);
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                        if (kullanici == null){
-                            startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
-                            overridePendingTransition(0,0);
-                            finish();
-                        }else{
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(user.getPhoneNumber());
+            databaseReference.keepSynced(true);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                    if (kullanici == null){
+                        startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                    }else{
+                        if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
+                            //Kaydedildi
                             startActivity(new Intent(SSActivity.this, MainActivity.class));
                             overridePendingTransition(0,0);
                             finish();
+                        }else{
+                            //Kaydedilmedi
+                            Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
+                            intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
+                            intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
+                            intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
+                            startActivity(intent);
+                            overridePendingTransition(0,0);
+                            finish();
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Veritabanı", error.getMessage());
-                        Toast.makeText(SSActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     }
-                });
-            }else{
-                //Kaydedilmedi
-                startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
-                overridePendingTransition(0,0);
-                finish();
-            }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Veritabanı", error.getMessage());
+                    Toast.makeText(SSActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                }
+            });
         }else{
             //Giriş yapılmadı
             startActivity(new Intent(SSActivity.this, GirisActivity.class));
