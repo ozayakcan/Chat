@@ -63,7 +63,6 @@ public class BilgilerActivity extends AppCompatActivity {
     private Izinler izinler;
     FirebaseUser firebaseUser;
     private String resimBaglantisi = Veritabani.VarsayilanDeger;
-    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +80,7 @@ public class BilgilerActivity extends AppCompatActivity {
         profilResmi = findViewById(R.id.profilResmi);
         if (profilResmiString != null){
             resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+            resimBaglantisi = profilResmiString;
         }
         izinler = new Izinler(BilgilerActivity.this);
         veritabani = new Veritabani(BilgilerActivity.this);
