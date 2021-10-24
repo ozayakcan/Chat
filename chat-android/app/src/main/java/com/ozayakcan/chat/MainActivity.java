@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
-        vpAdapter.fragmentEkle(new MesajlarFragment(), getString(R.string.messages));
-        vpAdapter.fragmentEkle(new KisilerFragment(), getString(R.string.contacts));
+        vpAdapter.fragmentEkle(new MesajlarFragment(MainActivity.this), getString(R.string.messages));
+        vpAdapter.fragmentEkle(new KisilerFragment(MainActivity.this), getString(R.string.contacts));
         viewPager.setAdapter(vpAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager,

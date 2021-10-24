@@ -1,5 +1,6 @@
 package com.ozayakcan.chat.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,8 +13,10 @@ import com.ozayakcan.chat.R;
 
 public class KisilerFragment extends Fragment {
 
-    public KisilerFragment() {
+    private Context mContext;
 
+    public KisilerFragment(Context context) {
+        mContext = context;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,5 +1,6 @@
 package com.ozayakcan.chat.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,9 +13,10 @@ import com.ozayakcan.chat.R;
 
 public class MesajlarFragment extends Fragment {
 
+    private Context mContext;
 
-    public MesajlarFragment() {
-
+    public MesajlarFragment(Context context) {
+        mContext = context;
     }
 
     @Override
