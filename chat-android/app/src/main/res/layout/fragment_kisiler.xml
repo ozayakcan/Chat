@@ -5,11 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.KisilerFragment">
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/kisilerRW"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="Kişiler" />
+            android:layout_height="match_parent"/>
 
 </LinearLayout>
