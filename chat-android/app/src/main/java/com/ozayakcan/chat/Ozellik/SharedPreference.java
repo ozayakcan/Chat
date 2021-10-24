@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Utils;
+package com.ozayakcan.chat.Ozellik;
 
 import static android.content.Context.MODE_PRIVATE;
 

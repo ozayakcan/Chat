@@ -33,4 +33,6 @@
     <string name="no_image_selected">No Image Selected</string>
     <string name="failed">Failed!</string>
     <string name="could_not_connect_to_database">Could not connect to database. Please try again later!</string>
+    <string name="messages">Messages</string>
+    <string name="contacts">Contacts</string>
 </resources>

@@ -1,6 +1,6 @@
-package com.ozayakcan.chat.Login;
+package com.ozayakcan.chat.Giris;
 
-import static com.ozayakcan.chat.Utils.Animasyonlar.YatayGecisAnimasyonu;
+import static com.ozayakcan.chat.Ozellik.Animasyonlar.YatayGecisAnimasyonu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -35,7 +35,7 @@ import com.ozayakcan.chat.R;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class LoginActivity extends AppCompatActivity {
+public class GirisActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private String dogrulamaID = "";
@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_giris);
         mAuth = FirebaseAuth.getInstance();
         mAuth.setLanguageCode(Locale.getDefault().getLanguage());
         //Telefon
@@ -266,7 +266,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()){
-                        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                        startActivity(new Intent(GirisActivity.this, BilgilerActivity.class));
                         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
                         finish();
                     }else{

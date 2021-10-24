@@ -1,20 +1,8 @@
-package com.ozayakcan.chat.Utils;
+package com.ozayakcan.chat.Ozellik;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.ozayakcan.chat.Login.RegisterActivity;
 import com.ozayakcan.chat.Model.Kullanici;
-import com.ozayakcan.chat.R;
 
 import java.util.HashMap;
 

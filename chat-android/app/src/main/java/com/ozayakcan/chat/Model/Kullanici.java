@@ -1,8 +1,6 @@
 package com.ozayakcan.chat.Model;
 
-import com.ozayakcan.chat.Utils.Veritabani;
-
-import java.util.Date;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class Kullanici {
 

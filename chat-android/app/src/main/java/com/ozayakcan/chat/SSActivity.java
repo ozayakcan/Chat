@@ -18,11 +18,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ozayakcan.chat.Login.LoginActivity;
-import com.ozayakcan.chat.Login.RegisterActivity;
+import com.ozayakcan.chat.Giris.GirisActivity;
+import com.ozayakcan.chat.Giris.BilgilerActivity;
 import com.ozayakcan.chat.Model.Kullanici;
-import com.ozayakcan.chat.Utils.SharedPreference;
-import com.ozayakcan.chat.Utils.Veritabani;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class SSActivity extends AppCompatActivity {
 
@@ -53,7 +53,7 @@ public class SSActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Kullanici kullanici = snapshot.getValue(Kullanici.class);
                         if (kullanici == null){
-                            startActivity(new Intent(SSActivity.this, RegisterActivity.class));
+                            startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
                             overridePendingTransition(0,0);
                             finish();
                         }else{
@@ -71,13 +71,13 @@ public class SSActivity extends AppCompatActivity {
                 });
             }else{
                 //Kaydedilmedi
-                startActivity(new Intent(SSActivity.this, RegisterActivity.class));
+                startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
                 overridePendingTransition(0,0);
                 finish();
             }
         }else{
             //Giriş yapılmadı
-            startActivity(new Intent(SSActivity.this, LoginActivity.class));
+            startActivity(new Intent(SSActivity.this, GirisActivity.class));
             overridePendingTransition(0,0);
             finish();
         }

@@ -1,27 +1,20 @@
-package com.ozayakcan.chat.Login;
+package com.ozayakcan.chat.Giris;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,21 +31,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.R;
-import com.ozayakcan.chat.Utils.ChatApp;
-import com.ozayakcan.chat.Utils.Izinler;
-import com.ozayakcan.chat.Utils.Resimler;
-import com.ozayakcan.chat.Utils.SharedPreference;
-import com.ozayakcan.chat.Utils.Veritabani;
-import com.squareup.picasso.Picasso;
+import com.ozayakcan.chat.Ozellik.ChatApp;
+import com.ozayakcan.chat.Ozellik.Izinler;
+import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,7 +50,7 @@ import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RegisterActivity extends AppCompatActivity {
+public class BilgilerActivity extends AppCompatActivity {
 
     private CircleImageView profilResmi, kamera;
     private EditText isimET, hakkimdaET;
@@ -83,15 +68,15 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_bilgiler);
         //** Çoğu Activity'de çağırılacak
         //chatApp = new ChatApp(this);
         //chatApp.Init();
         //**
-        izinler = new Izinler(RegisterActivity.this);
-        resimler = new Resimler(RegisterActivity.this);
-        veritabani = new Veritabani(RegisterActivity.this);
-        sharedPreference = new SharedPreference(RegisterActivity.this);
+        izinler = new Izinler(BilgilerActivity.this);
+        resimler = new Resimler(BilgilerActivity.this);
+        veritabani = new Veritabani(BilgilerActivity.this);
+        sharedPreference = new SharedPreference(BilgilerActivity.this);
         profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
@@ -153,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(RegisterActivity.this, getString(R.string.could_not_connect_to_database), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BilgilerActivity.this, getString(R.string.could_not_connect_to_database), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -189,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Uri sonuc = intent.getData();
                         resimler.ResimKirp(sonuc);
                     }else{
-                        Toast.makeText(RegisterActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BilgilerActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -240,7 +225,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
                     overridePendingTransition(0,0);
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
                     finish();
                 }
 

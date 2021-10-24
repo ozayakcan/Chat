@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Utils;
+package com.ozayakcan.chat.Ozellik;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ozayakcan.chat.Login.RegisterActivity;
 import com.ozayakcan.chat.R;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
