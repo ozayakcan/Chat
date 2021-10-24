@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,10 +13,8 @@ import com.ozayakcan.chat.R;
 
 public class Izinler {
 
-    public static final int PROFIL_RESMI_KAMERA_IZIN_KODU = 1920;
+    public static final int PROFIL_RESMI_KAMERA_IZIN_KODU = 1081;
     public static final int PROFIL_RESMI_DOSYA_IZIN_KODU = 1453;
-
-    public static final int RESIM_YUKLE_SONUC = 1923;
 
     private final Context mContext;
 
@@ -31,6 +30,9 @@ public class Izinler {
     public void Sor(String izin, int IZIN_KODU){
         ActivityCompat.requestPermissions((Activity) mContext, new String[]{izin}, IZIN_KODU);
     }
+    public void SorYeniApi(String izin, ActivityResultLauncher<String> kisiIzniResultLauncher){
+       kisiIzniResultLauncher.launch(izin);
+    }
     public void ZorunluIzinUyariKutusu(String izinler, int IZIN_KODU){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setCancelable(false);
@@ -45,5 +47,18 @@ public class Izinler {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
+    public void ZorunluIzinUyariKutusuYeniApi(String izinler, ActivityResultLauncher<String> kisiIzniResultLauncher){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.permission_denied);
+        builder.setMessage(R.string.you_must_grant_required_permissions);
+        builder.setPositiveButton(R.string.grant, (dialog, which) -> {
+            SorYeniApi(izinler, kisiIzniResultLauncher);
+        });
+        builder.setNegativeButton(R.string.dismiss, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
