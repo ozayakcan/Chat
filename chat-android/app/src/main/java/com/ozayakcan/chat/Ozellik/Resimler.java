@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class Resimler {
 
     private final Context mContext;
     public UploadTask resimYukleUploadTask;
+    public static final String VarsayilanResimUzantisi = ".jpg";
 
     public Resimler(Context context) {mContext = context;}
 
@@ -56,7 +58,7 @@ public class Resimler {
             if (resim != null){
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(konum);
                 resimYukleUploadTask = storageReference.putFile(resim);
-                resimYukleUploadTask.continueWithTask((Continuation<UploadTask.TaskSnapshot, Task<Uri>>) task -> {
+                resimYukleUploadTask.continueWithTask(task -> {
                     if (!task.isSuccessful()) {
                         Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         throw task.getException();
@@ -135,7 +137,7 @@ public class Resimler {
         activityResultLauncher.launch(galeriIntent);
     }
     public void ResimKirp(Uri sonuc){
-        Uri kaydedilenResim = Uri.fromFile(new File(mContext.getCacheDir(), System.currentTimeMillis()+"."+DosyaUzantisi(sonuc)));
+        Uri kaydedilenResim = Uri.fromFile(new File(mContext.getCacheDir(), System.currentTimeMillis()+""));
         UCrop.of(sonuc, kaydedilenResim)
                 .withAspectRatio(1,1)
                 .withMaxResultSize(640,640)
@@ -154,10 +156,5 @@ public class Resimler {
         options.setToolbarWidgetColor(mContext.getColor(R.color.white));
         options.setToolbarTitle(mContext.getString(R.string.crop_profile_photo));
         return options;
-    }
-    public String DosyaUzantisi(Uri dosya){
-        ContentResolver contentResolver = mContext.getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(dosya));
     }
 }
