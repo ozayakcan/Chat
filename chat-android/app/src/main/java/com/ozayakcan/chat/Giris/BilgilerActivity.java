@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,15 +30,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.UploadTask;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
-import com.ozayakcan.chat.R;
-import com.ozayakcan.chat.Ozellik.ChatApp;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.ozayakcan.chat.R;
 import com.yalantis.ucrop.UCrop;
 
 import java.text.ParseException;
@@ -56,7 +53,6 @@ public class BilgilerActivity extends AppCompatActivity {
     private EditText isimET, hakkimdaET;
     private TextView isimHata;
     private Button bitirBtn;
-    private ChatApp chatApp;
     private Resimler resimler;
     private Veritabani veritabani;
     private SharedPreference sharedPreference;
@@ -68,10 +64,6 @@ public class BilgilerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bilgiler);
-        //** Çoğu Activity'de çağırılacak
-        //chatApp = new ChatApp(this);
-        //chatApp.Init();
-        //**
         Intent intent = getIntent();
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String isimString = intent.getStringExtra(Veritabani.IsimKey);
