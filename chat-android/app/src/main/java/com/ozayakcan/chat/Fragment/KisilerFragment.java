@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.KisiAdapter;
+import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
@@ -37,13 +38,13 @@ public class KisilerFragment extends Fragment {
     private Izinler izinler;
     private SharedPreference sharedPreference;
     private View view;
-    private Context mContext;
     private FirebaseUser firebaseUser;
     private RecyclerView kisilerRW;
     private KisiAdapter kisiAdapter;
     private List<Kullanici> kullaniciList;
-    public KisilerFragment(Context context) {
-        mContext = context;
+    private MainActivity mainActivity;
+    public KisilerFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -95,7 +96,6 @@ public class KisilerFragment extends Fragment {
             }
         });
     }
-
     private void KisileriGuncelle(DataSnapshot veriler){
         kullaniciList.clear();
         for (DataSnapshot verilerSnapshot : veriler.getChildren()){
@@ -104,7 +104,9 @@ public class KisilerFragment extends Fragment {
                 kullaniciList.add(kullanici);
             }
         }
-        kisiAdapter = new KisiAdapter(getContext(), kullaniciList);
+        if (mainActivity != null){
+            kisiAdapter = new KisiAdapter(kullaniciList, mainActivity);
+        }
         kisilerRW.setAdapter(kisiAdapter);
     }
 }

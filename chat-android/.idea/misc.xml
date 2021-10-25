@@ -15,18 +15,22 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main2.xml" value="0.13020833333333334" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_splash.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/alt_menu_arkaplan.xml" value="0.1" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/gonder_butonu.xml" value="0.24814814814814815" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_baseline_photo_camera_24.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_baseline_photo_camera_with_background_24.xml" value="0.14427083333333332" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.24814814814814815" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_kamera.xml" value="0.13177083333333334" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14427083333333332" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/ic_profil_resmi.xml" value="0.13177083333333334" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/kisi_ismi_arkaplan.xml" value="0.2601851851851852" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/mesaj_arkaplan_sol.xml" value="0.24814814814814815" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/rounded_corners.xml" value="0.2601851851851852" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/drawable/varsayilan_arkaplan.xml" value="0.2601851851851852" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_ethree.xml" value="0.115625" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_kirp.xml" value="0.1" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_login.xml" value="0.176" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_mesaj.xml" value="1.2" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/activity_register.xml" value="0.4" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/fragment_kisiler.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/fragment_mesaj.xml" value="0.264" />
@@ -35,6 +39,8 @@
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/layout_alt_menu.xml" value="0.1082427536231884" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/layout_resim_sec.xml" value="0.4" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/mesaj_listesi.xml" value="0.4" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/mesaj_sag.xml" value="0.10054347826086957" />
+        <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/mesaj_sol.xml" value="0.3915343915343915" />
         <entry key="..\:/Projelerim/Android/Chat/chat-android/app/src/main/res/layout/test_fragment.xml" value="0.12360688956433637" />
       </map>
     </option>

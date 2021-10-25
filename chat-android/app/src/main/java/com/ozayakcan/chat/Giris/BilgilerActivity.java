@@ -217,7 +217,6 @@ public class BilgilerActivity extends AppCompatActivity {
                         HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, false);
                         databaseReference.updateChildren(map);
                     }
-                    veritabani.KisileriEkle(firebaseUser);
                     sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
                     overridePendingTransition(0,0);
                     startActivity(new Intent(BilgilerActivity.this, MainActivity.class));

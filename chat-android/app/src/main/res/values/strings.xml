@@ -35,4 +35,7 @@
     <string name="could_not_connect_to_database">Could not connect to database. Please try again later!</string>
     <string name="messages">Messages</string>
     <string name="contacts">Contacts</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

@@ -2,6 +2,7 @@ package com.ozayakcan.chat.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.MainActivity;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
@@ -22,20 +25,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
 
-    private Context mContext;
     private Resimler resimler;
     List<Kullanici> kullaniciList;
+    private MainActivity mainActivity;
+    private Context mContext;
 
-    public KisiAdapter(Context mContext, List<Kullanici> kullaniciList){
-        this.mContext = mContext;
+    public KisiAdapter( List<Kullanici> kullaniciList, MainActivity mainActivity){
+        this.mainActivity = mainActivity;
+        this.mContext = mainActivity;
         this.kullaniciList = kullaniciList;
-        resimler = new Resimler(mContext);
     }
 
     @NonNull
     @Override
     public KisiAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.kisi_listesi, parent, false);
+        resimler = new Resimler(mContext);
         return new ViewHolder(view);
     }
 
@@ -48,11 +53,11 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
-        if (holder.profilResmi.getDrawable().getConstantState().equals(mContext.getDrawable(R.drawable.varsayilan_arkaplan).getConstantState())){
+        if (kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             holder.kisiBasHarfi.setText(String.valueOf(kullanici.getIsim().charAt(0)));
         }
         holder.kisi.setOnClickListener(v -> {
-
+            mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi());
         });
     }
 

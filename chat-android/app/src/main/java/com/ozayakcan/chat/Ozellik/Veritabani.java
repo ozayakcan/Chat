@@ -24,6 +24,7 @@ public class Veritabani {
 
     public static String IDKey = "id";
     public static String IsimKey = "isim";
+    public static String OnlineDurumuKey = "onlineDurumu";
     public static String ProfilResmiKey = "profilResmi";
     public static String TelefonKey = "telefon";
     public static String HakkimdaKey = "hakkimda";
@@ -47,6 +48,7 @@ public class Veritabani {
         map.put(Veritabani.IsimKey, kullanici.getIsim());
         map.put(Veritabani.TelefonKey, kullanici.getTelefon());
         map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
+        map.put(Veritabani.OnlineDurumuKey, kullanici.getOnlineDurumu());
         if (tarih){
             map.put(Veritabani.KayitZamaniKey, kullanici.getKayitZamani());
         }

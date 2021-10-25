@@ -1,5 +1,6 @@
 package com.ozayakcan.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,5 +36,16 @@ public class MainActivity extends AppCompatActivity {
                 (tab, position) -> {
                     tab.setText(vpAdapter.baslikGetir(position));
                 }).attach();
+    }
+
+    public void MesajGoster(String id, String isim, String telefon, String profilResmi){
+        Intent intent = new Intent(MainActivity.this, MesajActivity.class);
+        intent.putExtra(Veritabani.IDKey, id);
+        intent.putExtra(Veritabani.IsimKey, isim);
+        intent.putExtra(Veritabani.TelefonKey, telefon);
+        intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
+        startActivity(intent);
+        overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
+        finish();
     }
 }
