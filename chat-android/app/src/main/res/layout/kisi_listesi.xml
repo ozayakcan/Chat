@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/kisi"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:clickable="true"
     android:focusable="true">
-    <TextView
-        android:id="@+id/kisiTW"
+    <RelativeLayout
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilResmi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/varsayilan_arkaplan"/>
+        <TextView
+            android:id="@+id/kisiBasHarfi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="30sp"/>
+    </RelativeLayout>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/kisiAdi"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/kisiHakkinda"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:textSize="14sp"
+            android:textColor="@color/gray"/>
+    </LinearLayout>
+</LinearLayout>

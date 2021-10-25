@@ -19,8 +19,8 @@ import java.util.HashMap;
 
 public class Veritabani {
 
-    public static String KullaniciTablosu = "Kullanıcılar";
-    public static String KisiTablosu = "Kişiler";
+    public static String KullaniciTablosu = "Kullanicilar";
+    public static String KisiTablosu = "kisiler";
 
     public static String IDKey = "id";
     public static String IsimKey = "isim";
@@ -84,7 +84,8 @@ public class Veritabani {
                                 Kullanici kullanici = snapshot.getValue(Kullanici.class);
                                 if (kullanici != null){
                                     if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
-                                        KisiEkle(kullanici.getID(), isim, telefonNumarasi, firebaseUser.getPhoneNumber());
+                                        kullanici.setIsim(isim);
+                                        KisiEkle(kullanici, firebaseUser.getPhoneNumber());
                                     }
                                 }
                             }
@@ -100,17 +101,19 @@ public class Veritabani {
             }
         }
     }
-    public static void KisiEkle(String eklenecekID, String eklenecekIsim, String eklenecekTelefon, String telefon) {
+    public static void KisiEkle(Kullanici kullanici, String telefon) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(Veritabani.IDKey, eklenecekID);
-        map.put(Veritabani.IsimKey, eklenecekIsim);
-        map.put(Veritabani.TelefonKey, eklenecekTelefon);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(telefon).child(eklenecekTelefon);
+        map.put(Veritabani.IDKey, kullanici.getID());
+        map.put(Veritabani.IsimKey, kullanici.getIsim());
+        map.put(Veritabani.TelefonKey, kullanici.getTelefon());
+        map.put(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
+        map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+telefon+"/"+Veritabani.KisiTablosu).child(kullanici.getTelefon());
 		databaseReference.updateChildren(map);
     }
 
     public static void KisiSil(String telefon) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(telefon);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+telefon+"/"+Veritabani.KisiTablosu);
 		databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -2,6 +2,8 @@ package com.ozayakcan.chat.Model;
 
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
+import java.util.List;
+
 public class Kullanici {
 
     private String ID = "";
@@ -91,4 +93,5 @@ public class Kullanici {
     public void setKayitZamani(long kayitZamani) {
         this.kayitZamani = kayitZamani;
     }
+
 }

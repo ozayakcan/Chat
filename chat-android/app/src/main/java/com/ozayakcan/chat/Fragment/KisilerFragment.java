@@ -1,27 +1,22 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -86,7 +81,7 @@ public class KisilerFragment extends Fragment {
     }
     private void KisileriBul(){
         //Kişiler veritabanından çekiliyor
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(firebaseUser.getPhoneNumber());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+Veritabani.KisiTablosu);
         reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,10 +96,10 @@ public class KisilerFragment extends Fragment {
         });
     }
 
-    private void KisileriGuncelle(DataSnapshot snapshot){
+    private void KisileriGuncelle(DataSnapshot veriler){
         kullaniciList.clear();
-        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-            Kullanici kullanici = dataSnapshot.getValue(Kullanici.class);
+        for (DataSnapshot verilerSnapshot : veriler.getChildren()){
+            Kullanici kullanici = verilerSnapshot.getValue(Kullanici.class);
             if (kullanici != null){
                 kullaniciList.add(kullanici);
             }
