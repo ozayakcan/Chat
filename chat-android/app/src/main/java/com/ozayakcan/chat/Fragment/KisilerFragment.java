@@ -9,16 +9,19 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.KisiAdapter;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -36,6 +40,7 @@ import java.util.List;
 public class KisilerFragment extends Fragment {
 
     private Izinler izinler;
+    private SharedPreference sharedPreference;
     private View view;
     private Context mContext;
     private FirebaseUser firebaseUser;
@@ -51,6 +56,7 @@ public class KisilerFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kisiler, container, false);
         izinler = new Izinler(getContext());
+        sharedPreference = new SharedPreference(getContext());
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);
@@ -78,22 +84,14 @@ public class KisilerFragment extends Fragment {
     private void KisiIzniUyariKutusu() {
         izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
     }
-
     private void KisileriBul(){
         //Kişiler veritabanından çekiliyor
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(firebaseUser.getPhoneNumber());
+        reference.keepSynced(true);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                kullaniciList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Kullanici kullanici = dataSnapshot.getValue(Kullanici.class);
-                    if (kullanici != null){
-                        kullaniciList.add(kullanici);
-                    }
-                }
-                kisiAdapter = new KisiAdapter(getContext(), kullaniciList);
-                kisilerRW.setAdapter(kisiAdapter);
+                KisileriGuncelle(snapshot);
             }
 
             @Override
@@ -101,7 +99,14 @@ public class KisilerFragment extends Fragment {
 
             }
         });
-        //Karışıklık olmaması için veritabanındaki kişiler siliniyor
+        if (!sharedPreference.GetirBoolean(SharedPreference.rehberGuncellendi, false)){
+            KisileriEkle();
+            sharedPreference.KaydetBoolean(SharedPreference.rehberGuncellendi, true);
+        }
+    }
+
+    private void KisileriEkle(){
+        //Veritabanındaki kişiler siliniyor
         Veritabani.KisiSil(firebaseUser.getPhoneNumber());
         //Rehberdeki kişiler veritabanına ekleniyor
         ContentResolver contentResolver = mContext.getContentResolver();
@@ -121,10 +126,12 @@ public class KisilerFragment extends Fragment {
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                             new String[]{id}, null);
                     while (pCur.moveToNext()) {
-                        String telefonNumarasi = pCur.getString(pCur.getColumnIndex(
+                        String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
-                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        databaseReference.keepSynced(true);
+						databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Kullanici kullanici = snapshot.getValue(Kullanici.class);
@@ -145,5 +152,17 @@ public class KisilerFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void KisileriGuncelle(DataSnapshot snapshot){
+        kullaniciList.clear();
+        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+            Kullanici kullanici = dataSnapshot.getValue(Kullanici.class);
+            if (kullanici != null){
+                kullaniciList.add(kullanici);
+            }
+        }
+        kisiAdapter = new KisiAdapter(getContext(), kullaniciList);
+        kisilerRW.setAdapter(kisiAdapter);
     }
 }

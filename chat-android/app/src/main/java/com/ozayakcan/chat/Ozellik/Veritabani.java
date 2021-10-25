@@ -55,12 +55,12 @@ public class Veritabani {
         map.put(Veritabani.IsimKey, eklenecekIsim);
         map.put(Veritabani.TelefonKey, eklenecekTelefon);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(telefon).child(eklenecekTelefon);
-        databaseReference.updateChildren(map);
+		databaseReference.updateChildren(map);
     }
 
     public static void KisiSil(String telefon) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KisiTablosu).child(telefon);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+		databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 snapshot.getRef().setValue(null);

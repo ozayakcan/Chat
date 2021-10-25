@@ -190,8 +190,8 @@ public class BilgilerActivity extends AppCompatActivity {
         }else{
             bitirBtn.setEnabled(false);
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
-            databaseReference.keepSynced(true);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+			databaseReference.keepSynced(true);
+			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("Database Kullanıcı Kaydet", snapshot.toString());

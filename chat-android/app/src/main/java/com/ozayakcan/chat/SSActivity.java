@@ -46,7 +46,7 @@ public class SSActivity extends AppCompatActivity {
             //Giriş Yapıldı
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(user.getPhoneNumber());
             databaseReference.keepSynced(true);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
