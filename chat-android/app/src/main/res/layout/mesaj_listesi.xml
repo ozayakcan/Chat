@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/kisi"
+    android:id="@+id/mesajlar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -52,7 +52,7 @@
                 android:textColor="@color/gray"
                 android:layout_alignParentStart="true"/>
             <RelativeLayout
-                android:id="@+id/mesajSayisi"
+                android:id="@+id/okunmamisMesaj"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
@@ -66,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/varsayilan_arkaplan"/>
                 <TextView
-                    android:id="@+id/okunmamisMesaj"
+                    android:id="@+id/mesajSayisi"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@color/white"
