@@ -99,59 +99,6 @@ public class KisilerFragment extends Fragment {
 
             }
         });
-        if (!sharedPreference.GetirBoolean(SharedPreference.rehberGuncellendi, false)){
-            KisileriEkle();
-            sharedPreference.KaydetBoolean(SharedPreference.rehberGuncellendi, true);
-        }
-    }
-
-    private void KisileriEkle(){
-        //Veritabanındaki kişiler siliniyor
-        Veritabani.KisiSil(firebaseUser.getPhoneNumber());
-        //Rehberdeki kişiler veritabanına ekleniyor
-        ContentResolver contentResolver = mContext.getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if ((cursor != null ? cursor.getCount() : 0) > 0) {
-            while (cursor != null && cursor.moveToNext()) {
-                String id = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String isim = cursor.getString(cursor.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-
-                if (cursor.getInt(cursor.getColumnIndex(
-                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    Cursor pCur = contentResolver.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
-                        databaseReference.keepSynced(true);
-						databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                if (kullanici != null){
-                                    if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
-                                        Veritabani.KisiEkle(kullanici.getID(), isim, telefonNumarasi, firebaseUser.getPhoneNumber());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                    pCur.close();
-                }
-            }
-        }
     }
 
     private void KisileriGuncelle(DataSnapshot snapshot){

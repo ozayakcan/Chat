@@ -57,6 +57,8 @@ public class SSActivity extends AppCompatActivity {
                     }else{
                         if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                             //Kaydedildi
+                            Veritabani veritabani = new Veritabani(SSActivity.this);
+                            veritabani.KisileriEkle(user);
                             startActivity(new Intent(SSActivity.this, MainActivity.class));
                             overridePendingTransition(0,0);
                             finish();

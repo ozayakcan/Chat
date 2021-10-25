@@ -10,7 +10,6 @@ import java.util.Map;
 public class SharedPreference {
 
     public static final String kullaniciKaydedildi = "Kayit";
-    public static final String rehberGuncellendi = "KisilerEklendi";
     private final Context mContext;
     private static final String SHARED_PREF_ADI = "Chat";
 
