@@ -203,20 +203,21 @@ public class BilgilerActivity extends AppCompatActivity {
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Veritabani.TarihSaatFormati);
                         try {
                             date = simpleDateFormat.parse(sdf.format(new Date()));
-                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), date.getTime());
+                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), date.getTime(), true);
                             HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
                             databaseReference.updateChildren(map);
                         } catch (ParseException e) {
                             Log.d("Tarih Alınamadı", e.getMessage());
-                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString());
+                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
                             HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
                             databaseReference.updateChildren(map);
                         }
                     }else{
-                        Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString());
+                        Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
                         HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, false);
                         databaseReference.updateChildren(map);
                     }
+                    veritabani.KisileriEkle(firebaseUser);
                     sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
                     overridePendingTransition(0,0);
                     startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
