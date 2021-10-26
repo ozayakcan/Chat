@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_corners"
+            android:background="@drawable/rounded_corners_15"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
             android:text="@string/done"/>

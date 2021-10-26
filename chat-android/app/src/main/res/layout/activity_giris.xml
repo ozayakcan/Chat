@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_corners"
+            android:background="@drawable/rounded_corners_15"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
             android:text="@string/next"/>
@@ -118,7 +118,7 @@
             android:id="@+id/tekrarGonderBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/rounded_corners"
+            android:background="@drawable/rounded_corners_15"
             android:backgroundTint="@color/disabledBackground"
             android:textColor="@color/disabledText"
             android:text="@string/resend"/>
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/rounded_corners"
+            android:background="@drawable/rounded_corners_15"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@color/white"
             android:text="@string/confirm"/>
