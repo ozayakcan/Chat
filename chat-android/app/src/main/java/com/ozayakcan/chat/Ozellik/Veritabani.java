@@ -56,7 +56,7 @@ public class Veritabani {
         map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
         map.put(Veritabani.OnlineDurumuKey, kullanici.getOnlineDurumu());
         if (tarih){
-            map.put(Veritabani.KayitZamaniKey, System.currentTimeMillis());
+            map.put(Veritabani.KayitZamaniKey, ServerValue.TIMESTAMP);
         }
         return map;
     }
