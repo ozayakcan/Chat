@@ -2,8 +2,6 @@ package com.ozayakcan.chat.Model;
 
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
-import java.util.List;
-
 public class Kullanici {
 
     private String ID = "";

@@ -14,10 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Resimler;
-import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.util.List;
