@@ -2,52 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:padding="8dp">
-
-
     <RelativeLayout
-        android:id="@+id/msgTypeMsg"
+        android:id="@+id/mesajLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true">
-        <RelativeLayout
+        android:layout_alignParentStart="true"
+        android:background="@drawable/mesaj_arkaplan_sol">
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/mesaj_arkaplan_sol"
-            android:layout_alignParentStart="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="hello"
-                android:id="@+id/show_message"
-                android:maxWidth="255dp"
-                android:textSize="18sp"
-                android:padding="8dp"/>
-
-            <ImageView
-                android:id="@+id/seen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/show_message"
-                android:layout_alignBottom="@id/show_message"
-                android:layout_marginBottom="5dp"
-                android:text="00:00"
-                android:textColor="#9f9f9f"
-                android:id="@+id/date"
-                android:textSize="12sp"
-                android:layout_marginEnd="3dp"/>
-        </RelativeLayout>
+            android:id="@+id/mesajText"
+            android:maxWidth="255dp"
+            android:textSize="18sp"
+            android:padding="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/mesajText"
+            android:layout_alignBottom="@id/mesajText"
+            android:layout_marginBottom="5dp"
+            android:textColor="#9f9f9f"
+            android:id="@+id/saat"
+            android:textSize="12sp"
+            android:layout_marginEnd="3dp"/>
     </RelativeLayout>
-
     <TextView
-        android:id="@+id/msgTypeDate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
+        android:layout_height="16dp"
+        android:layout_below="@id/mesajLayout"
+        android:layout_alignParentStart="true"
+        android:textSize="11sp"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:text="@string/seen"/>
 </RelativeLayout>
