@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
@@ -73,6 +74,7 @@ public class MesajActivity extends AppCompatActivity {
             isim.setText(isimString);
         }
         KisiBilgileriniGoster();
+        KisininOnlineDurumunuGuncelle();
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -94,6 +96,25 @@ public class MesajActivity extends AppCompatActivity {
                     }else{
                         durum.setText(getString(R.string.offline));
                     }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void KisininOnlineDurumunuGuncelle(){
+        DatabaseReference onlineDurumu = FirebaseDatabase.getInstance().getReference(".info/connected");
+        onlineDurumu.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean baglandi = snapshot.getValue(Boolean.class);
+                if (baglandi){
+                    KisiBilgileriniGoster();
+                }else{
+                    durum.setText(getString(R.string.offline));
                 }
             }
 
