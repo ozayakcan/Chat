@@ -1,7 +1,6 @@
 package com.ozayakcan.chat.Giris;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,11 +38,7 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 import com.yalantis.ucrop.UCrop;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -220,21 +215,9 @@ public class BilgilerActivity extends AppCompatActivity {
                     Log.d("Database Kullanıcı Kaydet", snapshot.toString());
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
                     if(kullanici == null){
-                        Date date = new Date();
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(Veritabani.TarihSaatFormati);
-                        sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Veritabani.TarihSaatFormati);
-                        try {
-                            date = simpleDateFormat.parse(sdf.format(new Date()));
-                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), date.getTime(), true);
-                            HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
-                            databaseReference.updateChildren(map);
-                        } catch (ParseException e) {
-                            Log.d("Tarih Alınamadı", e.getMessage());
-                            Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
-                            HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
-                            databaseReference.updateChildren(map);
-                        }
+                        Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
+                        HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
+                        databaseReference.updateChildren(map);
                     }else{
                         Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
                         HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, false);

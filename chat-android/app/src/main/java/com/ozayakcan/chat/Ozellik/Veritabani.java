@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
 
@@ -29,6 +30,11 @@ public class Veritabani {
     public static String TelefonKey = "telefon";
     public static String HakkimdaKey = "hakkimda";
     public static String KayitZamaniKey = "kayitZamani";
+
+    public static long MesajDurumuGonderiliyor = 0;
+    public static long MesajDurumuGonderildi = 1;
+    public static long MesajDurumuBendenSilindi = 3;
+    public static long MesajDurumuHerkestenSilindi = 4;
 
     public static String ProfilResmiDosyaAdi = "profil_resmi";
 
@@ -50,7 +56,7 @@ public class Veritabani {
         map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
         map.put(Veritabani.OnlineDurumuKey, kullanici.getOnlineDurumu());
         if (tarih){
-            map.put(Veritabani.KayitZamaniKey, kullanici.getKayitZamani());
+            map.put(Veritabani.KayitZamaniKey, System.currentTimeMillis());
         }
         return map;
     }
