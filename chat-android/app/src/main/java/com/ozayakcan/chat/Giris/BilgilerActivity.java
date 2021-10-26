@@ -71,6 +71,7 @@ public class BilgilerActivity extends AppCompatActivity {
         veritabani = new Veritabani(BilgilerActivity.this);
         sharedPreference = new SharedPreference(BilgilerActivity.this);
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
@@ -90,7 +91,6 @@ public class BilgilerActivity extends AppCompatActivity {
             hakkimdaET.setText(hakkimdaString);
         }
         bitirBtn = findViewById(R.id.bitirBtn);
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         profilResmi.setOnClickListener(v -> ProfilResmiDegistir());
         kamera.setOnClickListener(v -> ProfilResmiDegistir());
         isimET.setOnEditorActionListener((v, actionId, event) -> {
