@@ -4,8 +4,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,13 +17,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
+import com.ozayakcan.chat.R;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Veritabani {
 
     public static String KullaniciTablosu = "Kullanicilar";
     public static String KisiTablosu = "kisiler";
+    public static String MesajTablosu = "Mesajlar";
 
     public static String IDKey = "id";
     public static String IsimKey = "isim";
@@ -31,6 +36,11 @@ public class Veritabani {
     public static String HakkimdaKey = "hakkimda";
     public static String KayitZamaniKey = "kayitZamani";
 
+    public static String MesajKey = "mesaj";
+    public static String TarihKey = "tarih";
+    public static String MesajDurumuKey = "mesajDurumu";
+    public static String GonderenKey = "gonderen";
+    public static String GorulduKey = "goruldu";
     public static long MesajDurumuGonderiliyor = 0;
     public static long MesajDurumuGonderildi = 1;
     public static long MesajDurumuBendenSilindi = 3;
@@ -133,5 +143,49 @@ public class Veritabani {
 
             }
         });
+    }
+    public void MesajGonder(String mesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
+        Map<String, String> tarih = ServerValue.TIMESTAMP;
+        DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
+        ekleBir.keepSynced(true);
+        HashMap<String, Object> mapBir = new HashMap<>();
+        mapBir.put(Veritabani.MesajKey, mesaj);
+        mapBir.put(Veritabani.TarihKey, tarih);
+        mapBir.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
+        mapBir.put(Veritabani.GonderenKey, true);
+        mapBir.put(Veritabani.GorulduKey, false);
+        DatabaseReference ekleBirPush = ekleBir.push();
+        ekleBirPush.keepSynced(true);
+
+        DatabaseReference ekleIki = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
+        ekleIki.keepSynced(true);
+        HashMap<String, Object> mapIki = new HashMap<>();
+        mapIki.put(Veritabani.MesajKey, mesaj);
+        mapIki.put(Veritabani.TarihKey, tarih);
+        mapIki.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
+        mapIki.put(Veritabani.GonderenKey, false);
+        mapIki.put(Veritabani.GorulduKey, false);
+        ekleBirPush.setValue(mapBir, (error, ref) -> {
+            if (error == null){
+                ref.keepSynced(true);
+                HashMap<String, Object> basarili = new HashMap<>();
+                basarili.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
+                ref.updateChildren(basarili);
+                String key = ref.getKey();
+                if (key != null){
+                    DatabaseReference ekleIkiPush = ekleIki.child(key);
+                    ekleIkiPush.keepSynced(true);
+                    ekleIkiPush.setValue(mapIki, (error2, ref2) -> {
+                        if (error2 == null){
+                            ref2.keepSynced(true);
+                            HashMap<String, Object> basarili2 = new HashMap<>();
+                            basarili2.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
+                            ref2.updateChildren(basarili2);
+                        }
+                    });
+                }
+            }
+        });
+
     }
 }

@@ -82,8 +82,8 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/rounded_corners_25"
         android:backgroundTint="#FFFFFF"
-        android:padding="5dp">
-
+        android:padding="5dp"
+        android:gravity="bottom">
         <EditText
             android:id="@+id/gonderText"
             android:layout_width="match_parent"
@@ -94,7 +94,6 @@
             android:layout_toStartOf="@id/gonderBtn"
             android:background="@android:color/transparent"
             android:hint="@string/type_a_message" />
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/gonderBtn"
             android:layout_width="40dp"

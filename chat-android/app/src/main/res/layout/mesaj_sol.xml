@@ -11,24 +11,25 @@
         android:layout_alignParentStart="true"
         android:background="@drawable/mesaj_arkaplan_sol">
         <TextView
+            android:id="@+id/mesajText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/mesajText"
             android:maxWidth="255dp"
             android:textSize="18sp"
             android:padding="8dp"/>
         <TextView
+            android:id="@+id/saat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/mesajText"
             android:layout_alignBottom="@id/mesajText"
             android:layout_marginBottom="5dp"
             android:textColor="#9f9f9f"
-            android:id="@+id/saat"
             android:textSize="12sp"
             android:layout_marginEnd="3dp"/>
     </RelativeLayout>
     <TextView
+        android:id="@+id/goruldu"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_below="@id/mesajLayout"
