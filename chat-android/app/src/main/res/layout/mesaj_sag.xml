@@ -6,7 +6,7 @@
     android:padding="8dp">
     <RelativeLayout
         android:id="@+id/mesajLayout"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:background="@drawable/mesaj_arkaplan_sag">
@@ -14,19 +14,18 @@
             android:id="@+id/mesajText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/saat"
             android:maxWidth="255dp"
             android:textSize="18sp"
             android:textColor="@color/white"
-            android:padding="8dp"/>
+            android:padding="8dp" />
         <TextView
             android:id="@+id/saat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/mesajText"
             android:layout_alignBottom="@id/mesajText"
             android:layout_marginBottom="5dp"
-            android:textColor="#CCC7C7"
+            android:textColor="#9f9f9f"
             android:textSize="12sp"
             android:layout_marginEnd="3dp"/>
     </RelativeLayout>
@@ -35,8 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_below="@id/mesajLayout"
+        android:layout_alignParentEnd="true"
         android:textSize="11sp"
         android:textColor="@color/black"
-        android:layout_alignParentEnd="true"
+        android:visibility="gone"
         android:text="@string/seen"/>
 </RelativeLayout>

@@ -27,6 +27,7 @@ import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -117,7 +118,18 @@ public class MesajActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mesajList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
                     Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
+                    if (!mesaj.isGonderen()){
+                        HashMap<String, Object> mapBir = new HashMap<>();
+                        mapBir.put(Veritabani.GorulduKey, true);
+                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
+                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
+                    }
                     mesajList.add(mesaj);
                 }
                 mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
