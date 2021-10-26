@@ -60,33 +60,33 @@ public class BilgilerActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private String resimBaglantisi = Veritabani.VarsayilanDeger;
 
+    String profilResmiString, isimString, hakkimdaString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bilgiler);
-        Intent intent = getIntent();
-        String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
-        String isimString = intent.getStringExtra(Veritabani.IsimKey);
-        String hakkimdaString = intent.getStringExtra(Veritabani.HakkimdaKey);
         resimler = new Resimler(BilgilerActivity.this);
-        profilResmi = findViewById(R.id.profilResmi);
-        if (profilResmiString != null){
-            resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
-            resimBaglantisi = profilResmiString;
-        }
         izinler = new Izinler(BilgilerActivity.this);
         veritabani = new Veritabani(BilgilerActivity.this);
         sharedPreference = new SharedPreference(BilgilerActivity.this);
 
+        profilResmi = findViewById(R.id.profilResmi);
         kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
-        if (isimString != null){
-            isimET.setText(isimString);
-            isimET.setSelection(isimET.getText().length());
-        }
+        Intent intent = getIntent();
+        profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
+        isimString = intent.getStringExtra(Veritabani.IsimKey);
+        hakkimdaString = intent.getStringExtra(Veritabani.HakkimdaKey);
         isimHata = findViewById(R.id.isimHata);
         hakkimdaET = findViewById(R.id.hakkimdaET);
-        if (hakkimdaString != null){
+        if (isimString.equals("")){
+            BilgileriGetir();
+        }else{
+            resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+            resimBaglantisi = profilResmiString;
+            isimET.setText(isimString);
+            isimET.setSelection(isimET.getText().length());
             hakkimdaET.setText(hakkimdaString);
         }
         bitirBtn = findViewById(R.id.bitirBtn);
@@ -122,6 +122,29 @@ public class BilgilerActivity extends AppCompatActivity {
             return false;
         });
         bitirBtn.setOnClickListener(v -> Kaydet());
+    }
+
+    private void BilgileriGetir() {
+        DatabaseReference bilgilerReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
+        bilgilerReference.keepSynced(true);
+        bilgilerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                if (kullanici != null){
+                    resimler.ResimGoster(kullanici.getProfilResmi(), profilResmi, R.drawable.ic_profil_resmi);
+                    resimBaglantisi = kullanici.getProfilResmi();
+                    isimET.setText(kullanici.getIsim());
+                    isimET.setSelection(isimET.getText().length());
+                    hakkimdaET.setText(kullanici.getHakkimda());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void ProfilResmiDegistir() {

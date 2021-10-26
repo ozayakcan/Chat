@@ -30,6 +30,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.hbb20.CountryCodePicker;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.util.Locale;
@@ -266,7 +267,11 @@ public class GirisActivity extends AppCompatActivity {
         mAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()){
-                        startActivity(new Intent(GirisActivity.this, BilgilerActivity.class));
+                        Intent intent = new Intent(GirisActivity.this, BilgilerActivity.class);
+                        intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
+                        intent.putExtra(Veritabani.IsimKey, "");
+                        intent.putExtra(Veritabani.HakkimdaKey, "");
+                        startActivity(intent);
                         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
                         finish();
                     }else{

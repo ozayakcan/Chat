@@ -55,7 +55,11 @@ public class SSActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
                     if (kullanici == null){
-                        startActivity(new Intent(SSActivity.this, BilgilerActivity.class));
+                        Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
+                        intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
+                        intent.putExtra(Veritabani.IsimKey, "");
+                        intent.putExtra(Veritabani.HakkimdaKey, "");
+                        startActivity(intent);
                         overridePendingTransition(0,0);
                         finish();
                     }else{
