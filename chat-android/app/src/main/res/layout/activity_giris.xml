@@ -51,6 +51,13 @@
             android:gravity="center"
             android:text="@string/phone_number_can_not_be_empty"
             android:visibility="gone"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/yukleniyor_daire"/>
         <Button
             android:id="@+id/girisBtn"
             android:layout_width="match_parent"

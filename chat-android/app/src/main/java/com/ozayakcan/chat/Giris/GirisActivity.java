@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class GirisActivity extends AppCompatActivity {
     private TextView bosNumaraUyari, dogrulamaHataMesaji, geriSayimText, onayKoduHata;
     private CountryCodePicker ulkeKodu;
     private Button girisBtn, onayBtn, tekrarGonderBtn;
+    private ProgressBar progressBar;
     private String tamNumara = "";
     private boolean telefonDogrulamasi = false;
     //Gerisayım
@@ -58,6 +60,7 @@ public class GirisActivity extends AppCompatActivity {
         setContentView(R.layout.activity_giris);
         mAuth = FirebaseAuth.getInstance();
         mAuth.setLanguageCode(Locale.getDefault().getLanguage());
+        progressBar = findViewById(R.id.progressBar);
         //Telefon
         girisLayout = findViewById(R.id.girisLayout);
         bosNumaraUyari = findViewById(R.id.bosNumaraUyari);
@@ -288,9 +291,11 @@ public class GirisActivity extends AppCompatActivity {
     private void GirisButonDurumu(boolean durum){
         girisBtn.setEnabled(durum);
         if (durum){
+            progressBar.setVisibility(View.GONE);
             girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
             girisBtn.setTextColor(getColor(R.color.white));
         }else{
+            progressBar.setVisibility(View.VISIBLE);
             girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
             girisBtn.setTextColor(getColor(R.color.disabledText));
         }
