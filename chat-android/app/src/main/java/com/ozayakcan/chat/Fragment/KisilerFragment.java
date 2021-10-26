@@ -37,6 +37,7 @@ public class KisilerFragment extends Fragment {
 
     private Izinler izinler;
     private SharedPreference sharedPreference;
+    private Veritabani veritabani;
     private View view;
     private FirebaseUser firebaseUser;
     private RecyclerView kisilerRW;
@@ -51,9 +52,10 @@ public class KisilerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_kisiler, container, false);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         izinler = new Izinler(getContext());
         sharedPreference = new SharedPreference(getContext());
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        veritabani = new Veritabani(getContext());
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);
         kisilerRW.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -71,6 +73,7 @@ public class KisilerFragment extends Fragment {
             new ActivityResultContracts.RequestPermission(),
             result -> {
                 if (result){
+                    veritabani.KisileriEkle(firebaseUser);
                     KisileriBul();
                 }else{
                     KisiIzniUyariKutusu();
