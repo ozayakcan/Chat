@@ -217,8 +217,13 @@ public class GirisActivity extends AppCompatActivity {
     }
     private void OnayKodunuDogrula(){
         String kod = onayKodu.getText().toString().trim();
-        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);
-        GirisYap(phoneAuthCredential);
+        if (kod.length() < 6){
+            onayKoduHata.setText(getString(R.string.confirmation_code_is_wrong));
+            onayKoduHata.setVisibility(View.VISIBLE);
+        }else{
+            PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);
+            GirisYap(phoneAuthCredential);
+        }
     }
     private void OnayKodunuDogrula(String kod){
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(dogrulamaID, kod);

@@ -95,6 +95,7 @@
             android:textAlignment="center"
             android:hint="555555"
             android:maxLines="1"
+            android:maxLength="6"
             tools:ignore="HardcodedText" />
         <TextView
             android:id="@+id/geriSayimText"
