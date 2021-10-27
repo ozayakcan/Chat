@@ -28,6 +28,8 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MesajlarFragment extends Fragment {
@@ -57,6 +59,12 @@ public class MesajlarFragment extends Fragment {
             @Override
             public void onChanged() {
                 super.onChanged();
+                Collections.sort(mesajlarList, new Comparator<Mesajlar>() {
+                    @Override
+                    public int compare(Mesajlar o1, Mesajlar o2) {
+                        return Long.compare(o2.getMesaj().getTarih(), o1.getMesaj().getTarih());
+                    }
+                });
                 mesajlarRW.setAdapter(mesajlarAdapter);
             }
         });
