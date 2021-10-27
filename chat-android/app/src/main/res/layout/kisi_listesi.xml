@@ -39,12 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textSize="20sp"
+            android:maxLines="1"
             android:textColor="@color/black"/>
         <TextView
             android:id="@+id/kisiHakkinda"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:textSize="14sp"
+            android:maxLines="1"
             android:textColor="@color/gray"/>
     </LinearLayout>
 </LinearLayout>
