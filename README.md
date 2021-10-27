@@ -17,8 +17,18 @@ Firebase Realtime Database Kuralları
         "kisiler": {
           "$kisiNumarasi": {
             ".read": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)",
-            ".write": "auth != null && auth.token.phone_number == $telefonNumarasi",
+            ".write": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)"
         	}
+        }
+      }
+    },
+    "Mesajlar": {
+    	"$telefonNumarasi": {
+        ".read": "auth != null && auth.token.phone_number == $telefonNumarasi",
+        ".write": "auth != null && auth.token.phone_number == $telefonNumarasi",
+        "$kisiNumarasi": {
+          ".read": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)",
+          ".write": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)"
         }
       }
     }
