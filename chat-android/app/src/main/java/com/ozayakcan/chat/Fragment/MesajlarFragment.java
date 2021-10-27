@@ -52,6 +52,14 @@ public class MesajlarFragment extends Fragment {
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mesajlarList = new ArrayList<>();
+        mesajlarAdapter = new MesajlarAdapter(mesajlarList, mainActivity);
+        mesajlarAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                mesajlarRW.setAdapter(mesajlarAdapter);
+            }
+        });
         MesajlariBul();
         return view;
     }
@@ -132,7 +140,6 @@ public class MesajlarFragment extends Fragment {
     private void MesajGoster(Kullanici kullanici, Mesaj mesaj, String isim , long okunmamisMesaj){
         Mesajlar mesajlar = new Mesajlar(kullanici, mesaj, isim, okunmamisMesaj);
         mesajlarList.add(mesajlar);
-        mesajlarAdapter = new MesajlarAdapter(mesajlarList, mainActivity);
-        mesajlarRW.setAdapter(mesajlarAdapter);
+        mesajlarAdapter.notifyDataSetChanged();
     }
 }
