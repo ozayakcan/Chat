@@ -6,11 +6,8 @@
     android:orientation="vertical"
     tools:context=".Fragment.MesajlarFragment">
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mesajlarRW"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="Mesajlar" />
-
+            android:layout_height="wrap_content"/>
 </LinearLayout>
