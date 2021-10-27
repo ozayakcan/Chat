@@ -40,7 +40,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     @NonNull
     @Override
     public MesajlarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.kisi_listesi, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_listesi, parent, false);
         resimler = new Resimler(mContext);
         return new ViewHolder(view);
     }
@@ -55,7 +55,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             holder.kisiAdi.setText(mesajlar.getIsim());
         }
 
-        holder.kisiHakkinda.setText(mesajlar.getMesaj().getMesaj());
+        holder.sonMesaj.setText(mesajlar.getMesaj().getMesaj());
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
@@ -79,7 +79,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
 
         public LinearLayout kisi;
         public CircleImageView profilResmi;
-        public TextView kisiBasHarfi, kisiAdi, kisiHakkinda;
+        public TextView kisiBasHarfi, kisiAdi, sonMesaj;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,7 +87,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
             kisiAdi = itemView.findViewById(R.id.kisiAdi);
-            kisiHakkinda = itemView.findViewById(R.id.kisiHakkinda);
+            sonMesaj = itemView.findViewById(R.id.sonMesaj);
         }
     }
 }
