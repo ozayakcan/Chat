@@ -36,8 +36,12 @@
     <string name="could_not_connect_to_database">Veritabanına bağlanılamadı. Lütfen daha sonra tekrar deneyin!</string>
     <string name="messages">Mesajlar</string>
     <string name="contacts">Kişiler</string>
-    <string name="type_a_message">Bir mesaj yazın...</string>
+    <string name="type_a_message">Bir mesaj yazın…</string>
     <string name="online">Çevrimiçi</string>
     <string name="offline">Çevrimdışı</string>
     <string name="seen">Görüldü</string>
+    <string name="sending">Gönderiliyor</string>
+    <string name="sent">Gönderildi</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
 </resources>

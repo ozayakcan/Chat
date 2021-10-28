@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Model.Kullanici;
+import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.R;
 
 import java.util.HashMap;
@@ -49,8 +50,6 @@ public class Veritabani {
     public static String ProfilResmiDosyaAdi = "profil_resmi";
 
     public static String VarsayilanDeger = "varsayılan";
-
-    public static String TarihSaatFormati = "dd/MM/yyyy HH:mm:ss.SSS";
 
     private Context mContext;
 
@@ -187,5 +186,57 @@ public class Veritabani {
             }
         });
 
+    }
+    public void MesajDurumuGuncelle(String telefon, boolean karsi){
+        DatabaseReference onlineDurumu = FirebaseDatabase.getInstance().getReference(".info/connected");
+        onlineDurumu.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean baglandi = snapshot.getValue(Boolean.class);
+                if (baglandi){
+                    DatabaseReference guncelle = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(telefon);
+                    guncelle.keepSynced(true);
+                    guncelle.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                DatabaseReference guncelle2 = guncelle.child(dataSnapshot.getKey());
+                                guncelle2.keepSynced(true);
+                                guncelle2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                                        for (DataSnapshot dataSnapshot2 : snapshot2.getChildren()){
+                                            Mesaj mesaj = snapshot2.getValue(Mesaj.class);
+                                            if (mesaj.isGonderen() != karsi){
+                                                HashMap<String, Object> guncelleMap = new HashMap<>();
+                                                guncelleMap.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
+                                                DatabaseReference databaseReference13 = dataSnapshot2.getRef();
+                                                databaseReference13.keepSynced(true);
+                                                databaseReference13.updateChildren(guncelleMap);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

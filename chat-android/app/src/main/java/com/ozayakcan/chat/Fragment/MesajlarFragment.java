@@ -1,5 +1,6 @@
 package com.ozayakcan.chat.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajlarAdapter;
+import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
@@ -30,7 +32,9 @@ import com.ozayakcan.chat.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MesajlarFragment extends Fragment {
 
@@ -40,6 +44,7 @@ public class MesajlarFragment extends Fragment {
     private List<Mesajlar> mesajlarList;
     private RecyclerView mesajlarRW;
     private MesajlarAdapter mesajlarAdapter;
+    private Veritabani veritabani;
 
     public MesajlarFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -49,6 +54,7 @@ public class MesajlarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
+        veritabani = new Veritabani(mainActivity);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -69,18 +75,18 @@ public class MesajlarFragment extends Fragment {
             }
         });
         MesajlariBul();
+        veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         return view;
     }
 
     private void MesajlariBul() {
-        mesajlarList.clear();
         DatabaseReference kullanicilar = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
         kullanicilar.keepSynced(true);
         kullanicilar.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mesajlarList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-
                     Query query1 = dataSnapshot.getRef().orderByKey().limitToLast(1);
                     query1.keepSynced(true);
                     query1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,6 +100,7 @@ public class MesajlarFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot4) {
                                         Kullanici kullanici = snapshot4.getValue(Kullanici.class);
+                                        veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
                                         DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
                                         kisiyiKontrolEt.keepSynced(true);
                                         kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -145,9 +152,30 @@ public class MesajlarFragment extends Fragment {
             }
         });
     }
+    @SuppressLint("NotifyDataSetChanged")
     private void MesajGoster(Kullanici kullanici, Mesaj mesaj, String isim , long okunmamisMesaj){
         Mesajlar mesajlar = new Mesajlar(kullanici, mesaj, isim, okunmamisMesaj);
-        mesajlarList.add(mesajlar);
+        if (mesajlar.getMesaj().getMesaj().length() > ChatApp.MaxMesajKarakterSayisi){
+            mesajlar.getMesaj().setMesaj(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
+        }
+        if (mesajlarList.size() > 0){
+            boolean iceriyor = false;
+            int index = -1;
+            for(int i = 0; i < mesajlarList.size(); i++){
+                if (mesajlarList.get(i).getKullanici().getTelefon().equals(mesajlar.getKullanici().getTelefon())){
+                    iceriyor = true;
+                    index = i;
+                    break;
+                }
+            }
+            if (iceriyor){
+                mesajlarList.set(index, mesajlar);
+            }else{
+                mesajlarList.add(mesajlar);
+            }
+        }else {
+            mesajlarList.add(mesajlar);
+        }
         mesajlarAdapter.notifyDataSetChanged();
     }
 }

@@ -101,6 +101,8 @@ public class MesajActivity extends AppCompatActivity {
         KisiBilgileriniGoster();
         KisininOnlineDurumunuGuncelle();
         MesajlariGoster();
+        veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
+        veritabani.MesajDurumuGuncelle(telefonString, true);
     }
 
     private void MesajGonder() {
@@ -118,7 +120,6 @@ public class MesajActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mesajList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-
                     Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
                     if (!mesaj.isGonderen()){
                         HashMap<String, Object> mapBir = new HashMap<>();

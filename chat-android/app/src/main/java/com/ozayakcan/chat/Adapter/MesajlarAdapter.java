@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
@@ -54,8 +55,21 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         }else{
             holder.kisiAdi.setText(mesajlar.getIsim());
         }
-
         holder.sonMesaj.setText(mesajlar.getMesaj().getMesaj());
+        holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih()));
+        if (mesajlar.getMesaj().isGonderen()){
+            if (mesajlar.getMesaj().isGoruldu()){
+                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
+            }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                holder.mesajDurumu.setText(mContext.getString(R.string.sending));
+            }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
+                holder.mesajDurumu.setText(mContext.getString(R.string.sent));
+            }else{
+                holder.mesajDurumu.setText("");
+            }
+        }else{
+            holder.mesajDurumu.setText("");
+        }
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
@@ -79,7 +93,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
 
         public LinearLayout kisi;
         public CircleImageView profilResmi;
-        public TextView kisiBasHarfi, kisiAdi, sonMesaj;
+        public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,7 +101,9 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
             kisiAdi = itemView.findViewById(R.id.kisiAdi);
+            tarih = itemView.findViewById(R.id.tarih);
             sonMesaj = itemView.findViewById(R.id.sonMesaj);
+            mesajDurumu = itemView.findViewById(R.id.mesajDurumu);
         }
     }
 }
