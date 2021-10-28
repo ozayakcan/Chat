@@ -23,10 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -78,6 +81,15 @@ public class MesajActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
+        mesajAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                recyclerView.setAdapter(mesajAdapter);
+            }
+        });
+        recyclerView.setAdapter(mesajAdapter);
         profilResmi = findViewById(R.id.profilResmi);
         kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         isim = findViewById(R.id.isim);
@@ -116,6 +128,7 @@ public class MesajActivity extends AppCompatActivity {
         Query query = mesajlariGoster.orderByKey();
         query.keepSynced(true);
         query.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mesajList.clear();
@@ -133,8 +146,7 @@ public class MesajActivity extends AppCompatActivity {
                     }
                     mesajList.add(mesaj);
                 }
-                mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
-                recyclerView.setAdapter(mesajAdapter);
+                mesajAdapter.notifyDataSetChanged();
             }
 
             @Override
