@@ -18,8 +18,11 @@ public class Kullanici {
 
     private long kayitZamani = 0;
 
+    private long sonGorulme = 0;
+
     public Kullanici() {
         kayitZamani = System.currentTimeMillis();
+        sonGorulme = System.currentTimeMillis();
     }
 
     public Kullanici(String ID, String isim, String telefon, String hakkimda, boolean onlineDurumu) {
@@ -39,7 +42,7 @@ public class Kullanici {
         this.onlineDurumu = onlineDurumu;
     }
 
-    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu) {
+    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu, long sonGorulme) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
@@ -47,6 +50,7 @@ public class Kullanici {
         this.hakkimda = hakkimda;
         this.kayitZamani = kayitZamani;
         this.onlineDurumu = onlineDurumu;
+        this.sonGorulme = sonGorulme;
     }
 
     public String getID() {

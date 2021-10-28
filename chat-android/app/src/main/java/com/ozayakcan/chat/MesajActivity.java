@@ -219,4 +219,16 @@ public class MesajActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Veritabani.DurumGuncelle(firebaseUser, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Veritabani.DurumGuncelle(firebaseUser, false);
+    }
 }

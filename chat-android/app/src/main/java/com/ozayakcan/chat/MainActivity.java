@@ -48,4 +48,16 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Veritabani.DurumGuncelle(firebaseUser, true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Veritabani.DurumGuncelle(firebaseUser, false);
+    }
 }

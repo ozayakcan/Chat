@@ -36,6 +36,7 @@ public class Veritabani {
     public static String TelefonKey = "telefon";
     public static String HakkimdaKey = "hakkimda";
     public static String KayitZamaniKey = "kayitZamani";
+    public static String SonGorulmeKey = "sonGorulme";
 
     public static String MesajKey = "mesaj";
     public static String TarihKey = "tarih";
@@ -238,5 +239,14 @@ public class Veritabani {
 
             }
         });
+    }
+    public static void DurumGuncelle(FirebaseUser firebaseUser ,boolean durum){
+        DatabaseReference durumGuncelle = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(firebaseUser.getPhoneNumber());
+        HashMap<String, Object> durumGuncelleMap = new HashMap<>();
+        durumGuncelleMap.put(OnlineDurumuKey, durum);
+        if (!durum) {
+            durumGuncelleMap.put(SonGorulmeKey, ServerValue.TIMESTAMP);
+        }
+        durumGuncelle.updateChildren(durumGuncelleMap);
     }
 }
