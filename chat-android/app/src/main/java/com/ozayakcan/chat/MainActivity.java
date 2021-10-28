@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Veritabani.TelefonKey, telefon);
         intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
         startActivity(intent);
-        overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
+        overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
     }
 }

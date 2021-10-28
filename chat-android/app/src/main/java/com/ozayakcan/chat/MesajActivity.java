@@ -202,7 +202,7 @@ public class MesajActivity extends AppCompatActivity {
         Intent intent = new Intent(MesajActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
-        overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
+        overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
         finish();
     }
     @Override
