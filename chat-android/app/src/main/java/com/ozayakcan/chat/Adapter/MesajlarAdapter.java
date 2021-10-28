@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         return new ViewHolder(view);
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull MesajlarAdapter.ViewHolder holder, int position) {
         Mesajlar mesajlar = mesajlarList.get(position);
@@ -58,17 +59,31 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         holder.sonMesaj.setText(mesajlar.getMesaj().getMesaj());
         holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih()));
         if (mesajlar.getMesaj().isGonderen()){
+            holder.okunmamisMesajLayout.setVisibility(View.GONE);
             if (mesajlar.getMesaj().isGoruldu()){
                 holder.mesajDurumu.setText(mContext.getString(R.string.seen));
+                holder.mesajDurumu.setVisibility(View.VISIBLE);
             }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
                 holder.mesajDurumu.setText(mContext.getString(R.string.sending));
+                holder.mesajDurumu.setVisibility(View.VISIBLE);
             }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
                 holder.mesajDurumu.setText(mContext.getString(R.string.sent));
+                holder.mesajDurumu.setVisibility(View.VISIBLE);
             }else{
                 holder.mesajDurumu.setText("");
+                holder.mesajDurumu.setVisibility(View.GONE);
             }
         }else{
+            holder.mesajDurumu.setVisibility(View.VISIBLE);
             holder.mesajDurumu.setText("");
+            if (mesajlar.getOkumamisMesaj() > 0){
+                if (mesajlar.getOkumamisMesaj() >= 99){
+                    holder.okunmamisMesaj.setText("99+");
+                }else{
+                    holder.okunmamisMesaj.setText(String.valueOf(mesajlar.getOkumamisMesaj()));
+                }
+                holder.okunmamisMesajLayout.setVisibility(View.VISIBLE);
+            }
         }
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
@@ -93,7 +108,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
 
         public LinearLayout kisi;
         public CircleImageView profilResmi;
-        public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu;
+        public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu, okunmamisMesaj;
+        public RelativeLayout okunmamisMesajLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -104,6 +120,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             tarih = itemView.findViewById(R.id.tarih);
             sonMesaj = itemView.findViewById(R.id.sonMesaj);
             mesajDurumu = itemView.findViewById(R.id.mesajDurumu);
+            okunmamisMesaj = itemView.findViewById(R.id.okunmamisMesaj);
+            okunmamisMesajLayout = itemView.findViewById(R.id.okunmamisMesajLayout);
         }
     }
 }

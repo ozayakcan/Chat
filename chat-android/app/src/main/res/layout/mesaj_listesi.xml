@@ -66,17 +66,43 @@
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:textColor="@color/gray"
-                android:layout_toStartOf="@id/mesajDurumu"/>
-            <TextView
-                android:id="@+id/mesajDurumu"
+                android:layout_toStartOf="@id/mesajDurumuLayout"/>
+            <RelativeLayout
+                android:id="@+id/mesajDurumuLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="12sp"
-                android:paddingEnd="5dp"
-                android:paddingStart="0dp"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true">
+                <TextView
+                    android:id="@+id/mesajDurumu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="12sp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="0dp"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
+                <RelativeLayout
+                    android:id="@+id/okunmamisMesajLayout"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:visibility="gone">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/varsayilan_arkaplan"/>
+                    <TextView
+                        android:id="@+id/okunmamisMesaj"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:maxLength="3"
+                        android:textAlignment="center"
+                        android:textSize="11sp"
+                        android:gravity="center"
+                        android:textColor="@color/white"/>
+                </RelativeLayout>
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
