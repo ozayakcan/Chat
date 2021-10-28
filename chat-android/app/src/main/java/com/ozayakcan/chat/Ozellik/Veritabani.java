@@ -1,14 +1,18 @@
 package com.ozayakcan.chat.Ozellik;
 
+import static com.ozayakcan.chat.ChatApp.uygulamaArkaplanda;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -240,7 +244,31 @@ public class Veritabani {
             }
         });
     }
-    public static void DurumGuncelle(FirebaseUser firebaseUser ,boolean durum){
+    public void DurumKontrol(FirebaseUser firebaseUser){
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference sonGorulmeRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.SonGorulmeKey);
+        sonGorulmeRef.keepSynced(true);
+        final DatabaseReference onlineDurumuRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.OnlineDurumuKey);
+        onlineDurumuRef.keepSynced(true);
+        final DatabaseReference baglantiKontrol = firebaseDatabase.getReference(".info/connected");
+        baglantiKontrol.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    sonGorulmeRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                    onlineDurumuRef.onDisconnect().setValue(false);
+                    onlineDurumuRef.setValue(true);
+                }
+                Log.e("Calışıyor", "1");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+    }
+    public static void DurumGuncelle(FirebaseUser firebaseUser, boolean durum){
         DatabaseReference durumGuncelle = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(firebaseUser.getPhoneNumber());
         HashMap<String, Object> durumGuncelleMap = new HashMap<>();
         durumGuncelleMap.put(OnlineDurumuKey, durum);

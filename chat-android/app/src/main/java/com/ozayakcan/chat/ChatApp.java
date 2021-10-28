@@ -1,5 +1,6 @@
 package com.ozayakcan.chat;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;

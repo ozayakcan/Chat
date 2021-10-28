@@ -58,7 +58,6 @@ public class MesajActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mesaj);
         resimler = new Resimler(MesajActivity.this);
-        veritabani = new Veritabani(MesajActivity.this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -67,7 +66,8 @@ public class MesajActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> Geri());
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        veritabani = new Veritabani(MesajActivity.this);
+        veritabani.DurumKontrol(firebaseUser);
         mesajList = new ArrayList<>();
 
         Intent intent = getIntent();

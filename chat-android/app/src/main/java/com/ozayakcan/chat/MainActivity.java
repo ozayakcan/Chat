@@ -17,14 +17,18 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class MainActivity extends AppCompatActivity {
 
+
     FirebaseUser firebaseUser;
     ViewPager2 viewPager;
     TabLayout tabLayout;
+    Veritabani veritabani;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        veritabani = new Veritabani(MainActivity.this);
+        veritabani.DurumKontrol(firebaseUser);
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
@@ -60,4 +64,5 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
+
 }
