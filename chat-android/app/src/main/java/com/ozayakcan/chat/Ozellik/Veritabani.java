@@ -26,6 +26,7 @@ public class Veritabani {
     public static String KullaniciTablosu = "Kullanicilar";
     public static String KisiTablosu = "kisiler";
     public static String MesajTablosu = "Mesajlar";
+    public static String ArsivTablosu = "Arsiv";
 
     public static String IDKey = "id";
     public static String IsimKey = "isim";
@@ -254,11 +255,10 @@ public class Veritabani {
                     onlineDurumuRef.onDisconnect().setValue(false);
                     onlineDurumuRef.setValue(true);
                 }
-                Log.e("Calışıyor", "1");
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

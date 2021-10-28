@@ -44,4 +44,15 @@
     <string name="sent">Gönderildi</string>
     <string name="today">Bugün</string>
     <string name="yesterday">Dün</string>
+    <string name="delete">Sil</string>
+    <string name="show_message">Mesajı Görüntüle</string>
+    <string name="archive">Arşivle</string>
+    <string name="delete_messages">Mesajları Sil</string>
+    <string name="are_you_sure_you_want_to_delete_messages">Mesajları silmek istediğine emin misin? Bu eylem geri alınamaz.</string>
+    <string name="messages_could_not_be_deleted">Mesajlar silinemedi! Lütfen daha sonra tekrar deneyin.</string>
+    <string name="archive_messages">Mesajları arşivle</string>
+    <string name="are_you_sure_you_want_to_archive_messages">Mesajları arşivlemek istediğine emin misin?\n(Yeni mesajlar dahil edilmeyecek)</string>
+    <string name="messages_could_not_be_arhived">Mesajlar arşivlenemedi! Lütfen daha sonra tekrar deneyin.</string>
+    <string name="you_cannot_send_messages_in_the_archive">Arşivde mesaj gönderemezsin!</string>
+    <string name="messages_is_archiving">Mesajlar arşivleniyor</string>
 </resources>

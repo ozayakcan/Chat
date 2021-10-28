@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajActivity extends AppCompatActivity {
 
+    private RelativeLayout yaziKismi, arsivKismi;
     private CircleImageView profilResmi, gonderBtn;
     private RecyclerView recyclerView;
     private TextView kisiBasHarfi, gonderText, isim, durum;
@@ -45,6 +48,7 @@ public class MesajActivity extends AppCompatActivity {
     private String telefonString;
     private String isimString;
     private String profilResmiString;
+    private String tabloString = Veritabani.MesajTablosu;
 
     private FirebaseUser firebaseUser;
     private Resimler resimler;
@@ -74,7 +78,21 @@ public class MesajActivity extends AppCompatActivity {
         isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
-
+        String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
+        if (intentTabloString != null){
+            if (!intentTabloString.equals("")){
+                tabloString = intentTabloString;
+            }
+        }
+        yaziKismi = findViewById(R.id.yaziKismi);
+        arsivKismi = findViewById(R.id.arsivKismi);
+        if (tabloString.equals(Veritabani.ArsivTablosu)){
+            yaziKismi.setVisibility(View.GONE);
+            arsivKismi.setVisibility(View.VISIBLE);
+        }else{
+            arsivKismi.setVisibility(View.GONE);
+            yaziKismi.setVisibility(View.VISIBLE);
+        }
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -122,7 +140,7 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     private void MesajlariGoster(){
-        DatabaseReference mesajlariGoster = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(telefonString);
+        DatabaseReference mesajlariGoster = FirebaseDatabase.getInstance().getReference(tabloString).child(firebaseUser.getPhoneNumber()).child(telefonString);
         mesajlariGoster.keepSynced(true);
         Query query = mesajlariGoster.orderByKey();
         query.keepSynced(true);
@@ -134,14 +152,16 @@ public class MesajActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
                     if (!mesaj.isGonderen()){
-                        HashMap<String, Object> mapBir = new HashMap<>();
-                        mapBir.put(Veritabani.GorulduKey, true);
-                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
-                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
+                        if (tabloString.equals(Veritabani.MesajTablosu)){
+                            HashMap<String, Object> mapBir = new HashMap<>();
+                            mapBir.put(Veritabani.GorulduKey, true);
+                            DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
+                                    .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
+                            gorulduOlarakIsaretleBir.updateChildren(mapBir);
+                            DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
+                                    .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
+                            gorulduOlarakIsaretleIki.updateChildren(mapBir);
+                        }
                     }
                     mesajList.add(mesaj);
                 }

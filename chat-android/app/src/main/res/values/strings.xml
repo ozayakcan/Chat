@@ -43,4 +43,15 @@
     <string name="sent">Sent</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="delete">Delete</string>
+    <string name="show_message">Show Message</string>
+    <string name="archive">Archive</string>
+    <string name="delete_messages">Delete Messages</string>
+    <string name="are_you_sure_you_want_to_delete_messages">Are you sure you want to delete messages? This action cannot be undone.</string>
+    <string name="messages_could_not_be_deleted">Messages could not be deleted! Please try again later.</string>
+    <string name="archive_messages">Archive Messages</string>
+    <string name="are_you_sure_you_want_to_archive_messages">Are you sure you want to archive messages?\n(New messages will not be included)</string>
+    <string name="messages_could_not_be_arhived">Messages could not be arhived! Please try again later.</string>
+    <string name="you_cannot_send_messages_in_the_archive">You cannot send messages in the archive!</string>
+    <string name="messages_is_archiving">Messages is archiving</string>
 </resources>

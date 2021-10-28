@@ -1,13 +1,18 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,8 +50,10 @@ public class MesajlarFragment extends Fragment {
     private RecyclerView mesajlarRW;
     private MesajlarAdapter mesajlarAdapter;
     private Veritabani veritabani;
+    private Context mContext;
 
     public MesajlarFragment(MainActivity mainActivity) {
+        this.mContext = mainActivity;
         this.mainActivity = mainActivity;
     }
 
@@ -177,5 +184,77 @@ public class MesajlarFragment extends Fragment {
             mesajlarList.add(mesajlar);
         }
         mesajlarAdapter.notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajlariSil(FirebaseUser firebaseUser2, String telefon, int index){
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        builder.setCancelable(true);
+        builder.setTitle(R.string.delete_messages);
+        builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber());
+            databaseReference.keepSynced(true);
+            HashMap<String, Object> mesajSilMap = new HashMap<>();
+            mesajSilMap.put(telefon, null);
+            databaseReference.updateChildren(mesajSilMap, (error, ref) -> {
+                if (error == null){
+                    mesajlarAdapter.notifyItemRemoved(index);
+                }else{
+                    Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_deleted), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajlariArsivle(FirebaseUser firebaseUser2, String telefon, int index){
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        builder.setCancelable(true);
+        builder.setTitle(R.string.archive_messages);
+        builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            DatabaseReference veritabani = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber()).child(telefon);
+            databaseReference.keepSynced(true);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                    progressDialog.setCancelable(false);
+                    progressDialog.setMessage(mContext.getString(R.string.messages_is_archiving));
+                    progressDialog.show();
+                    HashMap<String, Object> arsivleMap = new HashMap<>();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        arsivleMap.put(Veritabani.ArsivTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), dataSnapshot.getValue());
+                        arsivleMap.put(Veritabani.MesajTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), null);
+                    }
+                    veritabani.updateChildren(arsivleMap, (error, ref) -> {
+                        if (error == null){
+                            mesajlarAdapter.notifyItemRemoved(index);
+                            mesajlarAdapter.notifyItemChanged(index);
+                            progressDialog.dismiss();
+                        }else {
+                            Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

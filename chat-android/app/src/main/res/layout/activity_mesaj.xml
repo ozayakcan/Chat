@@ -82,24 +82,44 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/rounded_corners_25"
         android:backgroundTint="#FFFFFF"
-        android:padding="5dp"
         android:gravity="bottom">
-        <EditText
-            android:id="@+id/gonderText"
+        <RelativeLayout
+            android:id="@+id/yaziKismi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@id/gonderBtn"
-            android:background="@android:color/transparent"
-            android:hint="@string/type_a_message" />
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/gonderBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/gonder_butonu" />
+            android:padding="5dp"
+            android:visibility="gone">
+            <EditText
+                android:id="@+id/gonderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@id/gonderBtn"
+                android:background="@android:color/transparent"
+                android:hint="@string/type_a_message" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/gonderBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/gonder_butonu" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/arsivKismi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/varsayilan_arkaplan"
+            android:padding="5dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:text="@string/you_cannot_send_messages_in_the_archive"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

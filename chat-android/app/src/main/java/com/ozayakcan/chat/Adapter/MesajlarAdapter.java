@@ -2,7 +2,6 @@ package com.ozayakcan.chat.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
-import com.ozayakcan.chat.MesajActivity;
-import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
@@ -47,7 +44,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         return new ViewHolder(view);
     }
 
-    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n", "ClickableViewAccessibility"})
     @Override
     public void onBindViewHolder(@NonNull MesajlarAdapter.ViewHolder holder, int position) {
         Mesajlar mesajlar = mesajlarList.get(position);
@@ -95,8 +92,14 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 holder.kisiBasHarfi.setText(String.valueOf(mesajlar.getIsim().charAt(0)));
             }
         }
-        holder.kisi.setOnClickListener(v -> {
-            mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+        holder.mesaj.setOnLongClickListener(v -> {
+            mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+            return true;
+        });
+        holder.mesaj.setOnClickListener((View.OnClickListener) v -> {
+            if (mainActivity != null){
+                mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+            }
         });
     }
 
@@ -106,14 +109,14 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout kisi;
+        public LinearLayout mesaj;
         public CircleImageView profilResmi;
         public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu, okunmamisMesaj;
         public RelativeLayout okunmamisMesajLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            kisi = itemView.findViewById(R.id.kisi);
+            mesaj = itemView.findViewById(R.id.mesaj);
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
             kisiAdi = itemView.findViewById(R.id.kisiAdi);
