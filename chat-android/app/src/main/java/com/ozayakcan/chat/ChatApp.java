@@ -1,11 +1,13 @@
 package com.ozayakcan.chat;
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +33,11 @@ public class ChatApp extends Application {
         build.setLoggingEnabled(true);
         Picasso.setSingletonInstance(build);
         appContext = getApplicationContext();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Veritabani veritabani = new Veritabani(appContext);
+        if (firebaseUser != null){
+            veritabani.DurumKontrol(firebaseUser);
+        }
     }
 
     public static Context getAppContext() {

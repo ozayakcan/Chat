@@ -67,7 +67,6 @@ public class MesajActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         veritabani = new Veritabani(MesajActivity.this);
-        veritabani.DurumKontrol(firebaseUser);
         mesajList = new ArrayList<>();
 
         Intent intent = getIntent();
