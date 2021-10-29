@@ -135,8 +135,11 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     private void MesajGonder() {
-        veritabani.MesajGonder(gonderText.getText().toString(), telefonString, firebaseUser);
-        gonderText.setText("");
+        String mesaj = gonderText.getText().toString();
+        if(!mesaj.equals("")){
+            veritabani.MesajGonder(mesaj, telefonString, firebaseUser);
+            gonderText.setText("");
+        }
     }
 
     private void MesajlariGoster(){
