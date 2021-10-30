@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager2 viewPager;
     TabLayout tabLayout;
     MesajlarFragment mesajlarFragment;
+    Veritabani veritabani;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
+        veritabani = new Veritabani(MainActivity.this);
+        veritabani.TokenYenile();
         mesajlarFragment = new MesajlarFragment(MainActivity.this);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
