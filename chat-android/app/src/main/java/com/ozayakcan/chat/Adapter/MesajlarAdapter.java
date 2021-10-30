@@ -27,8 +27,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
 
     private Resimler resimler;
     List<Mesajlar> mesajlarList;
-    private MainActivity mainActivity;
-    private Context mContext;
+    private final MainActivity mainActivity;
+    private final Context mContext;
 
     public MesajlarAdapter( List<Mesajlar> mesajlarList, MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -96,7 +96,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
             return true;
         });
-        holder.mesaj.setOnClickListener((View.OnClickListener) v -> {
+        holder.mesaj.setOnClickListener(v -> {
             if (mainActivity != null){
                 mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
             }

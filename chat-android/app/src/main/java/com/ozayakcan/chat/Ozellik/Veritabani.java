@@ -7,10 +7,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -57,7 +54,7 @@ public class Veritabani {
 
     public static String VarsayilanDeger = "varsayılan";
 
-    private Context mContext;
+    private final Context mContext;
 
     public Veritabani(Context context){
         mContext = context;
@@ -113,47 +110,50 @@ public class Veritabani {
         //Rehberdeki kişiler veritabanına ekleniyor
         ContentResolver contentResolver = mContext.getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if ((cursor != null ? cursor.getCount() : 0) > 0) {
-            while (cursor != null && cursor.moveToNext()) {
-                String id = cursor.getString(
-                        cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String isim = cursor.getString(cursor.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+        if (cursor != null) {
+            if (cursor.getCount() > 0){
+                while (cursor.moveToNext()) {
+                    String id = cursor.getString(
+                            cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    String isim = cursor.getString(cursor.getColumnIndex(
+                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
 
-                if (cursor.getInt(cursor.getColumnIndex(
-                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    Cursor pCur = contentResolver.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
-                        databaseReference.keepSynced(true);
-                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                if (kullanici != null){
-                                    if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
-                                        kullanici.setIsim(isim);
-                                        KisiEkle(kullanici, firebaseUser.getPhoneNumber());
+                    if (cursor.getInt(cursor.getColumnIndex(
+                            ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                        Cursor pCur = contentResolver.query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                new String[]{id}, null);
+                        while (pCur.moveToNext()) {
+                            String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
+                                    ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
+                            databaseReference.keepSynced(true);
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                    if (kullanici != null){
+                                        if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
+                                            kullanici.setIsim(isim);
+                                            KisiEkle(kullanici, firebaseUser.getPhoneNumber());
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                        pCur.close();
                     }
-                    pCur.close();
                 }
             }
+            cursor.close();
         }
     }
     public static void KisiEkle(Kullanici kullanici, String telefon) {

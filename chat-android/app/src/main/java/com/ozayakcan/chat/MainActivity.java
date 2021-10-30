@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -43,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(vpAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> {
-                    tab.setText(vpAdapter.baslikGetir(position));
-                }).attach();
+                (tab, position) -> tab.setText(vpAdapter.baslikGetir(position))).attach();
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
@@ -61,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void MesajBasiliTut(String id, String isim, String telefon, String profilResmi, int index){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this, R.style.AltMenuTema);
-        View altMenuView = LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_mesaj_islevleri, (LinearLayout) findViewById(R.id.altMenuLayout));
+        View altMenuView = LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_mesaj_islevleri, findViewById(R.id.altMenuLayout));
         altMenuView.findViewById(R.id.mesajiGoruntule).setOnClickListener(v -> {
             MesajGoster(id, isim, telefon, profilResmi);
             bottomSheetDialog.dismiss();

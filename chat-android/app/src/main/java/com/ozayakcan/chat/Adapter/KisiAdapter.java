@@ -1,8 +1,6 @@
 package com.ozayakcan.chat.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ozayakcan.chat.MainActivity;
-import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
@@ -27,8 +24,8 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
 
     private Resimler resimler;
     List<Kullanici> kullaniciList;
-    private MainActivity mainActivity;
-    private Context mContext;
+    private final MainActivity mainActivity;
+    private final Context mContext;
 
     public KisiAdapter( List<Kullanici> kullaniciList, MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -44,7 +41,6 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull KisiAdapter.ViewHolder holder, int position) {
         Kullanici kullanici = kullaniciList.get(position);
@@ -56,9 +52,7 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         if (kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             holder.kisiBasHarfi.setText(String.valueOf(kullanici.getIsim().charAt(0)));
         }
-        holder.kisi.setOnClickListener(v -> {
-            mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi());
-        });
+        holder.kisi.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
     }
 
     @Override

@@ -4,14 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,21 +34,18 @@ import com.ozayakcan.chat.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MesajlarFragment extends Fragment {
 
-    private View view;
-    private MainActivity mainActivity;
     private FirebaseUser firebaseUser;
     private List<Mesajlar> mesajlarList;
     private RecyclerView mesajlarRW;
     private MesajlarAdapter mesajlarAdapter;
     private Veritabani veritabani;
-    private Context mContext;
+    private final MainActivity mainActivity;
+    private final Context mContext;
 
     public MesajlarFragment(MainActivity mainActivity) {
         this.mContext = mainActivity;
@@ -60,7 +55,7 @@ public class MesajlarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
+        View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
         veritabani = new Veritabani(mainActivity);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
@@ -72,12 +67,7 @@ public class MesajlarFragment extends Fragment {
             @Override
             public void onChanged() {
                 super.onChanged();
-                Collections.sort(mesajlarList, new Comparator<Mesajlar>() {
-                    @Override
-                    public int compare(Mesajlar o1, Mesajlar o2) {
-                        return Long.compare(o2.getMesaj().getTarih(), o1.getMesaj().getTarih());
-                    }
-                });
+                Collections.sort(mesajlarList, (o1, o2) -> Long.compare(o2.getMesaj().getTarih(), o1.getMesaj().getTarih()));
                 mesajlarRW.setAdapter(mesajlarAdapter);
             }
         });
@@ -107,34 +97,38 @@ public class MesajlarFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot4) {
                                         Kullanici kullanici = snapshot4.getValue(Kullanici.class);
-                                        veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
-                                        DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
-                                        kisiyiKontrolEt.keepSynced(true);
-                                        kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot5) {
-                                                Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
-                                                long okunmamiMesaj = 0;
-                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                                    Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
-                                                    if (!mesaj1.isGonderen()){
-                                                        if (!mesaj1.isGoruldu()){
-                                                            okunmamiMesaj++;
+                                        if (kullanici != null){
+                                            veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
+                                            DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
+                                            kisiyiKontrolEt.keepSynced(true);
+                                            kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot5) {
+                                                    Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
+                                                    long okunmamiMesaj = 0;
+                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                                        Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
+                                                        if(mesaj1 != null){
+                                                            if (!mesaj1.isGonderen()){
+                                                                if (!mesaj1.isGoruldu()){
+                                                                    okunmamiMesaj++;
+                                                                }
+                                                            }
                                                         }
                                                     }
+                                                    if (kullanici1 != null){
+                                                        MesajGoster(kullanici, mesaj, kullanici1.getIsim(), okunmamiMesaj);
+                                                    }else{
+                                                        MesajGoster(kullanici, mesaj, "", okunmamiMesaj);
+                                                    }
                                                 }
-                                                if (kullanici1 != null){
-                                                    MesajGoster(kullanici, mesaj, kullanici1.getIsim(), okunmamiMesaj);
-                                                }else{
-                                                    MesajGoster(kullanici, mesaj, "", okunmamiMesaj);
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
                                                 }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
 
                                     @Override
@@ -177,16 +171,17 @@ public class MesajlarFragment extends Fragment {
             }
             if (iceriyor){
                 mesajlarList.set(index, mesajlar);
+                mesajlarAdapter.notifyItemChanged(index);
             }else{
                 mesajlarList.add(mesajlar);
+                mesajlarAdapter.notifyDataSetChanged();
             }
         }else {
             mesajlarList.add(mesajlar);
+            mesajlarAdapter.notifyDataSetChanged();
         }
-        mesajlarAdapter.notifyDataSetChanged();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void MesajlariSil(FirebaseUser firebaseUser2, String telefon, int index){
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
         builder.setCancelable(true);
@@ -205,13 +200,10 @@ public class MesajlarFragment extends Fragment {
                 }
             });
         });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    @SuppressLint("NotifyDataSetChanged")
     public void MesajlariArsivle(FirebaseUser firebaseUser2, String telefon, int index){
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
         builder.setCancelable(true);
@@ -237,11 +229,10 @@ public class MesajlarFragment extends Fragment {
                         if (error == null){
                             mesajlarAdapter.notifyItemRemoved(index);
                             mesajlarAdapter.notifyItemChanged(index);
-                            progressDialog.dismiss();
                         }else {
                             Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
                         }
+                        progressDialog.dismiss();
                     });
                 }
 
@@ -251,9 +242,7 @@ public class MesajlarFragment extends Fragment {
                 }
             });
         });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }

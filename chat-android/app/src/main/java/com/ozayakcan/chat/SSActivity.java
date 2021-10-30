@@ -60,8 +60,6 @@ public class SSActivity extends AppCompatActivity {
                         intent.putExtra(Veritabani.IsimKey, "");
                         intent.putExtra(Veritabani.HakkimdaKey, "");
                         startActivity(intent);
-                        overridePendingTransition(0,0);
-                        finish();
                     }else{
                         if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                             //Kaydedildi
@@ -70,8 +68,6 @@ public class SSActivity extends AppCompatActivity {
                                 veritabani.KisileriEkle(user);
                             }
                             startActivity(new Intent(SSActivity.this, MainActivity.class));
-                            overridePendingTransition(0,0);
-                            finish();
                         }else{
                             //Kaydedilmedi
                             Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
@@ -79,11 +75,11 @@ public class SSActivity extends AppCompatActivity {
                             intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
                             intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
                             startActivity(intent);
-                            overridePendingTransition(0,0);
-                            finish();
                         }
 
                     }
+                    overridePendingTransition(0,0);
+                    finish();
                 }
 
                 @Override

@@ -5,6 +5,7 @@ import static com.ozayakcan.chat.Ozellik.Animasyonlar.YatayGecisAnimasyonu;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -125,14 +126,10 @@ public class GirisActivity extends AppCompatActivity {
             }
         });
         onayBtn = findViewById(R.id.onayBtn);
-        onayBtn.setOnClickListener(v -> {
-            OnayKodunuDogrula();
-        });
+        onayBtn.setOnClickListener(v -> OnayKodunuDogrula());
         tekrarGonderBtn = findViewById(R.id.tekrarGonderBtn);
         TekrarGonderButonDurumu(false);
-        tekrarGonderBtn.setOnClickListener(v -> {
-            TekrarGonder();
-        });
+        tekrarGonderBtn.setOnClickListener(v -> TekrarGonder());
     }
 
     private void Giris(){
@@ -147,9 +144,7 @@ public class GirisActivity extends AppCompatActivity {
             builder.setCancelable(false);
             builder.setTitle(R.string.confirm_phone_number);
             builder.setMessage(tamNumara+"\n"+getString(R.string.are_you_sure_phone_number));
-            builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                OnayKoduGonder();
-            });
+            builder.setPositiveButton(R.string.yes, (dialog, which) -> OnayKoduGonder());
             builder.setNegativeButton(R.string.change, (dialog, which) -> {
                 dialog.cancel();
                 telefonNumarasi.requestFocus();
@@ -293,38 +288,71 @@ public class GirisActivity extends AppCompatActivity {
                 });
     }
 
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void GirisButonDurumu(boolean durum){
         girisBtn.setEnabled(durum);
         if (durum){
             progressBar.setVisibility(View.GONE);
-            girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
-            girisBtn.setTextColor(getColor(R.color.white));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+                girisBtn.setTextColor(getColor(R.color.white));
+            }else{
+                girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
+                girisBtn.setTextColor(getResources().getColor(R.color.white));
+            }
         }else{
             progressBar.setVisibility(View.VISIBLE);
-            girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
-            girisBtn.setTextColor(getColor(R.color.disabledText));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                girisBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+                girisBtn.setTextColor(getColor(R.color.disabledText));
+            }else{
+                girisBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
+                girisBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            }
         }
     }
 
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void OnayButonDurumu(boolean durum){
         onayBtn.setEnabled(durum);
         if (durum){
-            onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
-            onayBtn.setTextColor(getColor(R.color.white));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+                onayBtn.setTextColor(getColor(R.color.white));
+            }else{
+                onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
+                onayBtn.setTextColor(getResources().getColor(R.color.white));
+            }
         }else{
-            onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
-            onayBtn.setTextColor(getColor(R.color.disabledText));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                onayBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+                onayBtn.setTextColor(getColor(R.color.disabledText));
+            }else{
+                onayBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
+                onayBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            }
         }
     }
 
+    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void TekrarGonderButonDurumu(boolean durum){
         tekrarGonderBtn.setEnabled(durum);
         if (durum){
-            tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
-            tekrarGonderBtn.setTextColor(getColor(R.color.white));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_enabled));
+                tekrarGonderBtn.setTextColor(getColor(R.color.white));
+            }else{
+                tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_enabled));
+                tekrarGonderBtn.setTextColor(getResources().getColor(R.color.white));
+            }
         }else{
-            tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
-            tekrarGonderBtn.setTextColor(getColor(R.color.disabledText));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tekrarGonderBtn.setBackgroundTintList(getColorStateList(R.color.backgroundtint_disabled));
+                tekrarGonderBtn.setTextColor(getColor(R.color.disabledText));
+            }else{
+                tekrarGonderBtn.setBackgroundTintList(getResources().getColorStateList(R.color.backgroundtint_disabled));
+                tekrarGonderBtn.setTextColor(getResources().getColor(R.color.disabledText));
+            }
         }
     }
     private void OnayKoduHatalariniGizle(){

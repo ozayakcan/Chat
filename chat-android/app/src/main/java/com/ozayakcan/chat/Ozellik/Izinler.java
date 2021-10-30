@@ -16,11 +16,7 @@ public class Izinler {
     public Izinler(Context context) {mContext = context;}
 
     public boolean KontrolEt(String izin){
-        if(ContextCompat.checkSelfPermission(mContext, izin) == PackageManager.PERMISSION_GRANTED){
-            return true;
-        }else{
-            return false;
-        }
+        return ContextCompat.checkSelfPermission(mContext, izin) == PackageManager.PERMISSION_GRANTED;
     }
     public void Sor(String izin, ActivityResultLauncher<String> kisiIzniResultLauncher){
        kisiIzniResultLauncher.launch(izin);
@@ -30,12 +26,8 @@ public class Izinler {
         builder.setCancelable(false);
         builder.setTitle(R.string.permission_denied);
         builder.setMessage(R.string.you_must_grant_required_permissions);
-        builder.setPositiveButton(R.string.grant, (dialog, which) -> {
-            Sor(izinler, kisiIzniResultLauncher);
-        });
-        builder.setNegativeButton(R.string.dismiss, (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setPositiveButton(R.string.grant, (dialog, which) -> Sor(izinler, kisiIzniResultLauncher));
+        builder.setNegativeButton(R.string.dismiss, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }

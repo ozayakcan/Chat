@@ -44,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BilgilerActivity extends AppCompatActivity {
 
-    private CircleImageView profilResmi, kamera;
+    private CircleImageView profilResmi;
     private EditText isimET, hakkimdaET;
     private TextView isimHata;
     private Button bitirBtn;
@@ -68,7 +68,7 @@ public class BilgilerActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         profilResmi = findViewById(R.id.profilResmi);
-        kamera = findViewById(R.id.kamera);
+        CircleImageView kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
         Intent intent = getIntent();
         profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
@@ -212,7 +212,7 @@ public class BilgilerActivity extends AppCompatActivity {
 			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d("Database Kullanıcı Kaydet", snapshot.toString());
+                    Log.d("DB Kullanıcı Kaydet", snapshot.toString());
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
                     if(kullanici == null){
                         Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);

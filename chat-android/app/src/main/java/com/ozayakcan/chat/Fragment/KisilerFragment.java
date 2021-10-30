@@ -1,9 +1,7 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.Manifest;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +34,12 @@ import java.util.List;
 public class KisilerFragment extends Fragment {
 
     private Izinler izinler;
-    private SharedPreference sharedPreference;
     private Veritabani veritabani;
-    private View view;
     private FirebaseUser firebaseUser;
     private RecyclerView kisilerRW;
     private KisiAdapter kisiAdapter;
     private List<Kullanici> kullaniciList;
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
     public KisilerFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -51,10 +47,9 @@ public class KisilerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_kisiler, container, false);
+        View view = inflater.inflate(R.layout.fragment_kisiler, container, false);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         izinler = new Izinler(getContext());
-        sharedPreference = new SharedPreference(getContext());
         veritabani = new Veritabani(getContext());
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);

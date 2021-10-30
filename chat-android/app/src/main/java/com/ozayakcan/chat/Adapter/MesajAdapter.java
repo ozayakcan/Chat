@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.R;
 
@@ -22,25 +23,27 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     public static  final int MESAJ_TURU_SOL = 0;
     public static  final int MESAJ_TURU_SAG = 1;
 
-    private Context mContext;
+    private final MesajActivity mesajActivity;
+    private final Context mContext;
     List<Mesaj> mesajList;
 
 
-    public MesajAdapter(Context mContext, List<Mesaj> mesajList){
-        this.mContext = mContext;
+    public MesajAdapter(MesajActivity mesajActivity, List<Mesaj> mesajList){
+        this.mesajActivity = mesajActivity;
+        this.mContext = mesajActivity;
         this.mesajList = mesajList;
     }
 
     @NonNull
     @Override
     public MesajAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
         if (viewType == MESAJ_TURU_SAG){
-            View view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sag, parent, false);
-            return new ViewHolder(view);
+            view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sag, parent, false);
         }else{
-            View view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sol, parent, false);
-            return new ViewHolder(view);
+            view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sol, parent, false);
         }
+        return new ViewHolder(view);
     }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})

@@ -25,13 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
-import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,32 +36,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajActivity extends AppCompatActivity {
 
-    private RelativeLayout yaziKismi, arsivKismi;
-    private CircleImageView profilResmi, gonderBtn;
     private RecyclerView recyclerView;
-    private TextView kisiBasHarfi, gonderText, isim, durum;
+    private TextView gonderText;
+    private TextView durum;
 
-    private String idString;
     private String telefonString;
-    private String isimString;
-    private String profilResmiString;
     private String tabloString = Veritabani.MesajTablosu;
 
     private FirebaseUser firebaseUser;
-    private Resimler resimler;
     private Veritabani veritabani;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mesaj);
-        resimler = new Resimler(MesajActivity.this);
+        Resimler resimler = new Resimler(MesajActivity.this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setTitle("");
+        }
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> Geri());
@@ -74,18 +67,18 @@ public class MesajActivity extends AppCompatActivity {
         mesajList = new ArrayList<>();
 
         Intent intent = getIntent();
-        idString = intent.getStringExtra(Veritabani.IDKey);
-        isimString = intent.getStringExtra(Veritabani.IsimKey);
+        String idString = intent.getStringExtra(Veritabani.IDKey);
+        String isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
-        profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
+        String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
         if (intentTabloString != null){
             if (!intentTabloString.equals("")){
                 tabloString = intentTabloString;
             }
         }
-        yaziKismi = findViewById(R.id.yaziKismi);
-        arsivKismi = findViewById(R.id.arsivKismi);
+        RelativeLayout yaziKismi = findViewById(R.id.yaziKismi);
+        RelativeLayout arsivKismi = findViewById(R.id.arsivKismi);
         if (tabloString.equals(Veritabani.ArsivTablosu)){
             yaziKismi.setVisibility(View.GONE);
             arsivKismi.setVisibility(View.VISIBLE);
@@ -107,12 +100,12 @@ public class MesajActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(mesajAdapter);
-        profilResmi = findViewById(R.id.profilResmi);
-        kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
-        isim = findViewById(R.id.isim);
+        CircleImageView profilResmi = findViewById(R.id.profilResmi);
+        TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
+        TextView isim = findViewById(R.id.isim);
         durum = findViewById(R.id.durum);
         gonderText = findViewById(R.id.gonderText);
-        gonderBtn = findViewById(R.id.gonderBtn);
+        CircleImageView gonderBtn = findViewById(R.id.gonderBtn);
         gonderBtn.setOnClickListener(v -> MesajGonder());
         resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
         if (profilResmiString.equals(Veritabani.VarsayilanDeger)){
