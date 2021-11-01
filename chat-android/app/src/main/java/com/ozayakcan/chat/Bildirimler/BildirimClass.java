@@ -13,10 +13,10 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.MesajActivity;
+import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.Veritabani;
@@ -37,6 +38,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BildirimClass {
@@ -53,62 +55,67 @@ public class BildirimClass {
     public static String FCM_URL = "https://fcm.googleapis.com/";
     public static String BildirimTuruKey = "bildirimTuru";
     public static String MesajKey = "mesaj";
-    public static String MesajBildirimiIO = "0";
+    public static int MesajBildirimiID = 1923;
+    public static int MaxMesajSayisi = 7;
 
     public void MesajBildirimi() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
-            databaseReference.keepSynced(true);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference mesajKisileriRef= FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
+            mesajKisileriRef.keepSynced(true);
+            mesajKisileriRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int sira = 0;
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        sira++;
-                        if (dataSnapshot.getKey() != null){
-                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(dataSnapshot.getKey());
-                            databaseReference1.keepSynced(true);
-                            int finalSira = sira;
-                            databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onDataChange(@NonNull DataSnapshot mesajKisileriSnapshot) {
+                    List<BildirimMesaj> bildirimMesajList = new ArrayList<>();
+                    long mesajKisiSayisi = 0;
+                    for (DataSnapshot mesajKisileriDataSnapshot : mesajKisileriSnapshot.getChildren()){
+                        mesajKisiSayisi++;
+                        long finalMesajKisiSayisi = mesajKisiSayisi;
+                        if (mesajKisileriDataSnapshot.getKey() != null){
+                            DatabaseReference kullaniyicibul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisileriDataSnapshot.getKey());
+                            kullaniyicibul.keepSynced(true);
+                            kullaniyicibul.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                                    Kullanici kullanici = snapshot1.getValue(Kullanici.class);
-                                    String isim = dataSnapshot.getKey();
-                                    if (kullanici != null){
-                                        isim = kullanici.getIsim();
-                                    }
-                                    String sonIsim = isim;
-                                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(dataSnapshot.getKey());
-                                    databaseReference2.keepSynced(true);
-                                    databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
+                                    Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
+                                    DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
+                                    kisiyiBul.keepSynced(true);
+                                    kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                                            Kullanici kullanici1 = snapshot2.getValue(Kullanici.class);
-                                            if (kullanici1 != null){
-                                                DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(dataSnapshot.getKey());
-                                                databaseReference3.keepSynced(true);
-                                                databaseReference3.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapsho3) {
-                                                        List<Mesaj> mesajList = new ArrayList<>();
-                                                        for (DataSnapshot dataSnapshot1 : snapsho3.getChildren()){
-                                                            Mesaj mesaj = dataSnapshot1.getValue(Mesaj.class);
-                                                            if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu()){
-                                                                mesajList.add(mesaj);
-                                                            }
-                                                        }
-                                                        if (mesajList.size() > 0){
-                                                            MesajBildirimiGoster(kullanici1, mesajList, sonIsim, finalSira);
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
+                                        public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
+                                            Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
+                                            Kullanici asilKullanici = kullanici;
+                                            String isim = mesajKisileriDataSnapshot.getKey();
+                                            if (kisi != null){
+                                                isim = kisi.getIsim();
+                                                asilKullanici = kisi;
                                             }
+                                            DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
+                                            mesajlarRef.keepSynced(true);
+                                            Kullanici sonAsilKullanici = asilKullanici;
+                                            String sonIsim = isim;
+                                            mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
+                                                    long mesajSayisi = 0;
+                                                    for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
+                                                        Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
+                                                        if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
+                                                            mesajSayisi++;
+                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), mesaj.getTarih(), mesajSayisi);
+                                                            bildirimMesajList.add(bildirimMesaj);
+                                                        }
+                                                    }
+                                                    if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
+                                                        MesajBildirimiGoster(bildirimMesajList);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -136,64 +143,83 @@ public class BildirimClass {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    private void MesajBildirimiGoster(Kullanici kullanici, List<Mesaj> mesajList, String isim, int sira) {
-        Intent acilacakActivity = new Intent(mContext, MesajActivity.class);
-        acilacakActivity.putExtra(Veritabani.IDKey, kullanici.getID());
-        acilacakActivity.putExtra(Veritabani.IsimKey, isim);
-        acilacakActivity.putExtra(Veritabani.TelefonKey, kullanici.getTelefon());
-        acilacakActivity.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
-        acilacakActivity.putExtra(Veritabani.MesajTablosu, Veritabani.MesajTablosu);
-        int id  = Integer.parseInt(MesajBildirimiIO+sira);
-        PendingIntent resultPendingIntent;
+    private void MesajBildirimiGoster(List<BildirimMesaj> bildirimMesajList) {
+        Collections.sort(bildirimMesajList);
+        List <BildirimMesaj> bildirimMesajSayisi;
+        bildirimMesajSayisi = bildirimMesajList;
+        Collections.sort(bildirimMesajSayisi, (o1, o2) -> Long.compare(o2.getMesajSayisi(), o1.getMesajSayisi()));
+        Intent acilacakActivity;
+        if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
+            acilacakActivity = new Intent(mContext, MesajActivity.class);
+            acilacakActivity.putExtra(Veritabani.IDKey, bildirimMesajList.get(0).getID());
+            acilacakActivity.putExtra(Veritabani.IsimKey, bildirimMesajList.get(0).getIsim());
+            acilacakActivity.putExtra(Veritabani.TelefonKey, bildirimMesajList.get(0).getTelefon());
+            acilacakActivity.putExtra(Veritabani.ProfilResmiKey, bildirimMesajList.get(0).getProfilResmi());
+            acilacakActivity.putExtra(Veritabani.MesajTablosu, Veritabani.MesajTablosu);
+        }else{
+            acilacakActivity = new Intent(mContext, MainActivity.class);
+        }
+        PendingIntent pendingIntent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            resultPendingIntent = PendingIntent.getActivity(
+            pendingIntent = PendingIntent.getActivity(
                     mContext,
-                    id,
+                    MesajBildirimiID,
                     acilacakActivity,
-                    PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_ONE_SHOT
             );
         }else{
-            resultPendingIntent = PendingIntent.getActivity(
+            pendingIntent = PendingIntent.getActivity(
                     mContext,
-                    id,
+                    MesajBildirimiID,
                     acilacakActivity,
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_ONE_SHOT
             );
         }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,MesajKey);
         Notification notification;
-        mBuilder.setSmallIcon(R.drawable.varsayilan_bildirim_simgesi).setTicker(kullanici.getTelefon()).setWhen(0)
-                .setAutoCancel(true)
-                .setContentIntent(resultPendingIntent)
-                .setContentTitle(isim);
-        if (mesajList.size() > 1){
-            mBuilder.setStyle(cokluBildirim(isim, mesajList));
+        if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
+            mBuilder.setSmallIcon(R.drawable.varsayilan_bildirim_simgesi)
+                    .setTicker(bildirimMesajList.get(0).getTelefon())
+                    .setContentTitle(bildirimMesajList.get(0).getIsim());
+        }else{
+            mBuilder.setSmallIcon(R.drawable.varsayilan_bildirim_simgesi).setContentTitle(mContext.getString(R.string.app_name));
         }
-        int bildirimID = R.drawable.ic_profil_resmi;
-        Bitmap profilResmi;
-        if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            InputStream inputStream;
-            try {
-                URL kisiUrl = new URL(kullanici.getProfilResmi());
-                HttpURLConnection httpURLConnection = (HttpURLConnection) kisiUrl.openConnection();
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-                inputStream = httpURLConnection.getInputStream();
-                profilResmi = BitmapFactory.decodeStream(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-                profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+        mBuilder.setWhen(0)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+        if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
+            if (bildirimMesajList.size() > 1){
+                mBuilder.setStyle(cokluBildirim(bildirimMesajList, true));
             }
         }else{
-            profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+            mBuilder.setStyle(cokluBildirim(bildirimMesajList, false));
         }
-        mBuilder.setLargeIcon(profilResmi);
-        if (mesajList.size() > 1){
-            mBuilder.setContentText(mContext.getResources().getString(R.string.s_new_messages).replace("%s", mesajList.size()+""));
+        if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
+            int bildirimID = R.drawable.ic_profil_resmi;
+            Bitmap profilResmi;
+            if (!bildirimMesajList.get(0).getProfilResmi().equals(Veritabani.VarsayilanDeger)){
+                InputStream inputStream;
+                try {
+                    URL kisiUrl = new URL(bildirimMesajList.get(0).getProfilResmi());
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) kisiUrl.openConnection();
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.connect();
+                    inputStream = httpURLConnection.getInputStream();
+                    profilResmi = BitmapFactory.decodeStream(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+                }
+            }else{
+                profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+            }
+            mBuilder.setLargeIcon(profilResmi);
+        }
+        if (bildirimMesajList.size() > 1){
+            mBuilder.setContentText(mContext.getResources().getString(R.string.s_new_messages).replace("%s", bildirimMesajList.size()+""));
         }else {
-            mBuilder.setContentText(mesajList.get(0).getMesaj());
+            mBuilder.setContentText(bildirimMesajList.get(0).getMesaj());
         }
-        mBuilder.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         mBuilder.setOnlyAlertOnce(false);
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         mBuilder.setVibrate(new long[] {NotificationCompat.DEFAULT_VIBRATE, 0, NotificationCompat.DEFAULT_VIBRATE, 0});
@@ -203,22 +229,35 @@ public class BildirimClass {
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(MesajKey,
                     MesajKey,
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription(MesajKey);
             notificationManager.createNotificationChannel(channel);
         }
-        notificationManager.notify(id, notification);
+        notificationManager.notify(MesajBildirimiID, notification);
     }
 
-    private NotificationCompat.InboxStyle cokluBildirim(String isim, List<Mesaj> mesajList){
+    private NotificationCompat.InboxStyle cokluBildirim(List<BildirimMesaj> bildirimMesajList, boolean birKisi) {
         NotificationCompat.InboxStyle inbox = new NotificationCompat.InboxStyle();
-        for (int i = 0; i < mesajList.size(); i++){
-            inbox.addLine(mesajList.get(i).getMesaj());
+        int baslangic = bildirimMesajList.size() - 1;
+        if (bildirimMesajList.size() > MaxMesajSayisi){
+            baslangic = MaxMesajSayisi - 1;
         }
-        inbox.setBigContentTitle(isim).setSummaryText(mContext.getString(R.string.s_new_messages).replace("%s", mesajList.size()+""));
+        for (int i = baslangic; i >= 0; i--) {
+            if (birKisi){
+                inbox.addLine(bildirimMesajList.get(i).getMesaj()+" "+bildirimMesajList.get(i).getTarih());
+            }else{
+                inbox.addLine(bildirimMesajList.get(i).getIsim() + ": " + bildirimMesajList.get(i).getMesaj()+" "+bildirimMesajList.get(i).getTarih());
+            }
+        }
+        if (birKisi){
+            inbox.setBigContentTitle(bildirimMesajList.get(0).getIsim());
+        }else{
+            inbox.setBigContentTitle(mContext.getString(R.string.app_name));
+        }
+        inbox.setSummaryText(mContext.getString(R.string.s_new_messages).replace("%s", bildirimMesajList.size()+""));
         return inbox;
     }
 }

@@ -56,4 +56,5 @@
     <string name="you_cannot_send_messages_in_the_archive">Arşivde mesaj gönderemezsin!</string>
     <string name="messages_is_archiving">Mesajlar arşivleniyor</string>
     <string name="s_new_messages">%s Yeni Mesaj</string>
+    <string name="new_message">New Message</string>
 </resources>

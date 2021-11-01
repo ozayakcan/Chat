@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat">
         <activity
+            android:name=".TestActivity"
+            android:exported="false" />
+        <activity
             android:name=".MesajActivity"
             android:exported="false" />
         <activity
@@ -33,18 +36,22 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <service android:name=".Bildirimler.BildirimServisi"
+
+        <service
+            android:name=".Bildirimler.BildirimServisi"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/varsayilan_bildirim_simgesi" />
