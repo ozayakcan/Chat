@@ -260,4 +260,15 @@ public class BildirimClass {
         inbox.setSummaryText(mContext.getString(R.string.s_new_messages).replace("%s", bildirimMesajList.size()+""));
         return inbox;
     }
+    public static void MesajBildiriminiKaldir(Context mContext){
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(MesajKey,
+                    MesajKey,
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(MesajKey);
+            notificationManager.createNotificationChannel(channel);
+        }
+        notificationManager.cancel(MesajBildirimiID);
+    }
 }

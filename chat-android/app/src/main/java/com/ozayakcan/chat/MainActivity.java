@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         veritabani = new Veritabani(MainActivity.this);
         veritabani.TokenYenile();
+        BildirimClass.MesajBildiriminiKaldir(MainActivity.this);
         mesajlarFragment = new MesajlarFragment(MainActivity.this);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
