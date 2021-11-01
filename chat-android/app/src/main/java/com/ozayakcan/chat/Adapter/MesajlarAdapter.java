@@ -93,12 +93,12 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             }
         }
         holder.mesaj.setOnLongClickListener(v -> {
-            mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+            mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
             return true;
         });
         holder.mesaj.setOnClickListener(v -> {
             if (mainActivity != null){
-                mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getKullanici().getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+                mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
             }
         });
     }
