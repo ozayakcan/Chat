@@ -285,7 +285,7 @@ public class Veritabani {
                                     public void onDataChange(@NonNull DataSnapshot snapshot2) {
                                         for (DataSnapshot dataSnapshot2 : snapshot2.getChildren()){
                                             Mesaj mesaj = snapshot2.getValue(Mesaj.class);
-                                            if (mesaj.isGonderen() != karsi){
+                                            if (mesaj != null && !mesaj.getMesaj().equals("") && mesaj.isGonderen() != karsi){
                                                 HashMap<String, Object> guncelleMap = new HashMap<>();
                                                 guncelleMap.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
                                                 DatabaseReference databaseReference13 = dataSnapshot2.getRef();
