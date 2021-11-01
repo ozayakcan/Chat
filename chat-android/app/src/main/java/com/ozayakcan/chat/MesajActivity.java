@@ -36,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajActivity extends AppCompatActivity {
 
+    private boolean ilkAcilis = true;
     private RecyclerView recyclerView;
     private TextView gonderText;
     private TextView durum;
@@ -47,6 +48,7 @@ public class MesajActivity extends AppCompatActivity {
     private Veritabani veritabani;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
+    private Query mesajlariGosterQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,12 @@ public class MesajActivity extends AppCompatActivity {
         veritabani.MesajDurumuGuncelle(telefonString, true);
     }
 
+    private void MesajlariGoster() {
+        mesajlariGosterQuery = FirebaseDatabase.getInstance().getReference(tabloString).child(firebaseUser.getPhoneNumber()).child(telefonString).orderByKey();
+        mesajlariGosterQuery.keepSynced(true);
+        mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
+    }
+
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
         if(!mesaj.equals("")){
@@ -135,41 +143,35 @@ public class MesajActivity extends AppCompatActivity {
         }
     }
 
-    private void MesajlariGoster(){
-        DatabaseReference mesajlariGoster = FirebaseDatabase.getInstance().getReference(tabloString).child(firebaseUser.getPhoneNumber()).child(telefonString);
-        mesajlariGoster.keepSynced(true);
-        Query query = mesajlariGoster.orderByKey();
-        query.keepSynced(true);
-        query.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mesajList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
-                    if (!mesaj.isGonderen()){
-                        if (tabloString.equals(Veritabani.MesajTablosu)){
-                            HashMap<String, Object> mapBir = new HashMap<>();
-                            mapBir.put(Veritabani.GorulduKey, true);
-                            DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
-                                    .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
-                            gorulduOlarakIsaretleBir.updateChildren(mapBir);
-                            DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
-                                    .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
-                            gorulduOlarakIsaretleIki.updateChildren(mapBir);
-                        }
+    private ValueEventListener mesajlariGosterEventListener = new ValueEventListener() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            mesajList.clear();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
+                if (!mesaj.isGonderen()){
+                    if (tabloString.equals(Veritabani.MesajTablosu)){
+                        HashMap<String, Object> mapBir = new HashMap<>();
+                        mapBir.put(Veritabani.GorulduKey, true);
+                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
+                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
                     }
-                    mesajList.add(mesaj);
                 }
-                mesajAdapter.notifyDataSetChanged();
+                mesajList.add(mesaj);
             }
+            mesajAdapter.notifyDataSetChanged();
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-    }
+        }
+    };
 
     private void KisiBilgileriniGoster() {
         DatabaseReference kisiBilgileri = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
@@ -214,6 +216,7 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     private void Geri(){
+        mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
         Intent intent = new Intent(MesajActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
@@ -238,12 +241,17 @@ public class MesajActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!ilkAcilis){
+            mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
+        }
+        ilkAcilis = false;
         Veritabani.DurumGuncelle(firebaseUser, true);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
 }
