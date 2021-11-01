@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.util.List;
@@ -55,9 +56,16 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
         if (mesaj.isGonderen()){
             if (mesaj.isGoruldu()){
-                holder.goruldu.setVisibility(View.VISIBLE);
+                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
+                holder.mesajDurumu.setVisibility(View.VISIBLE);
             }else{
-                holder.goruldu.setVisibility(View.GONE);
+                if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                    holder.mesajDurumu.setText(mContext.getString(R.string.sending));
+                    holder.mesajDurumu.setVisibility(View.VISIBLE);
+                }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
+                    holder.mesajDurumu.setText(mContext.getString(R.string.sent));
+                    holder.mesajDurumu.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -69,14 +77,14 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         RelativeLayout mesajLayout;
-        TextView mesajText, saat, goruldu;
+        TextView mesajText, saat, mesajDurumu;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mesajLayout = itemView.findViewById(R.id.mesajLayout);
             mesajText = itemView.findViewById(R.id.mesajText);
             saat = itemView.findViewById(R.id.saat);
-            goruldu = itemView.findViewById(R.id.goruldu);
+            mesajDurumu = itemView.findViewById(R.id.mesajDurumu);
         }
     }
 

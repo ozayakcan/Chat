@@ -40,8 +40,8 @@
     <string name="online">Çevrimiçi</string>
     <string name="offline">Çevrimdışı</string>
     <string name="seen">Görüldü</string>
-    <string name="sending">Gönderiliyor</string>
-    <string name="sent">Gönderildi</string>
+    <string name="sending">İletiliyor</string>
+    <string name="sent">İletildi</string>
     <string name="today">Bugün</string>
     <string name="yesterday">Dün</string>
     <string name="delete">Sil</string>
