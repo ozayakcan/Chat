@@ -247,9 +247,9 @@ public class BildirimClass {
         }
         for (int i = baslangic; i >= 0; i--) {
             if (birKisi){
-                inbox.addLine(bildirimMesajList.get(i).getMesaj()+" "+bildirimMesajList.get(i).getTarih());
+                inbox.addLine(bildirimMesajList.get(i).getMesaj());
             }else{
-                inbox.addLine(bildirimMesajList.get(i).getIsim() + ": " + bildirimMesajList.get(i).getMesaj()+" "+bildirimMesajList.get(i).getTarih());
+                inbox.addLine(bildirimMesajList.get(i).getIsim() + ": " + bildirimMesajList.get(i).getMesaj());
             }
         }
         if (birKisi){
