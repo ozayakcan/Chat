@@ -4,21 +4,33 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class Mesaj {
 
+    String kullaniciID = "";
     String mesaj = "";
     long tarih = 0;
     long mesajDurumu = Veritabani.MesajDurumuGonderiliyor;
     boolean gonderen = true;
     boolean goruldu = false;
+    boolean hata = false;
 
     public Mesaj() {
     }
 
-    public Mesaj(String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu) {
+    public Mesaj(String kullaniciID, String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean hata) {
+        this.kullaniciID = kullaniciID;
         this.mesaj = mesaj;
         this.tarih = tarih;
         this.mesajDurumu = mesajDurumu;
         this.gonderen = gonderen;
         this.goruldu = goruldu;
+        this.hata = hata;
+    }
+
+    public String getKullaniciID() {
+        return kullaniciID;
+    }
+
+    public void setKullaniciID(String kullaniciID) {
+        this.kullaniciID = kullaniciID;
     }
 
     public String getMesaj() {
@@ -59,5 +71,13 @@ public class Mesaj {
 
     public void setGoruldu(boolean goruldu) {
         this.goruldu = goruldu;
+    }
+
+    public boolean isHata() {
+        return hata;
+    }
+
+    public void setHata(boolean hata) {
+        this.hata = hata;
     }
 }

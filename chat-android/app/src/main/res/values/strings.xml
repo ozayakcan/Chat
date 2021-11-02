@@ -56,4 +56,5 @@
     <string name="messages_is_archiving">Messages is archiving</string>
     <string name="s_new_messages">%s New Messages</string>
     <string name="new_message">New Message</string>
+    <string name="failed_to_fetch_messages">Failed to fetch messages!</string>
 </resources>

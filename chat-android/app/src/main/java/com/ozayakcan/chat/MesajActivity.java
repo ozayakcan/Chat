@@ -3,10 +3,12 @@ package com.ozayakcan.chat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,8 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.virgilsecurity.common.callback.OnResultListener;
+import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ public class MesajActivity extends AppCompatActivity {
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
     private Query mesajlariGosterQuery;
+    private String idString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class MesajActivity extends AppCompatActivity {
         mesajList = new ArrayList<>();
 
         Intent intent = getIntent();
-        String idString = intent.getStringExtra(Veritabani.IDKey);
+        idString = intent.getStringExtra(Veritabani.IDKey);
         String isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
@@ -138,33 +143,26 @@ public class MesajActivity extends AppCompatActivity {
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
         if(!mesaj.equals("")){
-            veritabani.MesajGonder(mesaj, telefonString, firebaseUser);
+            veritabani.MesajGonder(mesaj, telefonString, idString, firebaseUser);
             gonderText.setText("");
         }
     }
 
-    private ValueEventListener mesajlariGosterEventListener = new ValueEventListener() {
-        @SuppressLint("NotifyDataSetChanged")
+    private final ValueEventListener mesajlariGosterEventListener = new ValueEventListener() {
+
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            mesajList.clear();
-            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
-                if (!mesaj.isGonderen()){
-                    if (tabloString.equals(Veritabani.MesajTablosu)){
-                        HashMap<String, Object> mapBir = new HashMap<>();
-                        mapBir.put(Veritabani.GorulduKey, true);
-                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
-                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
-                    }
+            ChatApp.getE3KitKullanici().eThree.findUser(idString).addCallback(new OnResultListener<Card>() {
+                @Override
+                public void onSuccess(Card card) {
+                    runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
                 }
-                mesajList.add(mesaj);
-            }
-            mesajAdapter.notifyDataSetChanged();
+
+                @Override
+                public void onError(@NonNull Throwable throwable) {
+                    Log.e("E3Kullanıcı", "Hata", throwable);
+                }
+            });
         }
 
         @Override
@@ -172,6 +170,32 @@ public class MesajActivity extends AppCompatActivity {
 
         }
     };
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void SifreliMesajlariGoster(Card card, DataSnapshot snapshot) {
+        mesajList.clear();
+        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+            Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
+            if (!mesaj.isGonderen()){
+                if (tabloString.equals(Veritabani.MesajTablosu)){
+                    HashMap<String, Object> mapBir = new HashMap<>();
+                    mapBir.put(Veritabani.GorulduKey, true);
+                    DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
+                            .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
+                    gorulduOlarakIsaretleBir.updateChildren(mapBir);
+                    DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
+                            .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
+                    gorulduOlarakIsaretleIki.updateChildren(mapBir);
+                }
+                mesaj.setMesaj(ChatApp.getE3KitKullanici().eThree.authDecrypt(mesaj.getMesaj(), card));
+                mesajList.add(mesaj);
+            }else{
+                mesaj.setMesaj(ChatApp.getE3KitKullanici().eThree.authDecrypt(mesaj.getMesaj()));
+                mesajList.add(mesaj);
+            }
+        }
+        mesajAdapter.notifyDataSetChanged();
+    }
 
     private void KisiBilgileriniGoster() {
         DatabaseReference kisiBilgileri = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);

@@ -3,13 +3,16 @@ package com.ozayakcan.chat;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
+import com.virgilsecurity.android.ethree.interaction.EThree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.List;
 public class ChatApp extends Application {
 
     private static Context appContext;
+    private static EThree eThree;
+    private static E3KitKullanici e3KitKullanici;
     public static int MaxMesajKarakterSayisi = 20;
     public static String TarihSaatFormati = "dd/MM/yyyy HH:mm";
     public static String TarihFormati = "dd/MM/yyyy";
@@ -37,11 +42,29 @@ public class ChatApp extends Application {
         Veritabani veritabani = new Veritabani(appContext);
         if (firebaseUser != null){
             veritabani.DurumKontrol(firebaseUser);
+            E3KitKullanici e3KitKullanici1 = new E3KitKullanici(appContext, firebaseUser.getUid());
+            new Thread(() -> e3KitKullanici1.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
+                @Override
+                public void Basarili(EThree kullanici) {
+                    e3KitKullanici = e3KitKullanici1;
+                    e3KitKullanici.eThree = kullanici;
+                    Log.d("Chatapp", "Başarılı");
+                }
+
+                @Override
+                public void Basarisiz(Throwable hata) {
+                    Log.e("Chatapp", "Başarısız", hata);
+                }
+            })).start();
         }
     }
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    public static E3KitKullanici getE3KitKullanici(){
+        return e3KitKullanici;
     }
 
     public static String MesajBol(String mesaj, int bolunecek){

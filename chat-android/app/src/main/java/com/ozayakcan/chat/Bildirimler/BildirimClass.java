@@ -145,7 +145,7 @@ public class BildirimClass {
     @SuppressLint("UnspecifiedImmutableFlag")
     private void MesajBildirimiGoster(List<BildirimMesaj> bildirimMesajList) {
         Collections.sort(bildirimMesajList);
-        List <BildirimMesaj> bildirimMesajSayisi;
+        List<BildirimMesaj> bildirimMesajSayisi;
         bildirimMesajSayisi = bildirimMesajList;
         Collections.sort(bildirimMesajSayisi, (o1, o2) -> Long.compare(o2.getMesajSayisi(), o1.getMesajSayisi()));
         Intent acilacakActivity;

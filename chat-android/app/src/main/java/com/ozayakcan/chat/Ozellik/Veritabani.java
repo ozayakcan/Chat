@@ -24,8 +24,11 @@ import com.ozayakcan.chat.Bildirimler.Gonder;
 import com.ozayakcan.chat.Bildirimler.RetrofitAyarlari;
 import com.ozayakcan.chat.Bildirimler.RetrofitClient;
 import com.ozayakcan.chat.Bildirimler.Sonuc;
+import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.virgilsecurity.common.callback.OnResultListener;
+import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +54,7 @@ public class Veritabani {
     public static String SonGorulmeKey = "sonGorulme";
     public static String FCMTokenKey = "fcmToken";
 
+    public static String KullaniciIDKey = "kullaniciID";
     public static String MesajKey = "mesaj";
     public static String TarihKey = "tarih";
     public static String MesajDurumuKey = "mesajDurumu";
@@ -192,75 +196,88 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(String mesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
-        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
-        Map<String, String> tarih = ServerValue.TIMESTAMP;
-        DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
-        ekleBir.keepSynced(true);
-        HashMap<String, Object> mapBir = new HashMap<>();
-        mapBir.put(Veritabani.MesajKey, mesaj);
-        mapBir.put(Veritabani.TarihKey, tarih);
-        mapBir.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
-        mapBir.put(Veritabani.GonderenKey, true);
-        mapBir.put(Veritabani.GorulduKey, false);
-        DatabaseReference ekleBirPush = ekleBir.push();
-        ekleBirPush.keepSynced(true);
+    public void MesajGonder(String normalMesaj, String gonderilecekTelefon, String gonderilecekID, FirebaseUser firebaseUser){
+        ChatApp.getE3KitKullanici().eThree.findUser(gonderilecekID).addCallback(new OnResultListener<Card>() {
+            @Override
+            public void onSuccess(Card card) {
+                String sifreliMesaj = ChatApp.getE3KitKullanici().eThree.authEncrypt(normalMesaj, card);
+                RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
+                Map<String, String> tarih = ServerValue.TIMESTAMP;
+                DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
+                ekleBir.keepSynced(true);
+                HashMap<String, Object> mapBir = new HashMap<>();
+                mapBir.put(Veritabani.MesajKey, sifreliMesaj);
+                mapBir.put(Veritabani.KullaniciIDKey, firebaseUser.getUid());
+                mapBir.put(Veritabani.TarihKey, tarih);
+                mapBir.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
+                mapBir.put(Veritabani.GonderenKey, true);
+                mapBir.put(Veritabani.GorulduKey, false);
+                DatabaseReference ekleBirPush = ekleBir.push();
+                ekleBirPush.keepSynced(true);
 
-        DatabaseReference ekleIki = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
-        ekleIki.keepSynced(true);
-        HashMap<String, Object> mapIki = new HashMap<>();
-        mapIki.put(Veritabani.MesajKey, mesaj);
-        mapIki.put(Veritabani.TarihKey, tarih);
-        mapIki.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
-        mapIki.put(Veritabani.GonderenKey, false);
-        mapIki.put(Veritabani.GorulduKey, false);
-        ekleBirPush.setValue(mapBir, (error, ref) -> {
-            if (error == null){
-                ref.keepSynced(true);
-                HashMap<String, Object> basarili = new HashMap<>();
-                basarili.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
-                ref.updateChildren(basarili);
-                String key = ref.getKey();
-                if (key != null){
-                    DatabaseReference ekleIkiPush = ekleIki.child(key);
-                    ekleIkiPush.keepSynced(true);
-                    ekleIkiPush.setValue(mapIki, (error2, ref2) -> {
-                        if (error2 == null){
-                            ref2.keepSynced(true);
-                            HashMap<String, Object> basarili2 = new HashMap<>();
-                            basarili2.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
-                            ref2.updateChildren(basarili2);
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(gonderilecekTelefon);
-                            databaseReference.keepSynced(true);
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                    if (kullanici != null){
-                                        Data data = new Data(BildirimClass.MesajKey);
-                                        Gonder gonder = new Gonder(data, kullanici.getFcmToken());
-                                        retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
-                                            @Override
-                                            public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
+                DatabaseReference ekleIki = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
+                ekleIki.keepSynced(true);
+                HashMap<String, Object> mapIki = new HashMap<>();
+                mapIki.put(Veritabani.MesajKey, sifreliMesaj);
+                mapIki.put(Veritabani.KullaniciIDKey, firebaseUser.getUid());
+                mapIki.put(Veritabani.TarihKey, tarih);
+                mapIki.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
+                mapIki.put(Veritabani.GonderenKey, false);
+                mapIki.put(Veritabani.GorulduKey, false);
+                ekleBirPush.setValue(mapBir, (error, ref) -> {
+                    if (error == null){
+                        ref.keepSynced(true);
+                        HashMap<String, Object> basarili = new HashMap<>();
+                        basarili.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
+                        ref.updateChildren(basarili);
+                        String key = ref.getKey();
+                        if (key != null){
+                            DatabaseReference ekleIkiPush = ekleIki.child(key);
+                            ekleIkiPush.keepSynced(true);
+                            ekleIkiPush.setValue(mapIki, (error2, ref2) -> {
+                                if (error2 == null){
+                                    ref2.keepSynced(true);
+                                    HashMap<String, Object> basarili2 = new HashMap<>();
+                                    basarili2.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
+                                    ref2.updateChildren(basarili2);
+                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(gonderilecekTelefon);
+                                    databaseReference.keepSynced(true);
+                                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                            if (kullanici != null){
+                                                Data data = new Data(BildirimClass.MesajKey);
+                                                Gonder gonder = new Gonder(data, kullanici.getFcmToken());
+                                                retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
+                                                    @Override
+                                                    public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
 
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
+
+                                                    }
+                                                });
                                             }
+                                        }
 
-                                            @Override
-                                            public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
-                }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(@NonNull Throwable throwable) {
+                Log.e("E3Kullanici", "Hata", throwable);
             }
         });
 
