@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,10 +29,17 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hbb20.CountryCodePicker;
+import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -270,13 +278,33 @@ public class GirisActivity extends AppCompatActivity {
         mAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()){
-                        Intent intent = new Intent(GirisActivity.this, BilgilerActivity.class);
-                        intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
-                        intent.putExtra(Veritabani.IsimKey, "");
-                        intent.putExtra(Veritabani.HakkimdaKey, "");
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
-                        finish();
+                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
+                        databaseReference.keepSynced(true);
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                Intent intent = new Intent(GirisActivity.this, BilgilerActivity.class);
+                                if (kullanici == null){
+                                    intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
+                                    intent.putExtra(Veritabani.IsimKey, "");
+                                    intent.putExtra(Veritabani.HakkimdaKey, "");
+                                }else{
+                                    intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
+                                    intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
+                                    intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
+                                }
+                                overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(GirisActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }else{
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
                             onayKoduHata.setText(getString(R.string.confirmation_code_is_wrong));
