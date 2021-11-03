@@ -2,9 +2,11 @@ package com.ozayakcan.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,7 +20,9 @@ import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.virgilsecurity.android.ethree.interaction.EThree;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +54,18 @@ public class MainActivity extends AppCompatActivity {
 
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(vpAdapter.baslikGetir(position))).attach();
+        E3KitKullanici e3KitKullanici = new E3KitKullanici(MainActivity.this, firebaseUser.getPhoneNumber());
+        new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
+            @Override
+            public void Basarili(EThree kullanici) {
+
+            }
+
+            @Override
+            public void Basarisiz(Throwable hata) {
+                Log.e("Chatapp", "Başarısız: "+hata.getMessage());
+            }
+        })).start();
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){

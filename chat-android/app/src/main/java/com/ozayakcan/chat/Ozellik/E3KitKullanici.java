@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.virgilsecurity.android.common.model.java.EThreeParams;
 import com.virgilsecurity.android.ethree.interaction.EThree;
+import com.virgilsecurity.common.callback.OnCompleteListener;
 import com.virgilsecurity.common.callback.OnResultListener;
 
 import org.json.JSONException;
@@ -29,40 +30,14 @@ public class E3KitKullanici {
     public EThree eThree;
     public String kimlik;
 
+    private final String TAG = "E3KitKullanici";
+    private final String SIFRE = "_sifre";
+
+    private final String SUNUCU_URL = "https://ChatApp.rodanel.repl.co";
+
     public E3KitKullanici(Context context, String kimlik) {
         this.mContext = context;
         this.kimlik = kimlik;
-    }
-    private String VirgilJwt(String authToken) {
-        try {
-            String url = SUNUCU_URL + "/virgil-jwt";
-            URL object = new URL(url);
-
-            HttpURLConnection con = (HttpURLConnection) object.openConnection();
-            con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("Authorization", "Bearer " + authToken);
-            con.setRequestMethod("GET");
-
-            StringBuilder sb = new StringBuilder();
-            int HttpResult = con.getResponseCode();
-            if (HttpResult == HttpURLConnection.HTTP_OK) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                br.close();
-                JSONObject jsonObject = new JSONObject(sb.toString());
-
-                return jsonObject.getString("virgilToken");
-            } else {
-                throw new RuntimeException("Some connection error");
-            }
-        } catch (IOException exception) {
-            throw new RuntimeException("Some connection error");
-        } catch (JSONException e) {
-            throw new RuntimeException("Parsing virgil jwt json error");
-        }
     }
     public interface Tamamlandi{
         void Basarili(EThree eThree);
@@ -83,10 +58,69 @@ public class E3KitKullanici {
                     return virgilToken;
                 }, mContext);
                 eThree = new EThree(params);
+                String sifre = kimlik+SIFRE;
                 if (!eThree.hasLocalPrivateKey()){
-                    eThree.register().execute();
+                    eThree.register().addCallback(new OnCompleteListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "Kullanıcı kaydedildi.");
+                            eThree.backupPrivateKey(sifre).addCallback(new OnCompleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d(TAG, "Key yedeklendi 1.");
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable throwable) {
+                                    Log.e(TAG, "Key yedeklenemedi 1."+throwable.getMessage());
+                                }
+                            });
+                            tamamlandi.Basarili(eThree);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable throwable) {
+                            eThree.restorePrivateKey(sifre).addCallback(new OnCompleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d(TAG, "Key geri alındı.");
+                                    tamamlandi.Basarili(eThree);
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable throwable) {
+                                    Log.e(TAG, "Key geri alınamadı."+throwable.getMessage());
+                                    eThree.rotatePrivateKey().addCallback(new OnCompleteListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d(TAG, "Key sıfırlandı.");
+                                            tamamlandi.Basarili(eThree);
+                                        }
+
+                                        @Override
+                                        public void onError(@NonNull Throwable throwable) {
+                                            Log.e(TAG, "Key sıfırlanamadı."+throwable.getMessage());
+                                            tamamlandi.Basarisiz(throwable);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    eThree.backupPrivateKey(sifre).addCallback(new OnCompleteListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "Key yedeklendi 2.");
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable throwable) {
+                            Log.e(TAG, "Key yedeklenemedi 2."+throwable.getMessage());
+                        }
+                    });
+                    tamamlandi.Basarili(eThree);
                 }
-                tamamlandi.Basarili(eThree);
             }
 
             @Override
@@ -95,11 +129,6 @@ public class E3KitKullanici {
             }
         });
     }
-
-    private final String TAG = "E3KitKullanici";
-
-    private final String SUNUCU_URL = "https://ChatApp.rodanel.repl.co";
-
     private void Yetkilendir(String kimlik, OnResultListener<String> onResultListener){
         try {
             String url = SUNUCU_URL + "/authenticate";
@@ -137,5 +166,37 @@ public class E3KitKullanici {
             onResultListener.onError(exception);
         }
 
+    }
+
+    private String VirgilJwt(String authToken) {
+        try {
+            String url = SUNUCU_URL + "/virgil-jwt";
+            URL object = new URL(url);
+
+            HttpURLConnection con = (HttpURLConnection) object.openConnection();
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", "Bearer " + authToken);
+            con.setRequestMethod("GET");
+
+            StringBuilder sb = new StringBuilder();
+            int HttpResult = con.getResponseCode();
+            if (HttpResult == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                br.close();
+                JSONObject jsonObject = new JSONObject(sb.toString());
+
+                return jsonObject.getString("virgilToken");
+            } else {
+                throw new RuntimeException("Some connection error");
+            }
+        } catch (IOException exception) {
+            throw new RuntimeException("Some connection error");
+        } catch (JSONException e) {
+            throw new RuntimeException("Parsing virgil jwt json error");
+        }
     }
 }

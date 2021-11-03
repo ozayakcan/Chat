@@ -54,7 +54,6 @@ public class Veritabani {
     public static String SonGorulmeKey = "sonGorulme";
     public static String FCMTokenKey = "fcmToken";
 
-    public static String KullaniciIDKey = "kullaniciID";
     public static String MesajKey = "mesaj";
     public static String TarihKey = "tarih";
     public static String MesajDurumuKey = "mesajDurumu";
@@ -196,18 +195,17 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(String normalMesaj, String gonderilecekTelefon, String gonderilecekID, FirebaseUser firebaseUser){
-        ChatApp.getE3KitKullanici().eThree.findUser(gonderilecekID).addCallback(new OnResultListener<Card>() {
+    public void MesajGonder(E3KitKullanici e3KitKullanici, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
+        e3KitKullanici.eThree.findUser(gonderilecekTelefon).addCallback(new OnResultListener<Card>() {
             @Override
             public void onSuccess(Card card) {
-                String sifreliMesaj = ChatApp.getE3KitKullanici().eThree.authEncrypt(normalMesaj, card);
+                String sifreliMesaj = e3KitKullanici.eThree.authEncrypt(normalMesaj, card);
                 RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
                 Map<String, String> tarih = ServerValue.TIMESTAMP;
                 DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
                 ekleBir.keepSynced(true);
                 HashMap<String, Object> mapBir = new HashMap<>();
                 mapBir.put(Veritabani.MesajKey, sifreliMesaj);
-                mapBir.put(Veritabani.KullaniciIDKey, firebaseUser.getUid());
                 mapBir.put(Veritabani.TarihKey, tarih);
                 mapBir.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
                 mapBir.put(Veritabani.GonderenKey, true);
@@ -219,7 +217,6 @@ public class Veritabani {
                 ekleIki.keepSynced(true);
                 HashMap<String, Object> mapIki = new HashMap<>();
                 mapIki.put(Veritabani.MesajKey, sifreliMesaj);
-                mapIki.put(Veritabani.KullaniciIDKey, firebaseUser.getUid());
                 mapIki.put(Veritabani.TarihKey, tarih);
                 mapIki.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
                 mapIki.put(Veritabani.GonderenKey, false);

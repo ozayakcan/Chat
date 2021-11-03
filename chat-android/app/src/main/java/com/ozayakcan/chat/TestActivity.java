@@ -15,6 +15,5 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         TextView testTW = findViewById(R.id.testTW);
-        testTW.setText("AuthToken: "+ ChatApp.getE3KitKullanici().authToken+"\nVirgil Token: "+ChatApp.getE3KitKullanici().virgilToken+"\nE3: "+ChatApp.getE3KitKullanici().eThree.toString());
     }
 }

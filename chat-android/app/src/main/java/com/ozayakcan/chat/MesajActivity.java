@@ -27,8 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
 
@@ -54,6 +56,8 @@ public class MesajActivity extends AppCompatActivity {
     private List<Mesaj> mesajList;
     private Query mesajlariGosterQuery;
     private String idString;
+
+    private E3KitKullanici e3KitKullanici;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +117,6 @@ public class MesajActivity extends AppCompatActivity {
         durum = findViewById(R.id.durum);
         gonderText = findViewById(R.id.gonderText);
         CircleImageView gonderBtn = findViewById(R.id.gonderBtn);
-        gonderBtn.setOnClickListener(v -> MesajGonder());
         resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
         if (profilResmiString.equals(Veritabani.VarsayilanDeger)){
             if (isimString.equals("")){
@@ -129,12 +132,26 @@ public class MesajActivity extends AppCompatActivity {
         }
         KisiBilgileriniGoster();
         KisininOnlineDurumunuGuncelle();
-        MesajlariGoster();
         veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         veritabani.MesajDurumuGuncelle(telefonString, true);
-    }
+        e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getPhoneNumber());
+        new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
+            @Override
+            public void Basarili(EThree kullanici) {
+                MesajlariGoster();
+                gonderBtn.setOnClickListener(v -> MesajGonder());
+            }
 
+            @Override
+            public void Basarisiz(Throwable hata) {
+                Log.e("Chatapp", "Başarısız: "+hata.getMessage());
+                runOnUiThread(() -> Toast.makeText(MesajActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+            }
+        })).start();
+    }
+    boolean gosterildi = false;
     private void MesajlariGoster() {
+        gosterildi = true;
         mesajlariGosterQuery = FirebaseDatabase.getInstance().getReference(tabloString).child(firebaseUser.getPhoneNumber()).child(telefonString).orderByKey();
         mesajlariGosterQuery.keepSynced(true);
         mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
@@ -143,7 +160,7 @@ public class MesajActivity extends AppCompatActivity {
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
         if(!mesaj.equals("")){
-            veritabani.MesajGonder(mesaj, telefonString, idString, firebaseUser);
+            veritabani.MesajGonder(e3KitKullanici, mesaj, telefonString, firebaseUser);
             gonderText.setText("");
         }
     }
@@ -152,7 +169,7 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            ChatApp.getE3KitKullanici().eThree.findUser(idString).addCallback(new OnResultListener<Card>() {
+            e3KitKullanici.eThree.findUser(telefonString).addCallback(new OnResultListener<Card>() {
                 @Override
                 public void onSuccess(Card card) {
                     runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
@@ -160,7 +177,8 @@ public class MesajActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(@NonNull Throwable throwable) {
-                    Log.e("E3Kullanıcı", "Hata", throwable);
+                    Log.e("E3Kullanıcı", "Hata"+throwable.getMessage());
+                    runOnUiThread(() -> SifreliMesajlariGoster(null ,snapshot));
                 }
             });
         }
@@ -187,10 +205,14 @@ public class MesajActivity extends AppCompatActivity {
                             .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
                     gorulduOlarakIsaretleIki.updateChildren(mapBir);
                 }
-                mesaj.setMesaj(ChatApp.getE3KitKullanici().eThree.authDecrypt(mesaj.getMesaj(), card));
+                if (card == null){
+                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
+                }else{
+                    mesaj.setMesaj(e3KitKullanici.eThree.authDecrypt(mesaj.getMesaj(), card));
+                }
                 mesajList.add(mesaj);
             }else{
-                mesaj.setMesaj(ChatApp.getE3KitKullanici().eThree.authDecrypt(mesaj.getMesaj()));
+                mesaj.setMesaj(e3KitKullanici.eThree.authDecrypt(mesaj.getMesaj()));
                 mesajList.add(mesaj);
             }
         }
@@ -240,7 +262,9 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     private void Geri(){
-        mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
+        if (gosterildi){
+            mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
+        }
         Intent intent = new Intent(MesajActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
@@ -265,7 +289,7 @@ public class MesajActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!ilkAcilis){
+        if (gosterildi && !ilkAcilis){
             mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
         }
         ilkAcilis = false;
@@ -275,7 +299,9 @@ public class MesajActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
+        if (gosterildi){
+            mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
+        }
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
 }

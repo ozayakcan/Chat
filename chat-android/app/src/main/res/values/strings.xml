@@ -57,4 +57,5 @@
     <string name="s_new_messages">%s New Messages</string>
     <string name="new_message">New Message</string>
     <string name="failed_to_fetch_messages">Failed to fetch messages!</string>
+    <string name="this_message_could_not_be_decrypted">This message could not be decrypted!</string>
 </resources>

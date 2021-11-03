@@ -20,8 +20,6 @@ import java.util.List;
 public class ChatApp extends Application {
 
     private static Context appContext;
-    private static EThree eThree;
-    private static E3KitKullanici e3KitKullanici;
     public static int MaxMesajKarakterSayisi = 20;
     public static String TarihSaatFormati = "dd/MM/yyyy HH:mm";
     public static String TarihFormati = "dd/MM/yyyy";
@@ -42,29 +40,11 @@ public class ChatApp extends Application {
         Veritabani veritabani = new Veritabani(appContext);
         if (firebaseUser != null){
             veritabani.DurumKontrol(firebaseUser);
-            E3KitKullanici e3KitKullanici1 = new E3KitKullanici(appContext, firebaseUser.getUid());
-            new Thread(() -> e3KitKullanici1.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
-                @Override
-                public void Basarili(EThree kullanici) {
-                    e3KitKullanici = e3KitKullanici1;
-                    e3KitKullanici.eThree = kullanici;
-                    Log.d("Chatapp", "Başarılı");
-                }
-
-                @Override
-                public void Basarisiz(Throwable hata) {
-                    Log.e("Chatapp", "Başarısız", hata);
-                }
-            })).start();
         }
     }
 
     public static Context getAppContext() {
         return appContext;
-    }
-
-    public static E3KitKullanici getE3KitKullanici(){
-        return e3KitKullanici;
     }
 
     public static String MesajBol(String mesaj, int bolunecek){
