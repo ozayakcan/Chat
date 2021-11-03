@@ -50,7 +50,8 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.6'
     //Şifreleme
     implementation 'com.github.kittinunf.fuel:fuel:2.3.0'
-    implementation "com.virgilsecurity:ethree:2.0.10"
+    implementation 'com.virgilsecurity:ethree:2.0.10'
+    implementation 'com.google.code.gson:gson:2.8.8'
     //Firebase
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta03'
     implementation 'com.google.firebase:firebase-database:20.0.2'

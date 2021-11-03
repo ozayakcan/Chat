@@ -29,7 +29,9 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.virgilsecurity.android.common.model.EThreeParams;
 import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
@@ -39,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.jvm.functions.Function0;
 
 public class MesajActivity extends AppCompatActivity {
 
@@ -57,7 +60,7 @@ public class MesajActivity extends AppCompatActivity {
     private Query mesajlariGosterQuery;
     private String idString;
 
-    private E3KitKullanici e3KitKullanici;
+    private EThree eThree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,20 +137,32 @@ public class MesajActivity extends AppCompatActivity {
         KisininOnlineDurumunuGuncelle();
         veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         veritabani.MesajDurumuGuncelle(telefonString, true);
-        e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getPhoneNumber());
-        new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
-            @Override
-            public void Basarili(EThree kullanici) {
-                MesajlariGoster();
-                gonderBtn.setOnClickListener(v -> MesajGonder());
-            }
+        SharedPreference sharedPreference = new SharedPreference(MesajActivity.this);
+        if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
+            E3KitKullanici e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getPhoneNumber());
+            new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
+                @Override
+                public void Basarili(EThree kullanici) {
+                    eThree = kullanici;
+                    MesajlariGoster();
+                    gonderBtn.setOnClickListener(v -> MesajGonder());
+                }
 
-            @Override
-            public void Basarisiz(Throwable hata) {
-                Log.e("Chatapp", "Başarısız: "+hata.getMessage());
-                runOnUiThread(() -> Toast.makeText(MesajActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
-            }
-        })).start();
+                @Override
+                public void Basarisiz(Throwable hata) {
+                    Log.e("Chatapp", "Başarısız: "+hata.getMessage());
+                    runOnUiThread(() -> Toast.makeText(MesajActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+                }
+            })).start();
+        }else{
+            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getPhoneNumber(),
+                    () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
+                    MesajActivity.this);
+            eThree = new EThree(eThreeParams);
+            MesajlariGoster();
+            gonderBtn.setOnClickListener(v -> MesajGonder());
+        }
+
     }
     boolean gosterildi = false;
     private void MesajlariGoster() {
@@ -160,7 +175,7 @@ public class MesajActivity extends AppCompatActivity {
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
         if(!mesaj.equals("")){
-            veritabani.MesajGonder(e3KitKullanici, mesaj, telefonString, firebaseUser);
+            veritabani.MesajGonder(eThree, mesaj, telefonString, firebaseUser);
             gonderText.setText("");
         }
     }
@@ -169,7 +184,7 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            e3KitKullanici.eThree.findUser(telefonString).addCallback(new OnResultListener<Card>() {
+            eThree.findUser(telefonString).addCallback(new OnResultListener<Card>() {
                 @Override
                 public void onSuccess(Card card) {
                     runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
@@ -208,11 +223,11 @@ public class MesajActivity extends AppCompatActivity {
                 if (card == null){
                     mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
                 }else{
-                    mesaj.setMesaj(e3KitKullanici.eThree.authDecrypt(mesaj.getMesaj(), card));
+                    mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
                 }
                 mesajList.add(mesaj);
             }else{
-                mesaj.setMesaj(e3KitKullanici.eThree.authDecrypt(mesaj.getMesaj()));
+                mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
                 mesajList.add(mesaj);
             }
         }

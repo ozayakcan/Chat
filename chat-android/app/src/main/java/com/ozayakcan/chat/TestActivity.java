@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
+
 public class TestActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")

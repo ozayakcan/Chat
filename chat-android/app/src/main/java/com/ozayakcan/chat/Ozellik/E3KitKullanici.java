@@ -35,6 +35,9 @@ public class E3KitKullanici {
 
     private final String SUNUCU_URL = "https://ChatApp.rodanel.repl.co";
 
+    public static final String VirgilTokenKey = "virgilToken";
+    public static final String AuthTokenKey = "authToken";
+
     public E3KitKullanici(Context context, String kimlik) {
         this.mContext = context;
         this.kimlik = kimlik;
@@ -47,6 +50,7 @@ public class E3KitKullanici {
         Yetkilendir(kimlik, new OnResultListener<String>() {
             @Override
             public void onSuccess(String s) {
+                SharedPreference sharedPreference = new SharedPreference(mContext);
                 try {
                     JSONObject object = new JSONObject(s);
                     authToken = (String) object.get("authToken");
@@ -55,6 +59,10 @@ public class E3KitKullanici {
                 }
                 EThreeParams params = new EThreeParams(kimlik, () -> {
                     virgilToken = VirgilJwt(authToken);
+                    if (!virgilToken.equals("")){
+                        sharedPreference.KaydetString(VirgilTokenKey, virgilToken);
+                        sharedPreference.KaydetString(AuthTokenKey, authToken);
+                    }
                     return virgilToken;
                 }, mContext);
                 eThree = new EThree(params);
@@ -191,12 +199,15 @@ public class E3KitKullanici {
 
                 return jsonObject.getString("virgilToken");
             } else {
-                throw new RuntimeException("Some connection error");
+                Log.e(TAG, "Bağlantı hatası");
+                return "";
             }
         } catch (IOException exception) {
-            throw new RuntimeException("Some connection error");
+            Log.e(TAG, "Bağlantı hatası");
+            return "";
         } catch (JSONException e) {
-            throw new RuntimeException("Parsing virgil jwt json error");
+            Log.e(TAG, "Virgil JWT json hatası");
+            return "";
         }
     }
 }

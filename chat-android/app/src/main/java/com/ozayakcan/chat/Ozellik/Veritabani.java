@@ -27,6 +27,7 @@ import com.ozayakcan.chat.Bildirimler.Sonuc;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
 
@@ -195,11 +196,11 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(E3KitKullanici e3KitKullanici, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
-        e3KitKullanici.eThree.findUser(gonderilecekTelefon).addCallback(new OnResultListener<Card>() {
+    public void MesajGonder(EThree eThree, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
+        eThree.findUser(gonderilecekTelefon).addCallback(new OnResultListener<Card>() {
             @Override
             public void onSuccess(Card card) {
-                String sifreliMesaj = e3KitKullanici.eThree.authEncrypt(normalMesaj, card);
+                String sifreliMesaj = eThree.authEncrypt(normalMesaj, card);
                 RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
                 Map<String, String> tarih = ServerValue.TIMESTAMP;
                 DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
