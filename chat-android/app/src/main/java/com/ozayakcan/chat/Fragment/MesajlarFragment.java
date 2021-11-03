@@ -1,9 +1,11 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +28,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajlarAdapter;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+import com.virgilsecurity.android.common.model.EThreeParams;
+import com.virgilsecurity.android.ethree.interaction.EThree;
+import com.virgilsecurity.common.callback.OnResultListener;
+import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +56,9 @@ public class MesajlarFragment extends Fragment {
     private final MainActivity mainActivity;
     private final Context mContext;
 
+    private EThree eThree;
+    private SharedPreference sharedPreference;
+
     public MesajlarFragment(MainActivity mainActivity) {
         this.mContext = mainActivity;
         this.mainActivity = mainActivity;
@@ -57,6 +69,7 @@ public class MesajlarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
         veritabani = new Veritabani(mainActivity);
+        sharedPreference = new SharedPreference(mainActivity);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -71,8 +84,30 @@ public class MesajlarFragment extends Fragment {
                 mesajlarRW.setAdapter(mesajlarAdapter);
             }
         });
-        MesajlariBul();
-        veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
+        if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
+            E3KitKullanici e3KitKullanici = new E3KitKullanici(mainActivity, firebaseUser.getPhoneNumber());
+            new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
+                @Override
+                public void Basarili(EThree kullanici) {
+                    eThree = kullanici;
+                    MesajlariBul();
+                    veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
+                }
+
+                @Override
+                public void Basarisiz(Throwable hata) {
+                    Log.e("Chatapp", "Başarısız: "+hata.getMessage());
+                    ((Activity) mainActivity).runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+                }
+            })).start();
+        }else{
+            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getPhoneNumber(),
+                    () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
+                    mainActivity);
+            eThree = new EThree(eThreeParams);
+            MesajlariBul();
+            veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
+        }
         return view;
     }
 
@@ -116,11 +151,31 @@ public class MesajlarFragment extends Fragment {
                                                             }
                                                         }
                                                     }
-                                                    if (kullanici1 != null){
-                                                        MesajGoster(kullanici, mesaj, kullanici1.getIsim(), okunmamiMesaj);
-                                                    }else{
-                                                        MesajGoster(kullanici, mesaj, "", okunmamiMesaj);
-                                                    }
+                                                    long finalOkunmamiMesaj = okunmamiMesaj;
+                                                    eThree.findUser(kullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
+                                                        @Override
+                                                        public void onSuccess(Card card) {
+                                                            if (mesaj.isGonderen()){
+                                                                mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
+                                                            }else{
+                                                                if (card == null){
+                                                                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
+                                                                }else{
+                                                                    mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
+                                                                }
+                                                            }
+                                                            if (kullanici1 != null){
+                                                                ((Activity) mainActivity).runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamiMesaj));
+                                                            }else{
+                                                                ((Activity) mainActivity).runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamiMesaj));
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onError(@NonNull Throwable throwable) {
+                                                            ((Activity) mainActivity).runOnUiThread(() -> Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+                                                        }
+                                                    });
                                                 }
 
                                                 @Override
