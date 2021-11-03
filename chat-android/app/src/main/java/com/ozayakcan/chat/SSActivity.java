@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.ozayakcan.chat.Giris.GirisActivity;
 import com.ozayakcan.chat.Giris.BilgilerActivity;
 import com.ozayakcan.chat.Model.Kullanici;
@@ -59,41 +60,18 @@ public class SSActivity extends AppCompatActivity {
                     new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
                         @Override
                         public void Basarili(EThree eThree) {
-                            Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                            if (kullanici == null){
-                                Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
-                                intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
-                                intent.putExtra(Veritabani.IsimKey, "");
-                                intent.putExtra(Veritabani.HakkimdaKey, "");
-                                startActivity(intent);
-                            }else{
-                                if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
-                                    //Kaydedildi
-                                    Veritabani veritabani = new Veritabani(SSActivity.this);
-                                    if(izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
-                                        veritabani.KisileriEkle(user);
-                                    }
-                                    startActivity(new Intent(SSActivity.this, MainActivity.class));
-                                }else{
-                                    //Kaydedilmedi
-                                    Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
-                                    intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
-                                    intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
-                                    intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
-                                    startActivity(intent);
-                                }
-
-                            }
-                            overridePendingTransition(0,0);
-                            finish();
+                            DevamEt(snapshot, user);
                         }
 
                         @Override
                         public void Basarisiz(Throwable hata) {
-                            runOnUiThread(() -> Toast.makeText(SSActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+                            if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
+                                runOnUiThread(() -> Toast.makeText(SSActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
+                            }else{
+                                DevamEt(snapshot, user);
+                            }
                         }
                     })).start();
-
                 }
 
                 @Override
@@ -108,5 +86,34 @@ public class SSActivity extends AppCompatActivity {
             overridePendingTransition(0,0);
             finish();
         }
+    }
+    public void DevamEt(DataSnapshot snapshot, FirebaseUser user){
+        Kullanici kullanici = snapshot.getValue(Kullanici.class);
+        if (kullanici == null){
+            Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
+            intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
+            intent.putExtra(Veritabani.IsimKey, "");
+            intent.putExtra(Veritabani.HakkimdaKey, "");
+            startActivity(intent);
+        }else{
+            if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
+                //Kaydedildi
+                Veritabani veritabani = new Veritabani(SSActivity.this);
+                if(izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
+                    veritabani.KisileriEkle(user);
+                }
+                startActivity(new Intent(SSActivity.this, MainActivity.class));
+            }else{
+                //Kaydedilmedi
+                Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
+                intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
+                intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
+                intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
+                startActivity(intent);
+            }
+
+        }
+        overridePendingTransition(0,0);
+        finish();
     }
 }

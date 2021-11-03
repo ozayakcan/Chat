@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.virgilsecurity.android.common.model.java.EThreeParams;
 import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnCompleteListener;
@@ -35,6 +36,7 @@ public class E3KitKullanici {
 
     private final String SUNUCU_URL = "https://ChatApp.rodanel.repl.co";
 
+    public static final String EThreeKey = "eThree";
     public static final String VirgilTokenKey = "virgilToken";
     public static final String AuthTokenKey = "authToken";
 

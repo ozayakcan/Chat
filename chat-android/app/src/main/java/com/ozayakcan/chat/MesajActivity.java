@@ -162,7 +162,6 @@ public class MesajActivity extends AppCompatActivity {
             MesajlariGoster();
             gonderBtn.setOnClickListener(v -> MesajGonder());
         }
-
     }
     boolean gosterildi = false;
     private void MesajlariGoster() {
