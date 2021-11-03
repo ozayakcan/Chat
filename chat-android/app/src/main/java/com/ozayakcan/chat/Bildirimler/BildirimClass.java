@@ -1,6 +1,7 @@
 package com.ozayakcan.chat.Bildirimler;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,6 +14,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,8 +32,13 @@ import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+import com.virgilsecurity.android.common.model.EThreeParams;
+import com.virgilsecurity.android.ethree.interaction.EThree;
+import com.virgilsecurity.common.callback.OnResultListener;
+import com.virgilsecurity.sdk.cards.Card;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,12 +51,14 @@ import java.util.List;
 public class BildirimClass {
 
     private final Context mContext;
-    private BildirimClass(Context context){
+    private EThree eThree;
+    private BildirimClass(Context context, EThree eThree){
         this.mContext = context;
+        this.eThree = eThree;
     }
 
-    public static synchronized BildirimClass getInstance(Context context){
-        return new BildirimClass(context);
+    public static synchronized BildirimClass getInstance(Context context, EThree eThree){
+        return new BildirimClass(context, eThree);
     }
 
     public static String FCM_URL = "https://fcm.googleapis.com/";
@@ -97,18 +106,29 @@ public class BildirimClass {
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
-                                                    long mesajSayisi = 0;
-                                                    for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
-                                                        Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
-                                                        if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
-                                                            mesajSayisi++;
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), mesaj.getTarih(), mesajSayisi);
-                                                            bildirimMesajList.add(bildirimMesaj);
+                                                    eThree.findUser(sonAsilKullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
+                                                        @Override
+                                                        public void onSuccess(Card card) {
+                                                            long mesajSayisi = 0;
+                                                            for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
+                                                                Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
+                                                                if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
+                                                                    mesajSayisi++;
+                                                                    String cozulenMesaj = eThree.authDecrypt(mesaj.getMesaj(), card);
+                                                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), cozulenMesaj, mesaj.getTarih(), mesajSayisi);
+                                                                    bildirimMesajList.add(bildirimMesaj);
+                                                                }
+                                                            }
+                                                            if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
+                                                                MesajBildirimiGoster(bildirimMesajList);
+                                                            }
                                                         }
-                                                    }
-                                                    if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                        MesajBildirimiGoster(bildirimMesajList);
-                                                    }
+
+                                                        @Override
+                                                        public void onError(@NonNull Throwable throwable) {
+
+                                                        }
+                                                    });
                                                 }
 
                                                 @Override
