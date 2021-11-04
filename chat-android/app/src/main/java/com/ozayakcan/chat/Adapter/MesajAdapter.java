@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.Veritabani;
@@ -51,22 +52,29 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull MesajAdapter.ViewHolder holder, int position) {
         Mesaj mesaj = mesajList.get(position);
-
-        holder.mesajText.setText(mesaj.getMesaj());
-        holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
-        if (mesaj.isGonderen()){
-            if (mesaj.isGoruldu()){
-                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
-                holder.mesajDurumu.setVisibility(View.VISIBLE);
-            }else{
-                if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
-                    holder.mesajDurumu.setText(mContext.getString(R.string.sending));
+        if (mesaj.isTarihGoster()){
+            holder.mesajLayout.setVisibility(View.GONE);
+            holder.tarihText.setText(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+            holder.tarihLayout.setVisibility(View.VISIBLE);
+        }else{
+            holder.tarihLayout.setVisibility(View.GONE);
+            holder.mesajText.setText(mesaj.getMesaj());
+            holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
+            if (mesaj.isGonderen()){
+                if (mesaj.isGoruldu()){
+                    holder.mesajDurumu.setText(mContext.getString(R.string.seen));
                     holder.mesajDurumu.setVisibility(View.VISIBLE);
-                }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
-                    holder.mesajDurumu.setText(mContext.getString(R.string.sent));
-                    holder.mesajDurumu.setVisibility(View.VISIBLE);
+                }else{
+                    if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                        holder.mesajDurumu.setText(mContext.getString(R.string.sending));
+                        holder.mesajDurumu.setVisibility(View.VISIBLE);
+                    }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
+                        holder.mesajDurumu.setText(mContext.getString(R.string.sent));
+                        holder.mesajDurumu.setVisibility(View.VISIBLE);
+                    }
                 }
             }
+            holder.mesajLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -76,8 +84,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout mesajLayout;
-        TextView mesajText, saat, mesajDurumu;
+        RelativeLayout mesajLayout, tarihLayout;
+        TextView mesajText, saat, mesajDurumu, tarihText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +93,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
             mesajText = itemView.findViewById(R.id.mesajText);
             saat = itemView.findViewById(R.id.saat);
             mesajDurumu = itemView.findViewById(R.id.mesajDurumu);
+            tarihLayout = itemView.findViewById(R.id.tarihLayout);
+            tarihText = itemView.findViewById(R.id.tarihText);
         }
     }
 

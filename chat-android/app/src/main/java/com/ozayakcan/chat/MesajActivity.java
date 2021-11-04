@@ -198,9 +198,23 @@ public class MesajActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void SifreliMesajlariGoster(Card card, DataSnapshot snapshot) {
         mesajList.clear();
-        long sonTarih = 0;
         for (DataSnapshot dataSnapshot : snapshot.getChildren()){
             Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
+            if (mesajList.size() > 0){
+                if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
+                    Mesaj tarihMsj = new Mesaj();
+                    tarihMsj.setTarih(mesaj.getTarih());
+                    tarihMsj.setTarihGoster(true);
+                    tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+                    mesajList.add(tarihMsj);
+                }
+            }else{
+                Mesaj tarihMsj = new Mesaj();
+                tarihMsj.setTarih(mesaj.getTarih());
+                tarihMsj.setTarihGoster(true);
+                tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+                mesajList.add(tarihMsj);
+            }
             if (!mesaj.isGonderen()){
                 if (tabloString.equals(Veritabani.MesajTablosu)){
                     HashMap<String, Object> mapBir = new HashMap<>();

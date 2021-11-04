@@ -10,17 +10,19 @@ public class Mesaj {
     boolean gonderen = true;
     boolean goruldu = false;
     boolean hata = false;
+    boolean tarihGoster = false;
 
     public Mesaj() {
     }
 
-    public Mesaj(String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean hata) {
+    public Mesaj(String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean hata, boolean tarihGoster) {
         this.mesaj = mesaj;
         this.tarih = tarih;
         this.mesajDurumu = mesajDurumu;
         this.gonderen = gonderen;
         this.goruldu = goruldu;
         this.hata = hata;
+        this.tarihGoster = tarihGoster;
     }
 
     public String getMesaj() {
@@ -69,5 +71,13 @@ public class Mesaj {
 
     public void setHata(boolean hata) {
         this.hata = hata;
+    }
+
+    public boolean isTarihGoster() {
+        return tarihGoster;
+    }
+
+    public void setTarihGoster(boolean tarihGoster) {
+        this.tarihGoster = tarihGoster;
     }
 }

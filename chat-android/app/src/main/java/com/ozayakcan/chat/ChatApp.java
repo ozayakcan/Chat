@@ -56,15 +56,23 @@ public class ChatApp extends Application {
         }
         return bolunecekList.get(0)+"...";
     }
-    public static String MesajTarihiBul(long tarih){
+    public static String MesajTarihiBul(long tarih, boolean saatiGoster){
         String tarihStr = DateFormat.format(TarihFormati, tarih).toString();
         String bugunTarih = DateFormat.format(TarihFormati, System.currentTimeMillis()).toString();
         String dunTarih = DateFormat.format(TarihFormati, System.currentTimeMillis() - (24 * 60 * 60 * 1000)).toString();
         String saat = DateFormat.format(SaatFormati, tarih).toString();
         if (tarihStr.equals(bugunTarih)){
-            return saat;
+            if (saatiGoster){
+                return saat;
+            }else{
+                return getAppContext().getString(R.string.today);
+            }
         }else if (tarihStr.equals(dunTarih)){
-            return getAppContext().getString(R.string.yesterday)+" "+saat;
+            if (saatiGoster){
+                return getAppContext().getString(R.string.yesterday)+" "+saat;
+            }else{
+                return getAppContext().getString(R.string.yesterday);
+            }
         }else{
             return tarihStr;
         }

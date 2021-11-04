@@ -5,11 +5,30 @@
     android:background="@android:color/transparent"
     android:padding="8dp">
     <RelativeLayout
+        android:id="@+id/tarihLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/mesaj_tarih"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tarihText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#DAD5D5"
+            android:textSize="15sp"
+            android:textAlignment="center"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/mesajLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:background="@drawable/mesaj_arkaplan_sol">
+        android:background="@drawable/mesaj_arkaplan_sol"
+        android:visibility="gone">
         <TextView
             android:id="@+id/mesajText"
             android:layout_width="wrap_content"
