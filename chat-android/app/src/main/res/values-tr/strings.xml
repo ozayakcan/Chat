@@ -59,4 +59,5 @@
     <string name="new_message">Yeni Mesaj</string>
     <string name="failed_to_fetch_messages">Mesajlar Alınamadı!</string>
     <string name="this_message_could_not_be_decrypted">Bu mesaj çözülemedi!</string>
+    <string name="send">Send</string>
 </resources>

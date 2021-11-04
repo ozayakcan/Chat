@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +36,6 @@ import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.virgilsecurity.android.common.model.EThreeParams;
 import com.virgilsecurity.android.ethree.interaction.EThree;
-import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.ArrayList;
@@ -41,13 +43,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import kotlin.jvm.functions.Function0;
 
 public class MesajActivity extends AppCompatActivity {
 
     private boolean ilkAcilis = true;
     private RecyclerView recyclerView;
-    private TextView gonderText;
+    private TextView gonderText, altUyari;
+    private FrameLayout gonderBtn;
     private TextView durum;
 
     private String telefonString;
@@ -91,15 +93,11 @@ public class MesajActivity extends AppCompatActivity {
                 tabloString = intentTabloString;
             }
         }
-        RelativeLayout yaziKismi = findViewById(R.id.yaziKismi);
-        RelativeLayout arsivKismi = findViewById(R.id.arsivKismi);
-        if (tabloString.equals(Veritabani.ArsivTablosu)){
-            yaziKismi.setVisibility(View.GONE);
-            arsivKismi.setVisibility(View.VISIBLE);
-        }else{
-            arsivKismi.setVisibility(View.GONE);
-            yaziKismi.setVisibility(View.VISIBLE);
-        }
+        gonderBtn = findViewById(R.id.gonderBtn);
+        gonderText = findViewById(R.id.gonderText);
+        altUyari = findViewById(R.id.altUyari);
+        Uyari(tabloString.equals(Veritabani.ArsivTablosu), getString(R.string.you_cannot_send_messages_in_the_archive));
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -118,8 +116,6 @@ public class MesajActivity extends AppCompatActivity {
         TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         TextView isim = findViewById(R.id.isim);
         durum = findViewById(R.id.durum);
-        gonderText = findViewById(R.id.gonderText);
-        CircleImageView gonderBtn = findViewById(R.id.gonderBtn);
         resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
         if (profilResmiString.equals(Veritabani.VarsayilanDeger)){
             if (isimString.equals("")){
@@ -163,6 +159,28 @@ public class MesajActivity extends AppCompatActivity {
             gonderBtn.setOnClickListener(v -> MesajGonder());
         }
     }
+
+    private void Uyari(boolean goster, String... uyari) {
+        String uyariYazisi = uyari.length > 0 ? uyari[0] : "";
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        if (goster){
+            gonderText.setVisibility(View.GONE);
+            gonderBtn.setVisibility(View.GONE);
+            altUyari.setText(uyariYazisi);
+            altUyari.setVisibility(View.VISIBLE);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyari,ConstraintSet.TOP,0);
+        }else{
+            altUyari.setText(uyariYazisi);
+            altUyari.setVisibility(View.GONE);
+            gonderText.setVisibility(View.VISIBLE);
+            gonderBtn.setVisibility(View.VISIBLE);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderTextLayout,ConstraintSet.TOP,0);
+        }
+        constraintSet.applyTo(constraintLayout);
+    }
+
     boolean gosterildi = false;
     private void MesajlariGoster() {
         gosterildi = true;

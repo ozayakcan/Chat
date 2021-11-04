@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e6e6e6"
+    android:animateLayoutChanges="false"
+    android:id="@+id/constraintLayout"
     tools:context=".MesajActivity">
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/barLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -67,59 +70,72 @@
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:id="@+id/recyclerView"
-        android:layout_below="@id/barLayout"
-        android:layout_above="@id/altKisim"/>
-
-    <RelativeLayout
-        android:id="@+id/altKisim"
+        app:layout_constraintTop_toBottomOf="@id/barLayout"
+        app:layout_constraintBottom_toTopOf="@id/gonderTextLayout"/>
+    <TextView
+        android:id="@+id/altUyari"
         android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:background="@drawable/varsayilan_arkaplan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="15sp"
+        android:text="@string/you_cannot_send_messages_in_the_archive"/>
+    <FrameLayout
+        android:id="@+id/gonderBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/oval_arkaplan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/send"
+            android:padding="1dp"
+            android:src="@drawable/gonder_butonu"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/gonderTextLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/rounded_corners_25"
-        android:backgroundTint="#FFFFFF"
-        android:gravity="bottom">
-        <RelativeLayout
-            android:id="@+id/yaziKismi"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="2dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:background="@drawable/gonder_edittext_arkaplan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/gonderBtn"
+        app:layout_constraintStart_toStartOf="parent">
+        <EditText
+            android:id="@+id/gonderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:visibility="gone">
-            <EditText
-                android:id="@+id/gonderText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@id/gonderBtn"
-                android:background="@android:color/transparent"
-                android:hint="@string/type_a_message" />
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/gonderBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/gonder_butonu" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/arsivKismi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/varsayilan_arkaplan"
-            android:padding="5dp"
-            android:visibility="gone">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:text="@string/you_cannot_send_messages_in_the_archive"/>
-        </RelativeLayout>
-    </RelativeLayout>
-
-</RelativeLayout>
+            android:minHeight="36dp"
+            android:hint="@string/type_a_message"
+            android:autofillHints=""
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:scrollbars="vertical"
+            android:background="@color/white"
+            android:textSize="15sp">
+            <requestFocus/>
+        </EditText>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
