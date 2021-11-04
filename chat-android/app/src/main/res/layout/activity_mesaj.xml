@@ -130,7 +130,7 @@
             android:minHeight="36dp"
             android:hint="@string/type_a_message"
             android:autofillHints=""
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:maxLines="5"
             android:scrollbars="vertical"
             android:background="@color/white"
