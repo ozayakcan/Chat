@@ -202,9 +202,12 @@ public class MesajActivity extends AppCompatActivity {
 
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
-        if(!mesaj.equals("")){
+        String mesajKontrol = mesaj.replace("\n", "");
+        if(!mesajKontrol.equals("")){
             veritabani.MesajGonder(eThree, mesaj, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
+        }else{
+            Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
         }
     }
 

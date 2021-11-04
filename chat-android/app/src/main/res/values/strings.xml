@@ -59,4 +59,5 @@
     <string name="failed_to_fetch_messages">Failed to fetch messages!</string>
     <string name="this_message_could_not_be_decrypted">This message could not be decrypted!</string>
     <string name="send">Send</string>
+    <string name="you_cannot_send_empty_messages">You cannot send empty messages!</string>
 </resources>

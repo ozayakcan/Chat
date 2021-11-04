@@ -60,4 +60,5 @@
     <string name="failed_to_fetch_messages">Mesajlar Alınamadı!</string>
     <string name="this_message_could_not_be_decrypted">Bu mesaj çözülemedi!</string>
     <string name="send">Gonder</string>
+    <string name="you_cannot_send_empty_messages">Boş mesaj gönderemezsin!</string>
 </resources>
