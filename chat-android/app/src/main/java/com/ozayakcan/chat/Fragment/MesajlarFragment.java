@@ -112,101 +112,96 @@ public class MesajlarFragment extends Fragment {
     }
 
     private void MesajlariBul() {
-        DatabaseReference kullanicilar = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
-        kullanicilar.keepSynced(true);
-        kullanicilar.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mesajlarList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Query query1 = dataSnapshot.getRef().orderByKey().limitToLast(1);
-                    query1.keepSynced(true);
-                    query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot3) {
-                            for (DataSnapshot dataSnapshot10 : snapshot3.getChildren()){
-                                Mesaj mesaj = dataSnapshot10.getValue(Mesaj.class);
-                                DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(snapshot3.getKey());
-                                kisiyiBul.keepSynced(true);
-                                kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot4) {
-                                        Kullanici kullanici = snapshot4.getValue(Kullanici.class);
-                                        if (kullanici != null){
-                                            veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
-                                            DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
-                                            kisiyiKontrolEt.keepSynced(true);
-                                            kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot5) {
-                                                    Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
-                                                    long okunmamiMesaj = 0;
-                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                                        Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
-                                                        if(mesaj1 != null){
-                                                            if (!mesaj1.isGonderen()){
-                                                                if (!mesaj1.isGoruldu()){
-                                                                    okunmamiMesaj++;
+
+            DatabaseReference kullanicilar = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
+            kullanicilar.keepSynced(true);
+            kullanicilar.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    mesajlarList.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        Query query1 = dataSnapshot.getRef().orderByKey().limitToLast(1);
+                        query1.keepSynced(true);
+                        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot3) {
+                                for (DataSnapshot dataSnapshot10 : snapshot3.getChildren()){
+                                    Mesaj mesaj = dataSnapshot10.getValue(Mesaj.class);
+                                    DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(snapshot3.getKey());
+                                    kisiyiBul.keepSynced(true);
+                                    kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot4) {
+                                            Kullanici kullanici = snapshot4.getValue(Kullanici.class);
+                                            if (kullanici != null){
+                                                veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
+                                                DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
+                                                kisiyiKontrolEt.keepSynced(true);
+                                                kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot5) {
+                                                        new Thread(() -> {
+                                                            Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
+                                                            long okunmamisMesaj = 0;
+                                                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                                                Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
+                                                                if(mesaj1 != null){
+                                                                    if (!mesaj1.isGonderen()){
+                                                                        if (!mesaj1.isGoruldu()){
+                                                                            okunmamisMesaj++;
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                    }
-                                                    long finalOkunmamiMesaj = okunmamiMesaj;
-                                                    eThree.findUser(kullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
-                                                        @Override
-                                                        public void onSuccess(Card card) {
+                                                            Card kisiCard = eThree.findUser(kullanici.getTelefon()).get();
                                                             if (mesaj.isGonderen()){
                                                                 mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
                                                             }else{
-                                                                if (card == null){
-                                                                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
+                                                                if (kisiCard != null){
+                                                                    mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), kisiCard));
                                                                 }else{
-                                                                    mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
+                                                                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
                                                                 }
                                                             }
                                                             if (kullanici1 != null){
-                                                                ((Activity) mainActivity).runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamiMesaj));
+                                                                long finalOkunmamisMesaj1 = okunmamisMesaj;
+                                                                mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamisMesaj1));
                                                             }else{
-                                                                ((Activity) mainActivity).runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamiMesaj));
+                                                                long finalOkunmamisMesaj = okunmamisMesaj;
+                                                                mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamisMesaj));
                                                             }
-                                                        }
+                                                        }).start();
+                                                    }
 
-                                                        @Override
-                                                        public void onError(@NonNull Throwable throwable) {
-                                                            ((Activity) mainActivity).runOnUiThread(() -> Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
-                                                        }
-                                                    });
-                                                }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
     }
     @SuppressLint("NotifyDataSetChanged")
     private void MesajGoster(Kullanici kullanici, Mesaj mesaj, String isim , long okunmamisMesaj){

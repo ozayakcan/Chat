@@ -183,18 +183,10 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            eThree.findUser(telefonString).addCallback(new OnResultListener<Card>() {
-                @Override
-                public void onSuccess(Card card) {
-                    runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
-                }
-
-                @Override
-                public void onError(@NonNull Throwable throwable) {
-                    Log.e("E3Kullanıcı", "Hata"+throwable.getMessage());
-                    runOnUiThread(() -> SifreliMesajlariGoster(null ,snapshot));
-                }
-            });
+            new Thread(() -> {
+                Card card = eThree.findUser(telefonString).get();
+                runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
+            }).start();
         }
 
         @Override
@@ -206,6 +198,7 @@ public class MesajActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void SifreliMesajlariGoster(Card card, DataSnapshot snapshot) {
         mesajList.clear();
+        long sonTarih = 0;
         for (DataSnapshot dataSnapshot : snapshot.getChildren()){
             Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
             if (!mesaj.isGonderen()){
@@ -219,10 +212,10 @@ public class MesajActivity extends AppCompatActivity {
                             .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
                     gorulduOlarakIsaretleIki.updateChildren(mapBir);
                 }
-                if (card == null){
-                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
-                }else{
+                if (card != null){
                     mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
+                }else{
+                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
                 }
                 mesajList.add(mesaj);
             }else{
