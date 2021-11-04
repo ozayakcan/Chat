@@ -106,27 +106,45 @@ public class BildirimClass {
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
-                                                    new Thread(() -> {
-                                                        Card card =  eThree.findUser(sonAsilKullanici.getTelefon()).get();
-                                                        long mesajSayisi = 0;
-                                                        for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
-                                                            Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
-                                                            if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
-                                                                mesajSayisi++;
-                                                                String cozulenMesaj;
-                                                                if (card != null){
-                                                                    cozulenMesaj = eThree.authDecrypt(mesaj.getMesaj(), card);
-                                                                }else{
-                                                                    cozulenMesaj = mContext.getString(R.string.this_message_could_not_be_decrypted);
+                                                    eThree.findUser(sonAsilKullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
+                                                        @Override
+                                                        public void onSuccess(Card card) {
+                                                            long mesajSayisi = 0;
+                                                            for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
+                                                                Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
+                                                                if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
+                                                                    mesajSayisi++;
+                                                                    String cozulenMesaj;
+                                                                    if (card != null){
+                                                                        cozulenMesaj = eThree.authDecrypt(mesaj.getMesaj(), card);
+                                                                    }else{
+                                                                        cozulenMesaj = mContext.getString(R.string.this_message_could_not_be_decrypted);
+                                                                    }
+                                                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), cozulenMesaj, mesaj.getTarih(), mesajSayisi);
+                                                                    bildirimMesajList.add(bildirimMesaj);
                                                                 }
-                                                                BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), cozulenMesaj, mesaj.getTarih(), mesajSayisi);
-                                                                bildirimMesajList.add(bildirimMesaj);
+                                                            }
+                                                            if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
+                                                                MesajBildirimiGoster(bildirimMesajList);
                                                             }
                                                         }
-                                                        if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                            MesajBildirimiGoster(bildirimMesajList);
+
+                                                        @Override
+                                                        public void onError(@NonNull Throwable throwable) {
+                                                            long mesajSayisi = 0;
+                                                            for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
+                                                                Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
+                                                                if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
+                                                                    mesajSayisi++;
+                                                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mContext.getString(R.string.this_message_could_not_be_decrypted), mesaj.getTarih(), mesajSayisi);
+                                                                    bildirimMesajList.add(bildirimMesaj);
+                                                                }
+                                                            }
+                                                            if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
+                                                                MesajBildirimiGoster(bildirimMesajList);
+                                                            }
                                                         }
-                                                    }).start();
+                                                    });
                                                 }
 
                                                 @Override

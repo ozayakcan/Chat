@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -25,8 +26,10 @@ import com.ozayakcan.chat.Bildirimler.RetrofitAyarlari;
 import com.ozayakcan.chat.Bildirimler.RetrofitClient;
 import com.ozayakcan.chat.Bildirimler.Sonuc;
 import com.ozayakcan.chat.ChatApp;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.R;
 import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
@@ -196,7 +199,7 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(EThree eThree, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser){
+    public void MesajGonder(EThree eThree, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
         eThree.findUser(gonderilecekTelefon).addCallback(new OnResultListener<Card>() {
             @Override
             public void onSuccess(Card card) {
@@ -276,13 +279,14 @@ public class Veritabani {
             @Override
             public void onError(@NonNull Throwable throwable) {
                 Log.e("E3Kullanici", "Hata", throwable);
+                mesajActivity.runOnUiThread(() -> Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
             }
         });
 
     }
     public void MesajDurumuGuncelle(String telefon, boolean karsi){
         DatabaseReference onlineDurumu = FirebaseDatabase.getInstance().getReference(".info/connected");
-        onlineDurumu.addValueEventListener(new ValueEventListener() {
+        onlineDurumu.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean baglandi = snapshot.getValue(Boolean.class);

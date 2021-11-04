@@ -38,6 +38,7 @@ public class KisilerFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private RecyclerView kisilerRW;
     private KisiAdapter kisiAdapter;
+    private DatabaseReference kisilerRef;
     private List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
     public KisilerFragment(MainActivity mainActivity) {
@@ -56,8 +57,10 @@ public class KisilerFragment extends Fragment {
         kisilerRW.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         kullaniciList = new ArrayList<>();
+        kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+Veritabani.KisiTablosu);
+        kisilerRef.keepSynced(true);
         if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
-            KisileriBul();
+            KisileriBul(true);
         }else{
             izinler.Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
         }
@@ -69,7 +72,7 @@ public class KisilerFragment extends Fragment {
             result -> {
                 if (result){
                     veritabani.KisileriEkle(firebaseUser);
-                    KisileriBul();
+                    KisileriBul(true);
                 }else{
                     KisiIzniUyariKutusu();
                 }
@@ -78,22 +81,30 @@ public class KisilerFragment extends Fragment {
     private void KisiIzniUyariKutusu() {
         izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
     }
-    private void KisileriBul(){
+
+    private boolean kisilerGuncelleniyor = false;
+    private void KisileriBul(boolean goster){
         //Kişiler veritabanından çekiliyor
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+Veritabani.KisiTablosu);
-        reference.keepSynced(true);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                KisileriGuncelle(snapshot);
+        if (kisilerGuncelleniyor != goster){
+            if (goster){
+                kisilerRef.addValueEventListener(kisilerValueEventListener);
+            }else{
+                kisilerRef.removeEventListener(kisilerValueEventListener);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+            kisilerGuncelleniyor = goster;
+        }
     }
+    private final ValueEventListener kisilerValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            KisileriGuncelle(snapshot);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
     private void KisileriGuncelle(DataSnapshot veriler){
         kullaniciList.clear();
         for (DataSnapshot verilerSnapshot : veriler.getChildren()){
@@ -106,5 +117,17 @@ public class KisilerFragment extends Fragment {
             kisiAdapter = new KisiAdapter(kullaniciList, mainActivity);
         }
         kisilerRW.setAdapter(kisiAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        KisileriBul(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        KisileriBul(false);
     }
 }
