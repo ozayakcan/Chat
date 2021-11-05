@@ -61,4 +61,5 @@
     <string name="this_message_could_not_be_decrypted">Bu mesaj çözülemedi!</string>
     <string name="send">Gonder</string>
     <string name="you_cannot_send_empty_messages">Boş mesaj gönderemezsin!</string>
+    <string name="there_is_already_an_archiving_progress">There is already an archiving progress.</string>
 </resources>

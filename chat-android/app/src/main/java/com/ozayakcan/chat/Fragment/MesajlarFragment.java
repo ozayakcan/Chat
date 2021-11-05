@@ -2,17 +2,18 @@ package com.ozayakcan.chat.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,6 +58,9 @@ public class MesajlarFragment extends Fragment {
     private DatabaseReference kullanicilarRef;
     private boolean mesajlarGosteriliyor = false;
 
+    private boolean mesajlarArsivleniyor = false;
+    private LinearLayout arsivProgressBarLayout;
+
     private EThree eThree;
     private SharedPreference sharedPreference;
 
@@ -71,6 +75,7 @@ public class MesajlarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
         veritabani = new Veritabani(mainActivity);
         sharedPreference = new SharedPreference(mainActivity);
+        arsivProgressBarLayout = view.findViewById(R.id.arsivProgressBarLayout);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -294,46 +299,51 @@ public class MesajlarFragment extends Fragment {
         dialog.show();
     }
     public void MesajlariArsivle(FirebaseUser firebaseUser2, String telefon, int index){
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
-        builder.setCancelable(true);
-        builder.setTitle(R.string.archive_messages);
-        builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
-        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            DatabaseReference veritabani = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber()).child(telefon);
-            databaseReference.keepSynced(true);
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    final ProgressDialog progressDialog = new ProgressDialog(mContext);
-                    progressDialog.setCancelable(false);
-                    progressDialog.setMessage(mContext.getString(R.string.messages_is_archiving));
-                    progressDialog.show();
-                    HashMap<String, Object> arsivleMap = new HashMap<>();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        arsivleMap.put(Veritabani.ArsivTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), dataSnapshot.getValue());
-                        arsivleMap.put(Veritabani.MesajTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), null);
-                    }
-                    veritabani.updateChildren(arsivleMap, (error, ref) -> {
-                        if (error == null){
-                            mesajlarAdapter.notifyItemRemoved(index);
-                            mesajlarAdapter.notifyItemChanged(index);
-                        }else {
-                            Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
+        if (!mesajlarArsivleniyor){
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.archive_messages);
+            builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+            builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                arsivProgressBarLayout.setVisibility(View.VISIBLE);
+                mesajlarArsivleniyor = true;
+                DatabaseReference mesajlariArsivleRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber()).child(telefon);
+                databaseReference.keepSynced(true);
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        HashMap<String, Object> arsivleMap = new HashMap<>();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                            arsivleMap.put(Veritabani.ArsivTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), dataSnapshot.getValue());
+                            arsivleMap.put(Veritabani.MesajTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), null);
                         }
-                        progressDialog.dismiss();
-                    });
-                }
+                        mesajlariArsivleRef.updateChildren(arsivleMap, (error, ref) -> {
+                            if (error == null){
+                                mesajlarAdapter.notifyItemRemoved(index);
+                                mesajlarAdapter.notifyItemChanged(index);
+                            }else {
+                                Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
+                            }
+                            mesajlarArsivleniyor = false;
+                            arsivProgressBarLayout.setVisibility(View.GONE);
+                        });
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
+                        arsivProgressBarLayout.setVisibility(View.GONE);
+                        mesajlarArsivleniyor = false;
+                    }
+                });
             });
-        });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else{
+            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_progress), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

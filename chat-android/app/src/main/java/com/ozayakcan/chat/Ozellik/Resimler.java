@@ -3,18 +3,20 @@ package com.ozayakcan.chat.Ozellik;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,14 +56,11 @@ public class Resimler {
         });
     }
 
-    public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum){
+    public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum, LinearLayout progressBarLayout){
         if (resimYukleUploadTask != null && resimYukleUploadTask.isInProgress()) {
             Toast.makeText(mContext, R.string.upload_in_progress, Toast.LENGTH_SHORT).show();
         } else {
-            final ProgressDialog progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage(mContext.getString(R.string.uploading));
-            progressDialog.show();
+            progressBarLayout.setVisibility(View.VISIBLE);
             if (resim != null){
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(konum);
                 resimYukleUploadTask = storageReference.putFile(resim);
@@ -85,14 +84,14 @@ public class Resimler {
                     } else {
                         Toast.makeText(mContext, R.string.failed, Toast.LENGTH_SHORT).show();
                     }
-                    progressDialog.dismiss();
+                    progressBarLayout.setVisibility(View.GONE);
                 }).addOnFailureListener(e -> {
                     Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    progressBarLayout.setVisibility(View.GONE);
                 });
             }else{
                 Toast.makeText(mContext, mContext.getString(R.string.no_image_selected), Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
+                progressBarLayout.setVisibility(View.GONE);
             }
         }
     }
@@ -160,9 +159,9 @@ public class Resimler {
         //options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
         options.setHideBottomControls(false);
         options.setFreeStyleCropEnabled(false);
-        options.setStatusBarColor(mContext.getColor(R.color.colorPrimary));
-        options.setToolbarColor(mContext.getColor(R.color.colorPrimary));
-        options.setToolbarWidgetColor(mContext.getColor(R.color.white));
+        options.setStatusBarColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        options.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        options.setToolbarWidgetColor(ContextCompat.getColor(mContext, R.color.white));
         options.setToolbarTitle(mContext.getString(R.string.crop_profile_photo));
         return options;
     }

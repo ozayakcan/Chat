@@ -30,6 +30,28 @@
                 android:layout_alignParentBottom="true"
                 android:src="@drawable/ic_kamera"/>
         </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/progressBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/uploading"/>
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="true"
+                android:max="100"
+                android:backgroundTint="@color/white"
+                android:indeterminateTint="@color/colorPrimary"
+                android:layout_marginTop="-7dp"/>
+        </LinearLayout>
         <EditText
             android:id="@+id/isimET"
             android:layout_width="match_parent"

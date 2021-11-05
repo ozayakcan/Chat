@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BilgilerActivity extends AppCompatActivity {
 
+    private LinearLayout progressBarLayout;
     private CircleImageView profilResmi;
     private EditText isimET, hakkimdaET;
     private TextView isimHata;
@@ -67,6 +69,7 @@ public class BilgilerActivity extends AppCompatActivity {
         sharedPreference = new SharedPreference(BilgilerActivity.this);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        progressBarLayout = findViewById(R.id.progressBarLayout);
         profilResmi = findViewById(R.id.profilResmi);
         CircleImageView kamera = findViewById(R.id.kamera);
         isimET = findViewById(R.id.isimET);
@@ -196,7 +199,7 @@ public class BilgilerActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                resimler.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid()+"/"+Veritabani.ProfilResmiDosyaAdi+Resimler.VarsayilanResimUzantisi);
+                resimler.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid()+"/"+Veritabani.ProfilResmiDosyaAdi+Resimler.VarsayilanResimUzantisi, progressBarLayout);
             }
         }
     }

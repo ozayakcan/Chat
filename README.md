@@ -10,6 +10,16 @@ Firebase Realtime Database Kuralları
   "rules": {
     ".read": false,
     ".write": false,
+    "Arsiv": {
+    	"$telefonNumarasi": {
+        ".read": "auth != null && auth.token.phone_number == $telefonNumarasi",
+        ".write": "auth != null && auth.token.phone_number == $telefonNumarasi",
+        "$kisiNumarasi": {
+          ".read": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)",
+          ".write": "auth != null && (auth.token.phone_number == $telefonNumarasi || auth.token.phone_number == $kisiNumarasi)"
+        }
+      }
+    },
     "Kullanicilar": {
     	"$telefonNumarasi": {
         ".read": "auth != null",

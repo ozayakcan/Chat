@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -53,7 +54,7 @@ public class GirisActivity extends AppCompatActivity {
     private EditText telefonNumarasi, onayKodu;
     private TextView bosNumaraUyari, dogrulamaHataMesaji, geriSayimText, onayKoduHata;
     private CountryCodePicker ulkeKodu;
-    private Button girisBtn, girisBtnDevredisi, onayBtn, onayBtnDevredisi, tekrarGonderBtn, tekrarGonderBtnDevredisi;
+    private Button girisBtn, onayBtn, tekrarGonderBtn;
     private ProgressBar progressBar;
     private String tamNumara = "";
     private boolean telefonDogrulamasi = false;
@@ -102,7 +103,6 @@ public class GirisActivity extends AppCompatActivity {
             }
         });
         girisBtn = findViewById(R.id.girisBtn);
-        girisBtnDevredisi = findViewById(R.id.girisBtnDevredisi);
         girisBtn.setOnClickListener(v -> {
             GirisButonDurumu(false);
             Giris();
@@ -134,10 +134,8 @@ public class GirisActivity extends AppCompatActivity {
             }
         });
         onayBtn = findViewById(R.id.onayBtn);
-        onayBtnDevredisi = findViewById(R.id.onayBtnDevredisi);
         onayBtn.setOnClickListener(v -> OnayKodunuDogrula());
         tekrarGonderBtn = findViewById(R.id.tekrarGonderBtn);
-        tekrarGonderBtnDevredisi = findViewById(R.id.tekrarGonderBtnDevredisi);
         TekrarGonderButonDurumu(false);
         tekrarGonderBtn.setOnClickListener(v -> TekrarGonder());
     }
@@ -320,36 +318,37 @@ public class GirisActivity extends AppCompatActivity {
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
     private void GirisButonDurumu(boolean durum){
+        girisBtn.setEnabled(durum);
         if (durum){
             progressBar.setVisibility(View.GONE);
-            girisBtnDevredisi.setVisibility(View.GONE);
-            girisBtn.setVisibility(View.VISIBLE);
+            girisBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_enabled));
+            girisBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.white));
         }else{
             progressBar.setVisibility(View.VISIBLE);
-            girisBtn.setVisibility(View.GONE);
-            girisBtnDevredisi.setVisibility(View.VISIBLE);
+            girisBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_disabled));
+            girisBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.disabledText));
         }
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void OnayButonDurumu(boolean durum){
+        onayBtn.setEnabled(durum);
         if (durum){
-            onayBtnDevredisi.setVisibility(View.GONE);
-            onayBtn.setVisibility(View.VISIBLE);
+            onayBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_enabled));
+            onayBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.white));
         }else{
-            onayBtn.setVisibility(View.GONE);
-            onayBtnDevredisi.setVisibility(View.VISIBLE);
+            onayBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_disabled));
+            onayBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.disabledText));
         }
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void TekrarGonderButonDurumu(boolean durum){
+        tekrarGonderBtn.setEnabled(durum);
         if (durum){
-            tekrarGonderBtnDevredisi.setVisibility(View.GONE);
-            tekrarGonderBtn.setVisibility(View.VISIBLE);
+            tekrarGonderBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_enabled));
+            tekrarGonderBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.white));
         }else{
-            tekrarGonderBtn.setVisibility(View.GONE);
-            tekrarGonderBtnDevredisi.setVisibility(View.VISIBLE);
+            tekrarGonderBtn.setBackgroundTintList(ContextCompat.getColorStateList(GirisActivity.this, R.color.backgroundtint_disabled));
+            tekrarGonderBtn.setTextColor(ContextCompat.getColor(GirisActivity.this, R.color.disabledText));
         }
     }
     private void OnayKoduHatalariniGizle(){
