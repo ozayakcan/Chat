@@ -140,7 +140,7 @@ public class MesajActivity extends AppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         SharedPreference sharedPreference = new SharedPreference(MesajActivity.this);
         if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
-            E3KitKullanici e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getPhoneNumber());
+            E3KitKullanici e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getUid());
             new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
                 @Override
                 public void Basarili(EThree kullanici) {
@@ -156,7 +156,7 @@ public class MesajActivity extends AppCompatActivity {
                 }
             })).start();
         }else{
-            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getPhoneNumber(),
+            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getUid(),
                     () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
                     MesajActivity.this);
             eThree = new EThree(eThreeParams);
@@ -204,7 +204,7 @@ public class MesajActivity extends AppCompatActivity {
         String mesaj = gonderText.getText().toString();
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
-            veritabani.MesajGonder(eThree, mesaj, telefonString, firebaseUser, MesajActivity.this);
+            veritabani.MesajGonder(eThree, mesaj, idString, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
         }else{
             Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
@@ -215,7 +215,7 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            eThree.findUser(telefonString).addCallback(new OnResultListener<Card>() {
+            eThree.findUser(idString).addCallback(new OnResultListener<Card>() {
                 @Override
                 public void onSuccess(Card card) {
                     runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));

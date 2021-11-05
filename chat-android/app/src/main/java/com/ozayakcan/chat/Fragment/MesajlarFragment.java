@@ -93,7 +93,7 @@ public class MesajlarFragment extends Fragment {
         kullanicilarRef = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
         kullanicilarRef.keepSynced(true);
         if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
-            E3KitKullanici e3KitKullanici = new E3KitKullanici(mainActivity, firebaseUser.getPhoneNumber());
+            E3KitKullanici e3KitKullanici = new E3KitKullanici(mainActivity, firebaseUser.getUid());
             new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
                 @Override
                 public void Basarili(EThree kullanici) {
@@ -109,7 +109,7 @@ public class MesajlarFragment extends Fragment {
                 }
             })).start();
         }else{
-            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getPhoneNumber(),
+            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getUid(),
                     () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
                     mainActivity);
             eThree = new EThree(eThreeParams);
@@ -155,7 +155,7 @@ public class MesajlarFragment extends Fragment {
                                         kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot5) {
-                                                eThree.findUser(kullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
+                                                eThree.findUser(kullanici.getID()).addCallback(new OnResultListener<Card>() {
                                                     @Override
                                                     public void onSuccess(Card card) {
                                                         Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);

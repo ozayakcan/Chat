@@ -18,14 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Bildirimler.Data;
 import com.ozayakcan.chat.Bildirimler.Gonder;
 import com.ozayakcan.chat.Bildirimler.RetrofitAyarlari;
 import com.ozayakcan.chat.Bildirimler.RetrofitClient;
 import com.ozayakcan.chat.Bildirimler.Sonuc;
-import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
@@ -199,8 +197,8 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(EThree eThree, String normalMesaj, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
-        eThree.findUser(gonderilecekTelefon).addCallback(new OnResultListener<Card>() {
+    public void MesajGonder(EThree eThree, String normalMesaj, String gonderilecekID, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
+        eThree.findUser(gonderilecekID).addCallback(new OnResultListener<Card>() {
             @Override
             public void onSuccess(Card card) {
                 String sifreliMesaj = eThree.authEncrypt(normalMesaj, card);

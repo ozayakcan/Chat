@@ -1,7 +1,6 @@
 package com.ozayakcan.chat.Bildirimler;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,8 +13,6 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -32,10 +29,8 @@ import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
-import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
-import com.virgilsecurity.android.common.model.EThreeParams;
 import com.virgilsecurity.android.ethree.interaction.EThree;
 import com.virgilsecurity.common.callback.OnResultListener;
 import com.virgilsecurity.sdk.cards.Card;
@@ -106,7 +101,7 @@ public class BildirimClass {
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
-                                                    eThree.findUser(sonAsilKullanici.getTelefon()).addCallback(new OnResultListener<Card>() {
+                                                    eThree.findUser(sonAsilKullanici.getID()).addCallback(new OnResultListener<Card>() {
                                                         @Override
                                                         public void onSuccess(Card card) {
                                                             long mesajSayisi = 0;

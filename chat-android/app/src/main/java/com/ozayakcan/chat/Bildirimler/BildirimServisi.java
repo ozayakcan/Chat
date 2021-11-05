@@ -34,7 +34,7 @@ public class BildirimServisi extends FirebaseMessagingService {
         if (firebaseUser.getPhoneNumber() != null){
             SharedPreference sharedPreference = new SharedPreference(getApplicationContext());
             if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
-                E3KitKullanici e3KitKullanici = new E3KitKullanici(getApplicationContext(), firebaseUser.getPhoneNumber());
+                E3KitKullanici e3KitKullanici = new E3KitKullanici(getApplicationContext(), firebaseUser.getUid());
                 new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
                     @Override
                     public void Basarili(EThree kullanici) {
@@ -47,7 +47,7 @@ public class BildirimServisi extends FirebaseMessagingService {
                     }
                 })).start();
             }else{
-                EThreeParams eThreeParams = new EThreeParams(firebaseUser.getPhoneNumber(),
+                EThreeParams eThreeParams = new EThreeParams(firebaseUser.getUid(),
                         () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
                         getApplicationContext());
                 EThree eThree = new EThree(eThreeParams);

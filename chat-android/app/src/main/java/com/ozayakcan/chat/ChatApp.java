@@ -3,16 +3,13 @@ package com.ozayakcan.chat;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
-import com.virgilsecurity.android.ethree.interaction.EThree;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -56,7 +56,7 @@ public class SSActivity extends AppCompatActivity {
 			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    E3KitKullanici e3KitKullanici = new E3KitKullanici(SSActivity.this, user.getPhoneNumber());
+                    E3KitKullanici e3KitKullanici = new E3KitKullanici(SSActivity.this, user.getUid());
                     new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
                         @Override
                         public void Basarili(EThree eThree) {
