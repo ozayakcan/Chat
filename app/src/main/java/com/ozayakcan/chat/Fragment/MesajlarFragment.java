@@ -1,10 +1,8 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,14 +29,9 @@ import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
-import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
-import com.virgilsecurity.android.common.model.EThreeParams;
-import com.virgilsecurity.android.ethree.interaction.EThree;
-import com.virgilsecurity.common.callback.OnResultListener;
-import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +53,6 @@ public class MesajlarFragment extends Fragment {
     private boolean mesajlarArsivleniyor = false;
     private LinearLayout arsivProgressBarLayout;
 
-    private EThree eThree;
     private SharedPreference sharedPreference;
 
     public MesajlarFragment(MainActivity mainActivity) {
@@ -92,42 +83,18 @@ public class MesajlarFragment extends Fragment {
         });
         kullanicilarRef = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
         kullanicilarRef.keepSynced(true);
-        if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
-            E3KitKullanici e3KitKullanici = new E3KitKullanici(mainActivity, firebaseUser.getUid());
-            new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
-                @Override
-                public void Basarili(EThree kullanici) {
-                    eThree = kullanici;
-                    MesajlariBul(true);
-                    veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
-                }
-
-                @Override
-                public void Basarisiz(Throwable hata) {
-                    Log.e("Chatapp", "Başarısız: "+hata.getMessage());
-                    ((Activity) mainActivity).runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
-                }
-            })).start();
-        }else{
-            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getUid(),
-                    () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
-                    mainActivity);
-            eThree = new EThree(eThreeParams);
-            MesajlariBul(true);
-            veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
-        }
+        MesajlariBul(true);
+        veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         return view;
     }
     private void MesajlariBul(boolean goster) {
-        if (eThree != null){
-            if (mesajlarGosteriliyor != goster){
-                if (goster){
-                    kullanicilarRef.addValueEventListener(mesajlarValueEventListener);
-                }else{
-                    kullanicilarRef.removeEventListener(mesajlarValueEventListener);
-                }
-                mesajlarGosteriliyor = goster;
+        if (mesajlarGosteriliyor != goster){
+            if (goster){
+                kullanicilarRef.addValueEventListener(mesajlarValueEventListener);
+            }else{
+                kullanicilarRef.removeEventListener(mesajlarValueEventListener);
             }
+            mesajlarGosteriliyor = goster;
         }
     }
     private final ValueEventListener mesajlarValueEventListener = new ValueEventListener() {
@@ -155,67 +122,25 @@ public class MesajlarFragment extends Fragment {
                                         kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot5) {
-                                                eThree.findUser(kullanici.getID()).addCallback(new OnResultListener<Card>() {
-                                                    @Override
-                                                    public void onSuccess(Card card) {
-                                                        Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
-                                                        long okunmamisMesaj = 0;
-                                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                                            Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
-                                                            if(mesaj1 != null){
-                                                                if (!mesaj1.isGonderen()){
-                                                                    if (!mesaj1.isGoruldu()){
-                                                                        okunmamisMesaj++;
-                                                                    }
-                                                                }
+                                                Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
+                                                long okunmamisMesaj = 0;
+                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                                    Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
+                                                    if(mesaj1 != null){
+                                                        if (!mesaj1.isGonderen()){
+                                                            if (!mesaj1.isGoruldu()){
+                                                                okunmamisMesaj++;
                                                             }
-                                                        }
-                                                        if (mesaj.isGonderen()){
-                                                            mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
-                                                        }else{
-                                                            if (card != null){
-                                                                mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
-                                                            }else{
-                                                                mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
-                                                            }
-                                                        }
-                                                        if (kullanici1 != null){
-                                                            long finalOkunmamisMesaj1 = okunmamisMesaj;
-                                                            mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamisMesaj1));
-                                                        }else{
-                                                            long finalOkunmamisMesaj = okunmamisMesaj;
-                                                            mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamisMesaj));
                                                         }
                                                     }
-
-                                                    @Override
-                                                    public void onError(@NonNull Throwable throwable) {
-                                                        Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
-                                                        long okunmamisMesaj = 0;
-                                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                                            Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
-                                                            if(mesaj1 != null){
-                                                                if (!mesaj1.isGonderen()){
-                                                                    if (!mesaj1.isGoruldu()){
-                                                                        okunmamisMesaj++;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        if (mesaj.isGonderen()){
-                                                            mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
-                                                        }else{
-                                                            mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
-                                                        }
-                                                        if (kullanici1 != null){
-                                                            long finalOkunmamisMesaj1 = okunmamisMesaj;
-                                                            mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamisMesaj1));
-                                                        }else{
-                                                            long finalOkunmamisMesaj = okunmamisMesaj;
-                                                            mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamisMesaj));
-                                                        }
-                                                    }
-                                                });
+                                                }
+                                                if (kullanici1 != null){
+                                                    long finalOkunmamisMesaj1 = okunmamisMesaj;
+                                                    mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamisMesaj1));
+                                                }else{
+                                                    long finalOkunmamisMesaj = okunmamisMesaj;
+                                                    mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamisMesaj));
+                                                }
                                             }
 
                                             @Override

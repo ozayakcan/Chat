@@ -1,13 +1,10 @@
 package com.ozayakcan.chat;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,14 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
-import com.ozayakcan.chat.Ozellik.E3KitKullanici;
 import com.ozayakcan.chat.Ozellik.Resimler;
-import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
-import com.virgilsecurity.android.common.model.EThreeParams;
-import com.virgilsecurity.android.ethree.interaction.EThree;
-import com.virgilsecurity.common.callback.OnResultListener;
-import com.virgilsecurity.sdk.cards.Card;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,8 +54,6 @@ public class MesajActivity extends AppCompatActivity {
     private DatabaseReference kisiBilgileriRef;
     private DatabaseReference onlineDurumuRef;
     private String idString;
-
-    private EThree eThree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,31 +127,8 @@ public class MesajActivity extends AppCompatActivity {
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        SharedPreference sharedPreference = new SharedPreference(MesajActivity.this);
-        if (sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, "").equals("")){
-            E3KitKullanici e3KitKullanici = new E3KitKullanici(MesajActivity.this, firebaseUser.getUid());
-            new Thread(() -> e3KitKullanici.KullaniciyiGetir(new E3KitKullanici.Tamamlandi() {
-                @Override
-                public void Basarili(EThree kullanici) {
-                    eThree = kullanici;
-                    MesajlariGoster(true);
-                    gonderBtn.setOnClickListener(v -> MesajGonder());
-                }
-
-                @Override
-                public void Basarisiz(Throwable hata) {
-                    Log.e("Chatapp", "Başarısız: "+hata.getMessage());
-                    runOnUiThread(() -> Toast.makeText(MesajActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show());
-                }
-            })).start();
-        }else{
-            EThreeParams eThreeParams = new EThreeParams(firebaseUser.getUid(),
-                    () -> sharedPreference.GetirString(E3KitKullanici.VirgilTokenKey, ""),
-                    MesajActivity.this);
-            eThree = new EThree(eThreeParams);
-            MesajlariGoster(true);
-            gonderBtn.setOnClickListener(v -> MesajGonder());
-        }
+        MesajlariGoster(true);
+        gonderBtn.setOnClickListener(v -> MesajGonder());
     }
 
     private void Uyari(boolean goster, String... uyari) {
@@ -188,15 +154,13 @@ public class MesajActivity extends AppCompatActivity {
 
     boolean mesajlarGuncelleniyor = false;
     private void MesajlariGoster(boolean goster) {
-        if (eThree != null){
-            if (mesajlarGuncelleniyor != goster){
-                if (goster){
-                    mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
-                }else{
-                    mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
-                }
-                mesajlarGuncelleniyor = goster;
+        if (mesajlarGuncelleniyor != goster){
+            if (goster){
+                mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
+            }else{
+                mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
             }
+            mesajlarGuncelleniyor = goster;
         }
     }
 
@@ -204,7 +168,7 @@ public class MesajActivity extends AppCompatActivity {
         String mesaj = gonderText.getText().toString();
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
-            veritabani.MesajGonder(eThree, mesaj, idString, telefonString, firebaseUser, MesajActivity.this);
+            veritabani.MesajGonder(mesaj, idString, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
         }else{
             Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
@@ -215,17 +179,41 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
-            eThree.findUser(idString).addCallback(new OnResultListener<Card>() {
-                @Override
-                public void onSuccess(Card card) {
-                    runOnUiThread(() -> SifreliMesajlariGoster(card ,snapshot));
+            mesajList.clear();
+            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
+                if (mesajList.size() > 0){
+                    if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
+                        Mesaj tarihMsj = new Mesaj();
+                        tarihMsj.setTarih(mesaj.getTarih());
+                        tarihMsj.setTarihGoster(true);
+                        tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+                        mesajList.add(tarihMsj);
+                    }
+                }else{
+                    Mesaj tarihMsj = new Mesaj();
+                    tarihMsj.setTarih(mesaj.getTarih());
+                    tarihMsj.setTarihGoster(true);
+                    tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+                    mesajList.add(tarihMsj);
                 }
-
-                @Override
-                public void onError(@NonNull Throwable throwable) {
-                    runOnUiThread(() -> SifreliMesajlariGoster(null ,snapshot));
+                if (!mesaj.isGonderen()){
+                    if (tabloString.equals(Veritabani.MesajTablosu)){
+                        HashMap<String, Object> mapBir = new HashMap<>();
+                        mapBir.put(Veritabani.GorulduKey, true);
+                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
+                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
+                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
+                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
+                    }
+                    mesajList.add(mesaj);
+                }else{
+                    mesajList.add(mesaj);
                 }
-            });
+            }
+            mesajAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -234,50 +222,6 @@ public class MesajActivity extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void SifreliMesajlariGoster(Card card, DataSnapshot snapshot) {
-        mesajList.clear();
-        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-            Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
-            if (mesajList.size() > 0){
-                if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
-                    Mesaj tarihMsj = new Mesaj();
-                    tarihMsj.setTarih(mesaj.getTarih());
-                    tarihMsj.setTarihGoster(true);
-                    tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-                    mesajList.add(tarihMsj);
-                }
-            }else{
-                Mesaj tarihMsj = new Mesaj();
-                tarihMsj.setTarih(mesaj.getTarih());
-                tarihMsj.setTarihGoster(true);
-                tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-                mesajList.add(tarihMsj);
-            }
-            if (!mesaj.isGonderen()){
-                if (tabloString.equals(Veritabani.MesajTablosu)){
-                    HashMap<String, Object> mapBir = new HashMap<>();
-                    mapBir.put(Veritabani.GorulduKey, true);
-                    DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
-                            .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
-                    gorulduOlarakIsaretleBir.updateChildren(mapBir);
-                    DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
-                            .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
-                    gorulduOlarakIsaretleIki.updateChildren(mapBir);
-                }
-                if (card == null){
-                    mesaj.setMesaj(getString(R.string.this_message_could_not_be_decrypted));
-                }else{
-                    mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj(), card));
-                }
-                mesajList.add(mesaj);
-            }else{
-                mesaj.setMesaj(eThree.authDecrypt(mesaj.getMesaj()));
-                mesajList.add(mesaj);
-            }
-        }
-        mesajAdapter.notifyDataSetChanged();
-    }
     private boolean kisiBilgileriGuncelleniyor = false;
     private void KisiBilgileriniGoster(boolean goster) {
         if (kisiBilgileriGuncelleniyor != goster){
