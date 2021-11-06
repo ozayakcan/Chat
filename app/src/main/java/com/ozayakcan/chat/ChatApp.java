@@ -1,8 +1,12 @@
 package com.ozayakcan.chat;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.text.format.DateFormat;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -73,5 +77,12 @@ public class ChatApp extends Application {
         }else{
             return tarihStr;
         }
+    }
+    public static void registerBroadcastReceiver(BroadcastReceiver broadcastReceiver, String intentaction) {
+        LocalBroadcastManager.getInstance(getAppContext()).registerReceiver(broadcastReceiver,
+                new IntentFilter(intentaction));
+    }
+    public static void unregisterBroadcastReceiver(BroadcastReceiver broadcastReceiver) {
+        LocalBroadcastManager.getInstance(getAppContext()).unregisterReceiver(broadcastReceiver);
     }
 }

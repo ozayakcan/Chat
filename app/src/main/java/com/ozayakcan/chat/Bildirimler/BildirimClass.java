@@ -16,6 +16,7 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +30,7 @@ import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -58,6 +60,8 @@ public class BildirimClass {
     public static int MaxMesajSayisi = 7;
 
     public void MesajBildirimi() {
+        Intent bildirimGonder = new Intent(MesajKey);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
             DatabaseReference mesajKisileriRef= FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
@@ -99,12 +103,14 @@ public class BildirimClass {
                                                     long mesajSayisi = 0;
                                                     for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
                                                         Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
-                                                        if (mesaj != null && !mesaj.isGonderen() && !mesaj.isGoruldu() && sonAsilKullanici != null){
+                                                        if (mesaj != null && sonAsilKullanici != null){
                                                             mesajSayisi++;
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), mesaj.getTarih(), mesajSayisi);
+                                                            Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
+                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesaj123.getMesaj(), mesaj123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
                                                         }
                                                     }
+                                                    mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
                                                         MesajBildirimiGoster(bildirimMesajList);
                                                     }

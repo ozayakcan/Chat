@@ -1,5 +1,7 @@
 package com.ozayakcan.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,13 +27,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Resimler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,7 +53,6 @@ public class MesajActivity extends AppCompatActivity {
     private Veritabani veritabani;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
-    private Query mesajlariGosterQuery;
     private DatabaseReference kisiBilgileriRef;
     private DatabaseReference onlineDurumuRef;
     private String idString;
@@ -71,7 +73,6 @@ public class MesajActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         veritabani = new Veritabani(MesajActivity.this);
-        mesajList = new ArrayList<>();
 
         Intent intent = getIntent();
         idString = intent.getStringExtra(Veritabani.IDKey);
@@ -94,6 +95,7 @@ public class MesajActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        mesajList = new ArrayList<>();
         mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
         mesajAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -120,15 +122,13 @@ public class MesajActivity extends AppCompatActivity {
         }else{
             isim.setText(isimString);
         }
-        mesajlariGosterQuery = FirebaseDatabase.getInstance().getReference(tabloString).child(firebaseUser.getPhoneNumber()).child(telefonString).orderByKey();
-        mesajlariGosterQuery.keepSynced(true);
         kisiBilgileriRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
         kisiBilgileriRef.keepSynced(true);
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        MesajlariGoster(true);
         gonderBtn.setOnClickListener(v -> MesajGonder());
+        MesajlariGoster();
     }
 
     private void Uyari(boolean goster, String... uyari) {
@@ -151,76 +151,73 @@ public class MesajActivity extends AppCompatActivity {
         }
         constraintSet.applyTo(constraintLayout);
     }
-
-    boolean mesajlarGuncelleniyor = false;
-    private void MesajlariGoster(boolean goster) {
-        if (mesajlarGuncelleniyor != goster){
-            if (goster){
-                mesajlariGosterQuery.addValueEventListener(mesajlariGosterEventListener);
-            }else{
-                mesajlariGosterQuery.removeEventListener(mesajlariGosterEventListener);
-            }
-            mesajlarGuncelleniyor = goster;
-        }
-    }
-
-    private void MesajGonder() {
-        String mesaj = gonderText.getText().toString();
-        String mesajKontrol = mesaj.replace("\n", "");
-        if(!mesajKontrol.equals("")){
-            veritabani.MesajGonder(mesaj, idString, telefonString, firebaseUser, MesajActivity.this);
-            gonderText.setText("");
-        }else{
-            Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private final ValueEventListener mesajlariGosterEventListener = new ValueEventListener() {
-
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            mesajList.clear();
-            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                Mesaj mesaj = dataSnapshot.getValue(Mesaj.class);
-                if (mesajList.size() > 0){
-                    if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
-                        Mesaj tarihMsj = new Mesaj();
-                        tarihMsj.setTarih(mesaj.getTarih());
-                        tarihMsj.setTarihGoster(true);
-                        tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-                        mesajList.add(tarihMsj);
-                    }
-                }else{
+    private void MesajlariGoster(){
+        List<Mesaj> mesajlar = tabloString.equals(Veritabani.MesajTablosu) ? MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTur) : MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTurArsiv);
+        for (Mesaj mesaj : mesajlar){
+            if (mesajList.size() > 0){
+                if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
                     Mesaj tarihMsj = new Mesaj();
                     tarihMsj.setTarih(mesaj.getTarih());
                     tarihMsj.setTarihGoster(true);
                     tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
                     mesajList.add(tarihMsj);
                 }
-                if (!mesaj.isGonderen()){
-                    if (tabloString.equals(Veritabani.MesajTablosu)){
-                        HashMap<String, Object> mapBir = new HashMap<>();
-                        mapBir.put(Veritabani.GorulduKey, true);
-                        DatabaseReference gorulduOlarakIsaretleBir = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+telefonString+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleBir.updateChildren(mapBir);
-                        DatabaseReference gorulduOlarakIsaretleIki = FirebaseDatabase.getInstance()
-                                .getReference(Veritabani.MesajTablosu+"/"+telefonString+"/"+firebaseUser.getPhoneNumber()+"/"+dataSnapshot.getKey());
-                        gorulduOlarakIsaretleIki.updateChildren(mapBir);
-                    }
-                    mesajList.add(mesaj);
-                }else{
-                    mesajList.add(mesaj);
-                }
+            }else{
+                Mesaj tarihMsj = new Mesaj();
+                tarihMsj.setTarih(mesaj.getTarih());
+                tarihMsj.setTarihGoster(true);
+                tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
+                mesajList.add(tarihMsj);
             }
-            mesajAdapter.notifyDataSetChanged();
+            mesajList.add(mesaj);
         }
+        mesajAdapter.notifyItemRangeInserted(0, mesajList.size() - 1);
+        recyclerView.scrollToPosition(mesajList.size() - 1);
+        MesajlariGuncelle(true);
+    }
+    boolean mesajlarGuncelleniyor = false;
+    private void MesajlariGuncelle(boolean goster) {
+        if (mesajlarGuncelleniyor != goster){
+            if (goster){
+                ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.MesajKey);
+            }else{
+                ChatApp.unregisterBroadcastReceiver(mMesaj2BroadcastReceiver);
+            }
+            mesajlarGuncelleniyor = goster;
+        }
+    }
+    private final BroadcastReceiver mMesaj2BroadcastReceiver = new BroadcastReceiver() {
 
         @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
+        public void onReceive(Context context, Intent intent) {
+        if(intent.getAction().equals(BildirimClass.MesajKey)){
+            mesajList.clear();
+            MesajlariGoster();
+        }
         }
     };
+    private void MesajGonder() {
+        String mesaj = gonderText.getText().toString();
+        String mesajKontrol = mesaj.replace("\n", "");
+        if(!mesajKontrol.equals("")){
+            Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajDurumuGonderiliyor,true);
+            mesajList.add(mesajClass);
+            mesajAdapter.notifyItemInserted( mesajList.size() - 1);
+            recyclerView.scrollToPosition(mesajList.size() - 1);
+            veritabani.MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
+            gonderText.setText("");
+        }else{
+            Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void MesajDurumunuGuncelle(int sira, Mesaj mesaj){
+        if (mesajList.size() >= sira){
+            mesajList.set(sira, mesaj);
+            MesajFonksiyonlari.getInstance(MesajActivity.this).MesajDuzenle(telefonString, mesajList);
+            mesajAdapter.notifyItemChanged(sira);
+        }
+    }
 
     private boolean kisiBilgileriGuncelleniyor = false;
     private void KisiBilgileriniGoster(boolean goster) {
@@ -279,7 +276,7 @@ public class MesajActivity extends AppCompatActivity {
         }
     };
     private void Geri(){
-        MesajlariGoster(false);
+        MesajlariGuncelle(false);
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
         Intent intent = new Intent(MesajActivity.this, MainActivity.class);
@@ -304,9 +301,13 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        MesajlariGuncelle(true);
+    }
+    @Override
     protected void onResume() {
         super.onResume();
-        MesajlariGoster(true);
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
         Veritabani.DurumGuncelle(firebaseUser, true);
@@ -315,7 +316,15 @@ public class MesajActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MesajlariGoster(false);
+        KisiBilgileriniGoster(false);
+        KisininOnlineDurumunuGuncelle(false);
+        Veritabani.DurumGuncelle(firebaseUser, false);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MesajlariGuncelle(false);
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
         Veritabani.DurumGuncelle(firebaseUser, false);

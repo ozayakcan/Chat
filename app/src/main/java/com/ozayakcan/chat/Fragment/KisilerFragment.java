@@ -130,4 +130,10 @@ public class KisilerFragment extends Fragment {
         super.onPause();
         KisileriBul(false);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        KisileriBul(false);
+    }
 }

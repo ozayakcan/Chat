@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiArsivle).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariArsivle(firebaseUser, telefon, index);
+            mesajlarFragment.MesajlariArsivle(telefon, index);
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiSil).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariSil(firebaseUser, telefon, index);
+            mesajlarFragment.MesajlariSil(telefon, index);
             bottomSheetDialog.dismiss();
         });
         bottomSheetDialog.setContentView(altMenuView);
@@ -94,4 +94,9 @@ public class MainActivity extends AppCompatActivity {
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Veritabani.DurumGuncelle(firebaseUser, false);
+    }
 }

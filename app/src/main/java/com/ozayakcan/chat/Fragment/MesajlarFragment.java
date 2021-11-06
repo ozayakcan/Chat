@@ -1,12 +1,15 @@
 package com.ozayakcan.chat.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,14 +27,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajlarAdapter;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+
+import org.whispersystems.libsignal.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,11 +54,12 @@ public class MesajlarFragment extends Fragment {
     private Veritabani veritabani;
     private final MainActivity mainActivity;
     private final Context mContext;
-    private DatabaseReference kullanicilarRef;
     private boolean mesajlarGosteriliyor = false;
 
     private boolean mesajlarArsivleniyor = false;
-    private LinearLayout arsivProgressBarLayout;
+    private boolean mesajlarSiliniyor = false;
+    private LinearLayout progressBarLayout;
+    private TextView progressBarText;
 
     private SharedPreference sharedPreference;
 
@@ -66,7 +74,8 @@ public class MesajlarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
         veritabani = new Veritabani(mainActivity);
         sharedPreference = new SharedPreference(mainActivity);
-        arsivProgressBarLayout = view.findViewById(R.id.arsivProgressBarLayout);
+        progressBarLayout = view.findViewById(R.id.progressBarLayout);
+        progressBarText = view.findViewById(R.id.progressBarText);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -81,205 +90,137 @@ public class MesajlarFragment extends Fragment {
                 mesajlarRW.setAdapter(mesajlarAdapter);
             }
         });
-        kullanicilarRef = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
-        kullanicilarRef.keepSynced(true);
-        MesajlariBul(true);
+        MesajlariGetir();
         veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         return view;
     }
-    private void MesajlariBul(boolean goster) {
+
+    private void MesajlariGetir() {
+        mesajlarList.clear();
+        List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(MesajFonksiyonlari.KaydedilecekTur);
+        for (String kisi : kisiler){
+            List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+            DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
+            kullaniciRef.keepSynced(true);
+            kullaniciRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                    if (kullanici != null){
+                        DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
+                        kisilerRef.keepSynced(true);
+                        kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                Kullanici kisi = snapshot1.getValue(Kullanici.class);
+                                String isim = kisi != null ? kisi.getIsim() : kullanici.getIsim();
+                                long okunmamisMesaj = 0;
+                                for (Mesaj mesaj123 : mesajList){
+                                    if (!mesaj123.isGonderen() && mesaj123.isGoruldu()){
+                                        okunmamisMesaj++;
+                                    }
+                                }
+                                Mesajlar mesajlar = new Mesajlar(kullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
+                                mesajlarList.add(mesajlar);
+                                mesajlarAdapter.notifyDataSetChanged();
+                                MesajlariGuncelle(true);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    private void MesajlariGuncelle(boolean goster) {
         if (mesajlarGosteriliyor != goster){
             if (goster){
-                kullanicilarRef.addValueEventListener(mesajlarValueEventListener);
+                ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.MesajKey);
             }else{
-                kullanicilarRef.removeEventListener(mesajlarValueEventListener);
+                ChatApp.unregisterBroadcastReceiver(mMesaj2BroadcastReceiver);
             }
             mesajlarGosteriliyor = goster;
         }
     }
-    private final ValueEventListener mesajlarValueEventListener = new ValueEventListener() {
+    private final BroadcastReceiver mMesaj2BroadcastReceiver = new BroadcastReceiver() {
+
         @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            mesajlarList.clear();
-            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                Query query1 = dataSnapshot.getRef().orderByKey().limitToLast(1);
-                query1.keepSynced(true);
-                query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot3) {
-                        for (DataSnapshot dataSnapshot10 : snapshot3.getChildren()){
-                            Mesaj mesaj = dataSnapshot10.getValue(Mesaj.class);
-                            DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(snapshot3.getKey());
-                            kisiyiBul.keepSynced(true);
-                            kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot4) {
-                                    Kullanici kullanici = snapshot4.getValue(Kullanici.class);
-                                    if (kullanici != null){
-                                        veritabani.MesajDurumuGuncelle(kullanici.getTelefon(), true);
-                                        DatabaseReference kisiyiKontrolEt = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kullanici.getTelefon());
-                                        kisiyiKontrolEt.keepSynced(true);
-                                        kisiyiKontrolEt.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot5) {
-                                                Kullanici kullanici1 = snapshot5.getValue(Kullanici.class);
-                                                long okunmamisMesaj = 0;
-                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                                                    Mesaj mesaj1 = dataSnapshot1.getValue(Mesaj.class);
-                                                    if(mesaj1 != null){
-                                                        if (!mesaj1.isGonderen()){
-                                                            if (!mesaj1.isGoruldu()){
-                                                                okunmamisMesaj++;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                if (kullanici1 != null){
-                                                    long finalOkunmamisMesaj1 = okunmamisMesaj;
-                                                    mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, kullanici1.getIsim(), finalOkunmamisMesaj1));
-                                                }else{
-                                                    long finalOkunmamisMesaj = okunmamisMesaj;
-                                                    mainActivity.runOnUiThread(() -> MesajGoster(kullanici, mesaj, "", finalOkunmamisMesaj));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
+        public void onReceive(Context context, Intent intent) {
+        if(intent.getAction().equals(BildirimClass.MesajKey)){
+            MesajlariGetir();
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
         }
     };
-    @SuppressLint("NotifyDataSetChanged")
-    private void MesajGoster(Kullanici kullanici, Mesaj mesaj, String isim , long okunmamisMesaj){
-        Mesajlar mesajlar = new Mesajlar(kullanici, mesaj, isim, okunmamisMesaj);
-        if (mesajlar.getMesaj().getMesaj().length() > ChatApp.MaxMesajKarakterSayisi){
-            mesajlar.getMesaj().setMesaj(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
-        }
-        if (mesajlarList.size() > 0){
-            boolean iceriyor = false;
-            int index = -1;
-            for(int i = 0; i < mesajlarList.size(); i++){
-                if (mesajlarList.get(i).getKullanici().getTelefon().equals(mesajlar.getKullanici().getTelefon())){
-                    iceriyor = true;
-                    index = i;
-                    break;
-                }
-            }
-            if (iceriyor){
-                mesajlarList.set(index, mesajlar);
-                mesajlarAdapter.notifyItemChanged(index);
-            }else{
-                mesajlarList.add(mesajlar);
-                mesajlarAdapter.notifyDataSetChanged();
-            }
-        }else {
-            mesajlarList.add(mesajlar);
-            mesajlarAdapter.notifyDataSetChanged();
-        }
-    }
 
-    public void MesajlariSil(FirebaseUser firebaseUser2, String telefon, int index){
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
-        builder.setCancelable(true);
-        builder.setTitle(R.string.delete_messages);
-        builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
-        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber());
-            databaseReference.keepSynced(true);
-            HashMap<String, Object> mesajSilMap = new HashMap<>();
-            mesajSilMap.put(telefon, null);
-            databaseReference.updateChildren(mesajSilMap, (error, ref) -> {
-                if (error == null){
-                    mesajlarAdapter.notifyItemRemoved(index);
-                }else{
-                    Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_deleted), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    public void MesajlariArsivle(FirebaseUser firebaseUser2, String telefon, int index){
-        if (!mesajlarArsivleniyor){
+    public void MesajlariSil(String telefon, int index){
+        if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
             builder.setCancelable(true);
-            builder.setTitle(R.string.archive_messages);
-            builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+            builder.setTitle(R.string.delete_messages);
+            builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
             builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                arsivProgressBarLayout.setVisibility(View.VISIBLE);
-                mesajlarArsivleniyor = true;
-                DatabaseReference mesajlariArsivleRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser2.getPhoneNumber()).child(telefon);
-                databaseReference.keepSynced(true);
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        HashMap<String, Object> arsivleMap = new HashMap<>();
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                            arsivleMap.put(Veritabani.ArsivTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), dataSnapshot.getValue());
-                            arsivleMap.put(Veritabani.MesajTablosu+"/"+firebaseUser2.getPhoneNumber()+"/"+telefon+"/"+dataSnapshot.getKey(), null);
-                        }
-                        mesajlariArsivleRef.updateChildren(arsivleMap, (error, ref) -> {
-                            if (error == null){
-                                mesajlarAdapter.notifyItemRemoved(index);
-                                mesajlarAdapter.notifyItemChanged(index);
-                            }else {
-                                Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
-                            }
-                            mesajlarArsivleniyor = false;
-                            arsivProgressBarLayout.setVisibility(View.GONE);
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(mContext, mContext.getString(R.string.messages_could_not_be_arhived), Toast.LENGTH_SHORT).show();
-                        arsivProgressBarLayout.setVisibility(View.GONE);
-                        mesajlarArsivleniyor = false;
-                    }
-                });
+                mesajlarSiliniyor = true;
+                progressBarText.setText(mContext.getString(R.string.messages_is_deleting));
+                progressBarLayout.setVisibility(View.VISIBLE);
+                MesajFonksiyonlari.getInstance(mContext).MesajlariSil(telefon, MesajFonksiyonlari.KaydedilecekTur);
+                mesajlarList.remove(index);
+                mesajlarAdapter.notifyItemRemoved(index);
+                progressBarLayout.setVisibility(View.GONE);
+                progressBarText.setText("");
+                mesajlarSiliniyor = false;
             });
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
             dialog.show();
         }else{
-            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_progress), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void MesajlariArsivle(String telefon, int index){
+        if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
+            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.archive_messages);
+            builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+            builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                mesajlarArsivleniyor = true;
+                progressBarText.setText(mContext.getString(R.string.messages_is_archiving));
+                progressBarLayout.setVisibility(View.VISIBLE);
+                MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(telefon, true);
+                mesajlarList.remove(index);
+                mesajlarAdapter.notifyItemRemoved(index);
+                progressBarLayout.setVisibility(View.GONE);
+                progressBarText.setText("");
+                mesajlarArsivleniyor = false;
+            });
+            builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else{
+            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        MesajlariBul(true);
+    public void onStart() {
+        super.onStart();
+        MesajlariGuncelle(true);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        MesajlariBul(false);
+    public void onStop() {
+        super.onStop();
+        MesajlariGuncelle(false);
     }
 }

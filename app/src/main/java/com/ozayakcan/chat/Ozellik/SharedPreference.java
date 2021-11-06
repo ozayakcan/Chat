@@ -4,7 +4,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SharedPreference {
@@ -14,7 +17,6 @@ public class SharedPreference {
     private static final String SHARED_PREF_ADI = "Chat";
 
     public SharedPreference(Context context) {mContext = context;}
-
 
     public void KaydetString(String key, String deger){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
@@ -26,6 +28,29 @@ public class SharedPreference {
 
     public String GetirString(String key, String varsayilanDeger){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
+        return sharedPreference.getString(key, varsayilanDeger);
+    }
+
+
+    public List<String> CokluStringGetirOzel(String tur){
+        List<String> stringList = new ArrayList<>();
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
+        Map<String, ?> tumKeyler = sharedPreference.getAll();
+        for (Map.Entry<String, ?> entry : tumKeyler.entrySet()) {
+            stringList.add(entry.getKey());
+        }
+        return stringList;
+    }
+    public void KaydetStringOzel(String tur, String key, String deger){
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putString(key, deger);
+
+        editor.apply();
+    }
+
+    public String GetirStringOzel(String tur, String key, String varsayilanDeger){
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
         return sharedPreference.getString(key, varsayilanDeger);
     }
 

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".Fragment.MesajlarFragment">
         <LinearLayout
-            android:id="@+id/arsivProgressBarLayout"
+            android:id="@+id/progressBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -14,9 +14,9 @@
             android:paddingTop="5dp"
             android:visibility="gone">
                 <TextView
+                    android:id="@+id/progressBarText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/messages_is_archiving"/>
+                    android:layout_height="wrap_content"/>
                 <ProgressBar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

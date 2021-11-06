@@ -192,75 +192,48 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(String normalMesaj, String gonderilecekID, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
+    public void MesajGonder(Mesaj normalMesaj, int sira, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
         RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
-        Map<String, String> tarih = ServerValue.TIMESTAMP;
-        DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber()).child(gonderilecekTelefon);
+        DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
         ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
-        mapBir.put(Veritabani.MesajKey, normalMesaj);
-        mapBir.put(Veritabani.TarihKey, tarih);
-        mapBir.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
-        mapBir.put(Veritabani.GonderenKey, true);
-        mapBir.put(Veritabani.GorulduKey, false);
+        mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
         DatabaseReference ekleBirPush = ekleBir.push();
         ekleBirPush.keepSynced(true);
 
-        DatabaseReference ekleIki = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
-        ekleIki.keepSynced(true);
-        HashMap<String, Object> mapIki = new HashMap<>();
-        mapIki.put(Veritabani.MesajKey, normalMesaj);
-        mapIki.put(Veritabani.TarihKey, tarih);
-        mapIki.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderiliyor);
-        mapIki.put(Veritabani.GonderenKey, false);
-        mapIki.put(Veritabani.GorulduKey, false);
         ekleBirPush.setValue(mapBir, (error, ref) -> {
             if (error == null){
-                ref.keepSynced(true);
-                HashMap<String, Object> basarili = new HashMap<>();
-                basarili.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
-                ref.updateChildren(basarili);
-                String key = ref.getKey();
-                if (key != null){
-                    DatabaseReference ekleIkiPush = ekleIki.child(key);
-                    ekleIkiPush.keepSynced(true);
-                    ekleIkiPush.setValue(mapIki, (error2, ref2) -> {
-                        if (error2 == null){
-                            ref2.keepSynced(true);
-                            HashMap<String, Object> basarili2 = new HashMap<>();
-                            basarili2.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
-                            ref2.updateChildren(basarili2);
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(gonderilecekTelefon);
-                            databaseReference.keepSynced(true);
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                normalMesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                normalMesaj.setMesajKey(ekleBirPush.getKey());
+                mesajActivity.MesajDurumunuGuncelle(sira, normalMesaj);
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(gonderilecekTelefon);
+                databaseReference.keepSynced(true);
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                        if (kullanici != null){
+                            Data data = new Data(BildirimClass.MesajKey);
+                            Gonder gonder = new Gonder(data, kullanici.getFcmToken());
+                            retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
                                 @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                    if (kullanici != null){
-                                        Data data = new Data(BildirimClass.MesajKey);
-                                        Gonder gonder = new Gonder(data, kullanici.getFcmToken());
-                                        retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
-                                            @Override
-                                            public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
+                                public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
 
-                                            }
-
-                                            @Override
-                                            public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
-
-                                            }
-                                        });
-                                    }
                                 }
 
                                 @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
 
                                 }
                             });
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

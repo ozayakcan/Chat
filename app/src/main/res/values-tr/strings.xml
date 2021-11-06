@@ -55,11 +55,12 @@
     <string name="messages_could_not_be_arhived">Mesajlar arşivlenemedi! Lütfen daha sonra tekrar deneyin.</string>
     <string name="you_cannot_send_messages_in_the_archive">Arşivde mesaj gönderemezsin!</string>
     <string name="messages_is_archiving">Mesajlar arşivleniyor</string>
+    <string name="messages_is_deleting">Mesajlar siliniyor</string>
     <string name="s_new_messages">%s Yeni Mesaj</string>
     <string name="new_message">Yeni Mesaj</string>
     <string name="failed_to_fetch_messages">Mesajlar Alınamadı!</string>
     <string name="this_message_could_not_be_decrypted">Bu mesaj çözülemedi!</string>
     <string name="send">Gonder</string>
     <string name="you_cannot_send_empty_messages">Boş mesaj gönderemezsin!</string>
-    <string name="there_is_already_an_archiving_progress">There is already an archiving progress.</string>
+    <string name="there_is_already_an_archiving_or_deleting_progress">Şuanda bir silme ya da arşivleme işlemi mevcut.</string>
 </resources>
