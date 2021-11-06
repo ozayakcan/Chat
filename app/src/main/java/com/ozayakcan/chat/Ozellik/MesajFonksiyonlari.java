@@ -80,17 +80,21 @@ public class MesajFonksiyonlari {
             mesajList = gson.fromJson(normalMesaj, new TypeToken<List<Mesaj>>(){}.getType());
         }
         if (arsivle){
-            arsivList.addAll(mesajList);
-            mesajList.clear();
-            String arsivStr = gson.toJson(arsivList);
-            sharedPreference.KaydetStringOzel(KaydedilecekTurArsiv, kisi, arsivStr);
-            sharedPreference.KaydetStringOzel(KaydedilecekTur, kisi, "");
+            if (mesajList.size() > 0){
+                arsivList.addAll(mesajList);
+                mesajList.clear();
+                String arsivStr = gson.toJson(arsivList);
+                sharedPreference.KaydetStringOzel(KaydedilecekTurArsiv, kisi, arsivStr);
+                sharedPreference.KaydetStringOzel(KaydedilecekTur, kisi, "");
+            }
         }else{
-            mesajList.addAll(0, arsivList);
-            arsivList.clear();
-            String mesajlarStr = gson.toJson(mesajList);
-            sharedPreference.KaydetStringOzel(KaydedilecekTur, kisi, mesajlarStr);
-            sharedPreference.KaydetStringOzel(KaydedilecekTurArsiv, kisi, "");
+            if (arsivList.size() > 0){
+                mesajList.addAll(0, arsivList);
+                arsivList.clear();
+                String mesajlarStr = gson.toJson(mesajList);
+                sharedPreference.KaydetStringOzel(KaydedilecekTur, kisi, mesajlarStr);
+                sharedPreference.KaydetStringOzel(KaydedilecekTurArsiv, kisi, "");
+            }
         }
     }
 }

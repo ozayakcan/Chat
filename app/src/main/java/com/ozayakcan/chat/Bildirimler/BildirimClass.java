@@ -60,8 +60,6 @@ public class BildirimClass {
     public static int MaxMesajSayisi = 7;
 
     public void MesajBildirimi() {
-        Intent bildirimGonder = new Intent(MesajKey);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
             DatabaseReference mesajKisileriRef= FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
@@ -113,6 +111,8 @@ public class BildirimClass {
                                                     mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
                                                         MesajBildirimiGoster(bildirimMesajList);
+                                                        Intent bildirimGonder = new Intent(MesajKey);
+                                                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
                                                     }
                                                 }
 

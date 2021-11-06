@@ -100,46 +100,48 @@ public class MesajlarFragment extends Fragment {
         List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(MesajFonksiyonlari.KaydedilecekTur);
         for (String kisi : kisiler){
             List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
-            DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
-            kullaniciRef.keepSynced(true);
-            kullaniciRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                    if (kullanici != null){
-                        DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
-                        kisilerRef.keepSynced(true);
-                        kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @SuppressLint("NotifyDataSetChanged")
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                                Kullanici kisi = snapshot1.getValue(Kullanici.class);
-                                String isim = kisi != null ? kisi.getIsim() : kullanici.getIsim();
-                                long okunmamisMesaj = 0;
-                                for (Mesaj mesaj123 : mesajList){
-                                    if (!mesaj123.isGonderen() && mesaj123.isGoruldu()){
-                                        okunmamisMesaj++;
+            if (mesajList.size() > 0){
+                DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
+                kullaniciRef.keepSynced(true);
+                kullaniciRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                        if (kullanici != null){
+                            DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
+                            kisilerRef.keepSynced(true);
+                            kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @SuppressLint("NotifyDataSetChanged")
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                    Kullanici kisi = snapshot1.getValue(Kullanici.class);
+                                    String isim = kisi != null ? kisi.getIsim() : kullanici.getIsim();
+                                    long okunmamisMesaj = 0;
+                                    for (Mesaj mesaj123 : mesajList){
+                                        if (!mesaj123.isGonderen() && mesaj123.isGoruldu()){
+                                            okunmamisMesaj++;
+                                        }
                                     }
+                                    Mesajlar mesajlar = new Mesajlar(kullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
+                                    mesajlarList.add(mesajlar);
+                                    mesajlarAdapter.notifyDataSetChanged();
+                                    MesajlariGuncelle(true);
                                 }
-                                Mesajlar mesajlar = new Mesajlar(kullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
-                                mesajlarList.add(mesajlar);
-                                mesajlarAdapter.notifyDataSetChanged();
-                                MesajlariGuncelle(true);
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 

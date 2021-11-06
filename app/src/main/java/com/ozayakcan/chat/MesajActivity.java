@@ -1,5 +1,6 @@
 package com.ozayakcan.chat;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -151,27 +152,20 @@ public class MesajActivity extends AppCompatActivity {
         }
         constraintSet.applyTo(constraintLayout);
     }
+    @SuppressLint("NotifyDataSetChanged")
     private void MesajlariGoster(){
         List<Mesaj> mesajlar = tabloString.equals(Veritabani.MesajTablosu) ? MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTur) : MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTurArsiv);
         for (Mesaj mesaj : mesajlar){
             if (mesajList.size() > 0){
                 if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
-                    Mesaj tarihMsj = new Mesaj();
-                    tarihMsj.setTarih(mesaj.getTarih());
-                    tarihMsj.setTarihGoster(true);
-                    tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-                    mesajList.add(tarihMsj);
+                    mesaj.setTarihGoster(true);
                 }
             }else{
-                Mesaj tarihMsj = new Mesaj();
-                tarihMsj.setTarih(mesaj.getTarih());
-                tarihMsj.setTarihGoster(true);
-                tarihMsj.setMesaj(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-                mesajList.add(tarihMsj);
+                mesaj.setTarihGoster(true);
             }
             mesajList.add(mesaj);
         }
-        mesajAdapter.notifyItemRangeInserted(0, mesajList.size() - 1);
+        mesajAdapter.notifyDataSetChanged();
         recyclerView.scrollToPosition(mesajList.size() - 1);
         MesajlariGuncelle(true);
     }
@@ -201,6 +195,13 @@ public class MesajActivity extends AppCompatActivity {
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
             Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajDurumuGonderiliyor,true);
+            if (mesajList.size() > 0){
+                if (!ChatApp.MesajTarihiBul(mesajClass.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
+                    mesajClass.setTarihGoster(true);
+                }
+            }else{
+                mesajClass.setTarihGoster(true);
+            }
             mesajList.add(mesajClass);
             mesajAdapter.notifyItemInserted( mesajList.size() - 1);
             recyclerView.scrollToPosition(mesajList.size() - 1);

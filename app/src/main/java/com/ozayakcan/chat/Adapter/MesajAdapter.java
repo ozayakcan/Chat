@@ -53,29 +53,28 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull MesajAdapter.ViewHolder holder, int position) {
         Mesaj mesaj = mesajList.get(position);
         if (mesaj.isTarihGoster()){
-            holder.mesajLayout.setVisibility(View.GONE);
             holder.tarihText.setText(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
             holder.tarihLayout.setVisibility(View.VISIBLE);
         }else{
             holder.tarihLayout.setVisibility(View.GONE);
-            holder.mesajText.setText(mesaj.getMesaj());
-            holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
-            if (mesaj.isGonderen()){
-                if (mesaj.isGoruldu()){
-                    holder.mesajDurumu.setText(mContext.getString(R.string.seen));
+        }
+        holder.mesajText.setText(mesaj.getMesaj());
+        holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
+        if (mesaj.isGonderen()){
+            if (mesaj.isGoruldu()){
+                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
+                holder.mesajDurumu.setVisibility(View.VISIBLE);
+            }else{
+                if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                    holder.mesajDurumu.setText(mContext.getString(R.string.sending));
                     holder.mesajDurumu.setVisibility(View.VISIBLE);
-                }else{
-                    if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
-                        holder.mesajDurumu.setText(mContext.getString(R.string.sending));
-                        holder.mesajDurumu.setVisibility(View.VISIBLE);
-                    }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
-                        holder.mesajDurumu.setText(mContext.getString(R.string.sent));
-                        holder.mesajDurumu.setVisibility(View.VISIBLE);
-                    }
+                }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
+                    holder.mesajDurumu.setText(mContext.getString(R.string.sent));
+                    holder.mesajDurumu.setVisibility(View.VISIBLE);
                 }
             }
-            holder.mesajLayout.setVisibility(View.VISIBLE);
         }
+        holder.mesajLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
