@@ -2,11 +2,13 @@ package com.ozayakcan.chat.Ozellik;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +30,7 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -291,6 +294,7 @@ public class Veritabani {
         });
     }
     public void DurumKontrol(FirebaseUser firebaseUser){
+        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference sonGorulmeRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.SonGorulmeKey);
         sonGorulmeRef.keepSynced(true);

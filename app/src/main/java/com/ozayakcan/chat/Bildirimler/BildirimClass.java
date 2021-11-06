@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -41,6 +43,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class BildirimClass {
 
@@ -181,7 +185,6 @@ public class BildirimClass {
             );
         }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,MesajKey);
-        Notification notification;
         if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
             mBuilder.setSmallIcon(R.drawable.varsayilan_bildirim_simgesi)
                     .setTicker(bildirimMesajList.get(0).getTelefon())
@@ -201,25 +204,39 @@ public class BildirimClass {
         }
         if (bildirimMesajSayisi.get(0).getMesajSayisi() == bildirimMesajList.size()){
             int bildirimID = R.drawable.ic_profil_resmi;
-            Bitmap profilResmi;
             if (!bildirimMesajList.get(0).getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-                InputStream inputStream;
-                try {
-                    URL kisiUrl = new URL(bildirimMesajList.get(0).getProfilResmi());
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) kisiUrl.openConnection();
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.connect();
-                    inputStream = httpURLConnection.getInputStream();
-                    profilResmi = BitmapFactory.decodeStream(inputStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
-                }
+                Executor executor = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
+                executor.execute(() -> {
+                    Bitmap profilResmi;
+                    InputStream inputStream;
+                    try {
+                        URL kisiUrl = new URL(bildirimMesajList.get(0).getProfilResmi());
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) kisiUrl.openConnection();
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.connect();
+                        inputStream = httpURLConnection.getInputStream();
+                        profilResmi = BitmapFactory.decodeStream(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+                    }
+                    Bitmap finalProfilResmi = profilResmi;
+                    handler.post(() -> {
+                        mBuilder.setLargeIcon(finalProfilResmi);
+                        DevamEt(mBuilder, bildirimMesajList);
+                    });
+                });
             }else{
-                profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+                Bitmap profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);
+                mBuilder.setLargeIcon(profilResmi);
+                DevamEt(mBuilder, bildirimMesajList);
             }
-            mBuilder.setLargeIcon(profilResmi);
         }
+
+    }
+    private void DevamEt(NotificationCompat.Builder mBuilder, List<BildirimMesaj> bildirimMesajList){
+        Notification notification;
         if (bildirimMesajList.size() > 1){
             mBuilder.setContentText(mContext.getResources().getString(R.string.s_new_messages).replace("%s", bildirimMesajList.size()+""));
         }else {
@@ -243,7 +260,6 @@ public class BildirimClass {
         }
         notificationManager.notify(MesajBildirimiID, notification);
     }
-
     private NotificationCompat.InboxStyle cokluBildirim(List<BildirimMesaj> bildirimMesajList, boolean birKisi) {
         NotificationCompat.InboxStyle inbox = new NotificationCompat.InboxStyle();
         int baslangic = bildirimMesajList.size() - 1;

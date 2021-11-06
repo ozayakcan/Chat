@@ -25,7 +25,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
@@ -190,6 +189,7 @@ public class MesajActivity extends AppCompatActivity {
         }
         }
     };
+    @SuppressLint("NotifyDataSetChanged")
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();
         String mesajKontrol = mesaj.replace("\n", "");
@@ -203,7 +203,7 @@ public class MesajActivity extends AppCompatActivity {
                 mesajClass.setTarihGoster(true);
             }
             mesajList.add(mesajClass);
-            mesajAdapter.notifyItemInserted( mesajList.size() - 1);
+            mesajAdapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(mesajList.size() - 1);
             veritabani.MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
@@ -328,6 +328,5 @@ public class MesajActivity extends AppCompatActivity {
         MesajlariGuncelle(false);
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
-        Veritabani.DurumGuncelle(firebaseUser, false);
     }
 }

@@ -94,9 +94,4 @@ public class MainActivity extends AppCompatActivity {
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Veritabani.DurumGuncelle(firebaseUser, false);
-    }
 }
