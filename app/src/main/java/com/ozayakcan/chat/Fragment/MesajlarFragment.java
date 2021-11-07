@@ -118,7 +118,7 @@ public class MesajlarFragment extends Fragment {
                                     String isim = kisi != null ? kisi.getIsim() : kullanici.getIsim();
                                     long okunmamisMesaj = 0;
                                     for (Mesaj mesaj123 : mesajList){
-                                        if (!mesaj123.isGonderen() && mesaj123.isGoruldu()){
+                                        if (!mesaj123.isGonderen() && !mesaj123.isGoruldu()){
                                             okunmamisMesaj++;
                                         }
                                     }
