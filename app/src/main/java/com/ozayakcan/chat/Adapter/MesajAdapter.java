@@ -58,7 +58,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         }else{
             holder.tarihLayout.setVisibility(View.GONE);
         }
-        holder.mesajText.setText(mesaj.getMesaj());
+        holder.mesajText.setText(mesaj.getMesaj()+" "+mesaj.isGoruldu());
         holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
         if (mesaj.isGonderen()){
             if (mesaj.isGoruldu()){

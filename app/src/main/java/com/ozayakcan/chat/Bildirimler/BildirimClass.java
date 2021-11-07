@@ -108,7 +108,13 @@ public class BildirimClass {
                                                         if (mesaj != null && sonAsilKullanici != null){
                                                             mesajSayisi++;
                                                             Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesaj123.getMesaj(), mesaj123.getTarih(), mesajSayisi);
+                                                        }
+                                                    }
+                                                    List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(sonAsilKullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
+                                                    for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
+                                                        if (!kisiMesajListesi.get(i).isGoruldu()){
+                                                            Mesaj mesajlar123 = kisiMesajListesi.get(i);
+                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
                                                         }
                                                     }
@@ -232,6 +238,8 @@ public class BildirimClass {
                 mBuilder.setLargeIcon(profilResmi);
                 DevamEt(mBuilder, bildirimMesajList);
             }
+        }else{
+            DevamEt(mBuilder, bildirimMesajList);
         }
 
     }
