@@ -1,12 +1,12 @@
 package com.ozayakcan.chat.Bildirimler;
 
-public class Data {
+public class DataMesaj {
     private String bildirimTuru;
 
-    public Data() {
+    public DataMesaj() {
     }
 
-    public Data(String bildirimTuru) {
+    public DataMesaj(String bildirimTuru) {
         this.bildirimTuru = bildirimTuru;
     }
 

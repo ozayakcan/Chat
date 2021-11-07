@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -151,8 +152,27 @@ public class MesajActivity extends AppCompatActivity {
         }
         constraintSet.applyTo(constraintLayout);
     }
+    private void GorulduOlarakIsaretle() {
+        DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
+        gorulduKisiRef.keepSynced(true);
+        gorulduKisiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                if (kullanici != null){
+                    BildirimClass.getInstance(MesajActivity.this).GorulduBildirimiYolla(kullanici.getFcmToken(), telefonString, firebaseUser.getPhoneNumber());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     @SuppressLint("NotifyDataSetChanged")
     private void MesajlariGoster(){
+        GorulduOlarakIsaretle();
         List<Mesaj> mesajlar = tabloString.equals(Veritabani.MesajTablosu) ? MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTur) : MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTurArsiv);
         for (Mesaj mesaj : mesajlar){
             if (mesajList.size() > 0){
@@ -173,6 +193,7 @@ public class MesajActivity extends AppCompatActivity {
         if (mesajlarGuncelleniyor != goster){
             if (goster){
                 ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.MesajKey);
+                ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.GorulduKey);
             }else{
                 ChatApp.unregisterBroadcastReceiver(mMesaj2BroadcastReceiver);
             }
@@ -183,12 +204,20 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(BildirimClass.MesajKey)){
-            mesajList.clear();
-            MesajlariGoster();
-        }
+            if(intent.getAction().equals(BildirimClass.MesajKey)){
+                mesajList.clear();
+                MesajlariGoster();
+            }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+                if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
+                    mesajList.clear();
+                    MesajlariGoster();
+                }
+            }
         }
     };
+
+
+
     @SuppressLint("NotifyDataSetChanged")
     private void MesajGonder() {
         String mesaj = gonderText.getText().toString();

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.ozayakcan.chat.Adapter.MesajlarAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
@@ -37,8 +39,6 @@ import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
-
-import org.whispersystems.libsignal.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -149,6 +149,7 @@ public class MesajlarFragment extends Fragment {
         if (mesajlarGosteriliyor != goster){
             if (goster){
                 ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.MesajKey);
+                ChatApp.registerBroadcastReceiver(mMesaj2BroadcastReceiver, BildirimClass.GorulduKey);
             }else{
                 ChatApp.unregisterBroadcastReceiver(mMesaj2BroadcastReceiver);
             }
@@ -159,9 +160,11 @@ public class MesajlarFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(BildirimClass.MesajKey)){
-            MesajlariGetir();
-        }
+            if(intent.getAction().equals(BildirimClass.MesajKey)){
+                MesajlariGetir();
+            }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+                MesajlariGetir();
+            }
         }
     };
 
@@ -176,7 +179,9 @@ public class MesajlarFragment extends Fragment {
                 progressBarText.setText(mContext.getString(R.string.messages_is_deleting));
                 progressBarLayout.setVisibility(View.VISIBLE);
                 MesajFonksiyonlari.getInstance(mContext).MesajlariSil(telefon, MesajFonksiyonlari.KaydedilecekTur);
-                mesajlarList.remove(index);
+                if (mesajlarList.size()>index){
+                    mesajlarList.remove(index);
+                }
                 mesajlarAdapter.notifyItemRemoved(index);
                 progressBarLayout.setVisibility(View.GONE);
                 progressBarText.setText("");
@@ -200,7 +205,9 @@ public class MesajlarFragment extends Fragment {
                 progressBarText.setText(mContext.getString(R.string.messages_is_archiving));
                 progressBarLayout.setVisibility(View.VISIBLE);
                 MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(telefon, true);
-                mesajlarList.remove(index);
+                if (mesajlarList.size()>index){
+                    mesajlarList.remove(index);
+                }
                 mesajlarAdapter.notifyItemRemoved(index);
                 progressBarLayout.setVisibility(View.GONE);
                 progressBarText.setText("");

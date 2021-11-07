@@ -2,13 +2,11 @@ package com.ozayakcan.chat.Ozellik;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,22 +18,11 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
-import com.ozayakcan.chat.Bildirimler.Data;
-import com.ozayakcan.chat.Bildirimler.Gonder;
-import com.ozayakcan.chat.Bildirimler.RetrofitAyarlari;
-import com.ozayakcan.chat.Bildirimler.RetrofitClient;
-import com.ozayakcan.chat.Bildirimler.Sonuc;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Veritabani {
 
@@ -196,7 +183,6 @@ public class Veritabani {
         });
     }
     public void MesajGonder(Mesaj normalMesaj, int sira, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
-        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
         DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
         ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
@@ -216,19 +202,7 @@ public class Veritabani {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Kullanici kullanici = snapshot.getValue(Kullanici.class);
                         if (kullanici != null){
-                            Data data = new Data(BildirimClass.MesajKey);
-                            Gonder gonder = new Gonder(data, kullanici.getFcmToken());
-                            retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
-                                @Override
-                                public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
-
-                                }
-
-                                @Override
-                                public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
-
-                                }
-                            });
+                            BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken());
                         }
                     }
 
@@ -294,7 +268,6 @@ public class Veritabani {
         });
     }
     public void DurumKontrol(FirebaseUser firebaseUser){
-        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(BildirimClass.FCM_URL).create(RetrofitAyarlari.class);
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference sonGorulmeRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.SonGorulmeKey);
         sonGorulmeRef.keepSynced(true);

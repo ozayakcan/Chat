@@ -1,5 +1,8 @@
 package com.ozayakcan.chat.Bildirimler;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,8 +32,12 @@ public class BildirimServisi extends FirebaseMessagingService {
     private void BildirimiAyarla(RemoteMessage remoteMessage){
         if (remoteMessage.getData().size() > 0){
             String bildirimTuru = remoteMessage.getData().get(BildirimClass.BildirimTuruKey);
-            if (bildirimTuru != null && bildirimTuru.equals(BildirimClass.MesajKey)){
-                BildirimClass.getInstance(getApplicationContext()).MesajBildirimi();
+            if (bildirimTuru != null){
+                if (bildirimTuru.equals(BildirimClass.MesajKey)){
+                    BildirimClass.getInstance(getApplicationContext()).MesajBildirimi();
+                }else if (bildirimTuru.equals(BildirimClass.GorulduKey)){
+                    BildirimClass.getInstance(getApplicationContext()).GorulduGuncelle(remoteMessage.getData().get(BildirimClass.KisiKey));
+                }
             }
         }
     }

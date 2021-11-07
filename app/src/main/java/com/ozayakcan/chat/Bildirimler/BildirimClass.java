@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -46,6 +47,10 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class BildirimClass {
 
     private final Context mContext;
@@ -60,6 +65,8 @@ public class BildirimClass {
     public static String FCM_URL = "https://fcm.googleapis.com/";
     public static String BildirimTuruKey = "bildirimTuru";
     public static String MesajKey = "mesaj";
+    public static String GorulduKey = "goruldu";
+    public static String KisiKey = "kisi";
     public static int MesajBildirimiID = 1923;
     public static int MaxMesajSayisi = 7;
 
@@ -112,7 +119,7 @@ public class BildirimClass {
                                                     }
                                                     List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(sonAsilKullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
                                                     for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
-                                                        if (!kisiMesajListesi.get(i).isGoruldu()){
+                                                        if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
                                                             Mesaj mesajlar123 = kisiMesajListesi.get(i);
                                                             BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
@@ -299,5 +306,67 @@ public class BildirimClass {
             notificationManager.createNotificationChannel(channel);
         }
         notificationManager.cancel(MesajBildirimiID);
+    }
+
+    public static void MesajBildirimiYolla(String token){
+        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
+        DataMesaj data = new DataMesaj(MesajKey);
+        Gonder gonder = new Gonder(data, token);
+        retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
+            @Override
+            public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+    public void GorulduGuncelle(String kisi){
+        List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+        if (mesajList.size() > 0){
+            for (int i = mesajList.size() - 1; i >= 0; i--){
+                Mesaj mesaj = mesajList.get(i);
+                if (mesajList.get(i).isGonderen() && !mesajList.get(i).isGoruldu()){
+                    mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                    mesaj.setGoruldu(true);
+                    mesajList.set(i, mesaj);
+                }
+            }
+            MesajFonksiyonlari.getInstance(mContext).MesajDuzenle(kisi, mesajList);
+            Intent bildirimGonder = new Intent(GorulduKey);
+            bildirimGonder.putExtra(KisiKey, kisi);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
+        }
+    }
+    public void GorulduBildirimiYolla(String token, String kisi, String ben){
+        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
+        DataGoruldu data = new DataGoruldu(GorulduKey, ben);
+        Gonder gonder = new Gonder(data, token);
+        retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
+            @Override
+            public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
+
+            }
+        });
+        List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+        if (mesajList.size() > 0) {
+            for (int i = 0; i < mesajList.size(); i++) {
+                Mesaj mesaj = mesajList.get(i);
+                if (!mesaj.isGonderen() && !mesaj.isGoruldu()) {
+                    mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                    mesaj.setGoruldu(true);
+                    mesajList.set(i, mesaj);
+                }
+            }
+            MesajFonksiyonlari.getInstance(mContext).MesajDuzenle(kisi, mesajList);
+        }
     }
 }
