@@ -109,17 +109,17 @@ public class BildirimClass {
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
-                                                    long mesajSayisi = 0;
                                                     for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
                                                         Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
                                                         if (mesaj != null && sonAsilKullanici != null){
-                                                            mesajSayisi++;
                                                             Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
                                                         }
                                                     }
+                                                    long mesajSayisi = 0;
                                                     List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(sonAsilKullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
                                                     for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
                                                         if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
+                                                            mesajSayisi++;
                                                             Mesaj mesajlar123 = kisiMesajListesi.get(i);
                                                             BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
