@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MesajlarFragment extends Fragment {
 
@@ -123,9 +124,19 @@ public class MesajlarFragment extends Fragment {
                                         }
                                     }
                                     Mesajlar mesajlar = new Mesajlar(kullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
-                                    mesajlarList.add(mesajlar);
-                                    mesajlarAdapter.notifyDataSetChanged();
-                                    MesajlariGuncelle(true);
+
+                                    boolean kullaniciMevcut = false;
+                                    for (Mesajlar mesajlar123 : mesajlarList){
+                                        if (mesajlar123.getKullanici().getTelefon().equals(mesajlar.getKullanici().getTelefon())){
+                                            kullaniciMevcut = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!kullaniciMevcut){
+                                        mesajlarList.add(mesajlar);
+                                        mesajlarAdapter.notifyDataSetChanged();
+                                        MesajlariGuncelle(true);
+                                    }
                                 }
 
                                 @Override
@@ -160,11 +171,11 @@ public class MesajlarFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(BildirimClass.MesajKey)){
-                MesajlariGetir();
-            }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
-                MesajlariGetir();
-            }
+        if(intent.getAction().equals(BildirimClass.MesajKey)){
+            MesajlariGetir();
+        }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+            MesajlariGetir();
+        }
         }
     };
 

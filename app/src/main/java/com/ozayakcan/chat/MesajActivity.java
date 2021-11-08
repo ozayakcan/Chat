@@ -204,15 +204,15 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(BildirimClass.MesajKey)){
+        if(intent.getAction().equals(BildirimClass.MesajKey)){
+            mesajList.clear();
+            MesajlariGoster();
+        }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+            if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
                 mesajList.clear();
                 MesajlariGoster();
-            }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
-                if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
-                    mesajList.clear();
-                    MesajlariGoster();
-                }
             }
+        }
         }
     };
 
