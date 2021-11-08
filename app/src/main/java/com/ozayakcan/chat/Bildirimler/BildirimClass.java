@@ -128,7 +128,7 @@ public class BildirimClass {
                                                     }
                                                     mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                        if (bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
+                                                        if (!bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
                                                             MesajBildirimiGoster(bildirimMesajList);
                                                         }
                                                         Intent bildirimGonder = new Intent(MesajKey);
@@ -225,14 +225,9 @@ public class BildirimClass {
                 Handler handler = new Handler(Looper.getMainLooper());
                 executor.execute(() -> {
                     Bitmap profilResmi;
-                    InputStream inputStream;
                     try {
                         URL kisiUrl = new URL(bildirimMesajList.get(0).getProfilResmi());
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) kisiUrl.openConnection();
-                        httpURLConnection.setDoInput(true);
-                        httpURLConnection.connect();
-                        inputStream = httpURLConnection.getInputStream();
-                        profilResmi = BitmapFactory.decodeStream(inputStream);
+                        profilResmi = BitmapFactory.decodeStream(kisiUrl.openConnection().getInputStream());
                     } catch (IOException e) {
                         e.printStackTrace();
                         profilResmi = BitmapFactory.decodeResource(mContext.getResources(), bildirimID);

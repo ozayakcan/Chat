@@ -361,4 +361,10 @@ public class MesajActivity extends AppCompatActivity {
         KisininOnlineDurumunuGuncelle(false);
         ChatApp.SuankiKisiyiAyarla("");
     }
+
+    @Override
+    protected void onDestroy() {
+        ChatApp.SuankiKisiyiAyarla("");
+        super.onDestroy();
+    }
 }
