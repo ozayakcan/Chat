@@ -1,9 +1,11 @@
 package com.ozayakcan.chat;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.text.format.DateFormat;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -46,6 +48,22 @@ public class ChatApp extends Application {
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    public static boolean UygulamaArkaplanda(Context context){
+        boolean arkaplanda = true;
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> aktifUygulamalar = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : aktifUygulamalar) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                for (String activeProcess : processInfo.pkgList) {
+                    if (activeProcess.equals(context.getPackageName())) {
+                        arkaplanda = false;
+                    }
+                }
+            }
+        }
+        return arkaplanda;
     }
 
     public static String MesajBol(String mesaj, int bolunecek){

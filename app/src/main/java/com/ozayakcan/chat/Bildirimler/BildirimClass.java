@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.BildirimMesaj;
@@ -127,7 +128,9 @@ public class BildirimClass {
                                                     }
                                                     mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                        MesajBildirimiGoster(bildirimMesajList);
+                                                        if (ChatApp.UygulamaArkaplanda(mContext)){
+                                                            MesajBildirimiGoster(bildirimMesajList);
+                                                        }
                                                         Intent bildirimGonder = new Intent(MesajKey);
                                                         LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
                                                     }
