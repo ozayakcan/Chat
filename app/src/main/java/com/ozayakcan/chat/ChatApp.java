@@ -66,6 +66,15 @@ public class ChatApp extends Application {
         return arkaplanda;
     }
 
+    private static String suankiKisi = "";
+
+    public static String SuankiKisiyiBul(){
+        return suankiKisi;
+    }
+    public static void SuankiKisiyiAyarla(String kisi){
+        suankiKisi = kisi;
+    }
+
     public static String MesajBol(String mesaj, int bolunecek){
         List<String> bolunecekList = new ArrayList<>();
         int index = 0;

@@ -1,8 +1,5 @@
 package com.ozayakcan.chat.Bildirimler;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;

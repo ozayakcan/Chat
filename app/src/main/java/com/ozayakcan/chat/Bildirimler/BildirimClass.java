@@ -128,7 +128,7 @@ public class BildirimClass {
                                                     }
                                                     mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                        if (ChatApp.UygulamaArkaplanda(mContext)){
+                                                        if (bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
                                                             MesajBildirimiGoster(bildirimMesajList);
                                                         }
                                                         Intent bildirimGonder = new Intent(MesajKey);
@@ -280,11 +280,11 @@ public class BildirimClass {
     }
     private NotificationCompat.InboxStyle cokluBildirim(List<BildirimMesaj> bildirimMesajList, boolean birKisi) {
         NotificationCompat.InboxStyle inbox = new NotificationCompat.InboxStyle();
-        int baslangic = bildirimMesajList.size() - 1;
-        if (bildirimMesajList.size() > MaxMesajSayisi){
-            baslangic = MaxMesajSayisi - 1;
+        int baslangic = 0;
+        if (bildirimMesajList.size() >= MaxMesajSayisi){
+            baslangic = bildirimMesajList.size() - MaxMesajSayisi;
         }
-        for (int i = baslangic; i >= 0; i--) {
+        for (int i = baslangic; i < bildirimMesajList.size(); i++) {
             if (birKisi){
                 inbox.addLine(bildirimMesajList.get(i).getMesaj());
             }else{

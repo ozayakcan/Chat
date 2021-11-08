@@ -341,6 +341,7 @@ public class MesajActivity extends AppCompatActivity {
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
         Veritabani.DurumGuncelle(firebaseUser, true);
+        ChatApp.SuankiKisiyiAyarla(telefonString);
     }
 
     @Override
@@ -349,6 +350,7 @@ public class MesajActivity extends AppCompatActivity {
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
         Veritabani.DurumGuncelle(firebaseUser, false);
+        ChatApp.SuankiKisiyiAyarla("");
     }
 
     @Override
@@ -357,5 +359,6 @@ public class MesajActivity extends AppCompatActivity {
         MesajlariGuncelle(false);
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
+        ChatApp.SuankiKisiyiAyarla("");
     }
 }
