@@ -64,9 +64,9 @@
     <string name="send">Gonder</string>
     <string name="you_cannot_send_empty_messages">Boş mesaj gönderemezsin!</string>
     <string name="there_is_already_an_archiving_or_deleting_progress">Şuanda bir silme ya da arşivleme işlemi mevcut.</string>
-    <string name="archived_messages">Archived Messages</string>
-    <string name="are_you_sure_you_want_to_unarchive_messages">Are you sure you want to unarchive this messages?</string>
-    <string name="messages_is_unarchiving">Messages is unarchiving.</string>
-    <string name="there_is_already_an_unarchiving_or_deleting_progress">asdasd</string>
-    <string name="unarchive">Unarchive</string>
+    <string name="archived_messages">Arşivlenmiş Mesajlar</string>
+    <string name="are_you_sure_you_want_to_unarchive_messages">Mesajları arşivden çıkarmak istediğine emin misin?</string>
+    <string name="messages_is_unarchiving">Mesajlar arşivden çıkarılıyor.</string>
+    <string name="there_is_already_an_unarchiving_or_deleting_progress">Şuanda bir silme ya da arşivden çıkarma işlemi mevcut.</string>
+    <string name="unarchive">Arşivden Çıkar</string>
 </resources>
