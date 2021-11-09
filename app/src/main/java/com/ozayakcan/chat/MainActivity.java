@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.menuArsiv){
                 startActivity(new Intent(MainActivity.this, ArsivActivity.class));
                 overridePendingTransition(0,0);
+                finish();
             }
             return false;
         });
