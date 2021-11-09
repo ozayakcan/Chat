@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +24,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajlarAdapter;
+import com.ozayakcan.chat.ArsivActivity;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
-import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
@@ -42,9 +40,7 @@ import com.ozayakcan.chat.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class MesajlarFragment extends Fragment {
 
@@ -54,6 +50,7 @@ public class MesajlarFragment extends Fragment {
     private MesajlarAdapter mesajlarAdapter;
     private Veritabani veritabani;
     private final MainActivity mainActivity;
+    private final ArsivActivity arsivActivity;
     private final Context mContext;
     private boolean mesajlarGosteriliyor = false;
 
@@ -63,18 +60,25 @@ public class MesajlarFragment extends Fragment {
     private TextView progressBarText;
 
     private SharedPreference sharedPreference;
+    private String getirilecekMesajlar = MesajFonksiyonlari.KaydedilecekTur;
 
     public MesajlarFragment(MainActivity mainActivity) {
         this.mContext = mainActivity;
         this.mainActivity = mainActivity;
+        this.arsivActivity = null;
+    }
+    public MesajlarFragment(ArsivActivity arsivActivity) {
+        this.mContext = arsivActivity;
+        this.arsivActivity = arsivActivity;
+        this.mainActivity = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
-        veritabani = new Veritabani(mainActivity);
-        sharedPreference = new SharedPreference(mainActivity);
+        veritabani = new Veritabani(mContext);
+        sharedPreference = new SharedPreference(mContext);
         progressBarLayout = view.findViewById(R.id.progressBarLayout);
         progressBarText = view.findViewById(R.id.progressBarText);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
@@ -82,7 +86,14 @@ public class MesajlarFragment extends Fragment {
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mesajlarList = new ArrayList<>();
-        mesajlarAdapter = new MesajlarAdapter(mesajlarList, mainActivity);
+        if (arsivActivity != null){
+            getirilecekMesajlar = MesajFonksiyonlari.KaydedilecekTurArsiv;
+            mesajlarAdapter = new MesajlarAdapter(mesajlarList, arsivActivity);
+        }
+        if (mainActivity != null){
+            getirilecekMesajlar = MesajFonksiyonlari.KaydedilecekTur;
+            mesajlarAdapter = new MesajlarAdapter(mesajlarList, mainActivity);
+        }
         mesajlarAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -98,9 +109,9 @@ public class MesajlarFragment extends Fragment {
 
     private void MesajlariGetir() {
         mesajlarList.clear();
-        List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(MesajFonksiyonlari.KaydedilecekTur);
+        List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(getirilecekMesajlar);
         for (String kisi : kisiler){
-            List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+            List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, getirilecekMesajlar);
             if (mesajList.size() > 0){
                 DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
                 kullaniciRef.keepSynced(true);
@@ -179,7 +190,7 @@ public class MesajlarFragment extends Fragment {
         }
     };
 
-    public void MesajlariSil(String telefon, int index){
+    public void MesajlariSil(String telefon, int index, boolean arsivde){
         if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
             builder.setCancelable(true);
@@ -189,7 +200,7 @@ public class MesajlarFragment extends Fragment {
                 mesajlarSiliniyor = true;
                 progressBarText.setText(mContext.getString(R.string.messages_is_deleting));
                 progressBarLayout.setVisibility(View.VISIBLE);
-                MesajFonksiyonlari.getInstance(mContext).MesajlariSil(telefon, MesajFonksiyonlari.KaydedilecekTur);
+                MesajFonksiyonlari.getInstance(mContext).MesajlariSil(telefon, getirilecekMesajlar);
                 if (mesajlarList.size()>index){
                     mesajlarList.remove(index);
                 }
@@ -202,20 +213,32 @@ public class MesajlarFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
         }else{
-            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            if (arsivde){
+                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_unarchiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            }
         }
     }
-    public void MesajlariArsivle(String telefon, int index){
+    public void MesajlariArsivle(String telefon, int index, boolean arsivle){
         if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
             builder.setCancelable(true);
             builder.setTitle(R.string.archive_messages);
-            builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+            if (arsivle){
+                builder.setMessage(R.string.are_you_sure_you_want_to_archive_messages);
+            }else{
+                builder.setMessage(R.string.are_you_sure_you_want_to_unarchive_messages);
+            }
             builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                 mesajlarArsivleniyor = true;
-                progressBarText.setText(mContext.getString(R.string.messages_is_archiving));
+                if (arsivle){
+                    progressBarText.setText(mContext.getString(R.string.messages_is_archiving));
+                }else{
+                    progressBarText.setText(mContext.getString(R.string.messages_is_unarchiving));
+                }
                 progressBarLayout.setVisibility(View.VISIBLE);
-                MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(telefon, true);
+                MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(telefon, arsivle);
                 if (mesajlarList.size()>index){
                     mesajlarList.remove(index);
                 }
@@ -228,7 +251,11 @@ public class MesajlarFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
         }else{
-            Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            if (arsivle){
+                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_unarchiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

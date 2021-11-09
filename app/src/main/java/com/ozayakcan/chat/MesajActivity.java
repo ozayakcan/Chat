@@ -58,6 +58,8 @@ public class MesajActivity extends AppCompatActivity {
     private DatabaseReference onlineDurumuRef;
     private String idString;
 
+    private String getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +83,12 @@ public class MesajActivity extends AppCompatActivity {
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
-        if (intentTabloString != null){
-            if (!intentTabloString.equals("")){
-                tabloString = intentTabloString;
+        if (intentTabloString != null && !intentTabloString.equals("")){
+            tabloString = intentTabloString;
+            if (tabloString.equals(Veritabani.ArsivTablosu)){
+                getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTurArsiv;
+            }else{
+                getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
             }
         }
         gonderBtn = findViewById(R.id.gonderBtn);
@@ -173,7 +178,7 @@ public class MesajActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void MesajlariGoster(){
         GorulduOlarakIsaretle();
-        List<Mesaj> mesajlar = tabloString.equals(Veritabani.MesajTablosu) ? MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTur) : MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, MesajFonksiyonlari.KaydedilecekTurArsiv);
+        List<Mesaj> mesajlar = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, getirilecekMesaj);
         for (Mesaj mesaj : mesajlar){
             if (mesajList.size() > 0){
                 if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){

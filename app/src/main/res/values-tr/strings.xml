@@ -47,6 +47,7 @@
     <string name="delete">Sil</string>
     <string name="show_message">Mesajı Görüntüle</string>
     <string name="archive">Arşivle</string>
+    <string name="archive_title">Arşiv</string>
     <string name="delete_messages">Mesajları Sil</string>
     <string name="are_you_sure_you_want_to_delete_messages">Mesajları silmek istediğine emin misin? Bu eylem geri alınamaz.</string>
     <string name="messages_could_not_be_deleted">Mesajlar silinemedi! Lütfen daha sonra tekrar deneyin.</string>
@@ -63,4 +64,9 @@
     <string name="send">Gonder</string>
     <string name="you_cannot_send_empty_messages">Boş mesaj gönderemezsin!</string>
     <string name="there_is_already_an_archiving_or_deleting_progress">Şuanda bir silme ya da arşivleme işlemi mevcut.</string>
+    <string name="archived_messages">Archived Messages</string>
+    <string name="are_you_sure_you_want_to_unarchive_messages">Are you sure you want to unarchive this messages?</string>
+    <string name="messages_is_unarchiving">Messages is unarchiving.</string>
+    <string name="there_is_already_an_unarchiving_or_deleting_progress">asdasd</string>
+    <string name="unarchive">Unarchive</string>
 </resources>

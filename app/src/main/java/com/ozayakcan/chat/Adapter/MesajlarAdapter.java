@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.ArsivActivity;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Mesajlar;
@@ -28,11 +29,19 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     private Resimler resimler;
     List<Mesajlar> mesajlarList;
     private final MainActivity mainActivity;
+    private final ArsivActivity arsivActivity;
     private final Context mContext;
 
     public MesajlarAdapter( List<Mesajlar> mesajlarList, MainActivity mainActivity){
         this.mainActivity = mainActivity;
+        this.arsivActivity = null;
         this.mContext = mainActivity;
+        this.mesajlarList = mesajlarList;
+    }
+    public MesajlarAdapter( List<Mesajlar> mesajlarList, ArsivActivity arsivActivity){
+        this.arsivActivity = arsivActivity;
+        this.mainActivity = null;
+        this.mContext = arsivActivity;
         this.mesajlarList = mesajlarList;
     }
 
@@ -93,12 +102,20 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             }
         }
         holder.mesaj.setOnLongClickListener(v -> {
-            mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+            if (mainActivity != null){
+                mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+            }
+            if (arsivActivity != null){
+                arsivActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+            }
             return true;
         });
         holder.mesaj.setOnClickListener(v -> {
             if (mainActivity != null){
                 mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+            }
+            if (arsivActivity != null){
+                arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
             }
         });
     }

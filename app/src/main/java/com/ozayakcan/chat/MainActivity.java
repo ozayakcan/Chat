@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     ViewPager2 viewPager;
+    Toolbar toolbar;
     TabLayout tabLayout;
     MesajlarFragment mesajlarFragment;
     Veritabani veritabani;
@@ -37,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         testActivityBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.anamenu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menuArsiv){
+                startActivity(new Intent(MainActivity.this, ArsivActivity.class));
+                overridePendingTransition(0,0);
+            }
+            return false;
+        });
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         veritabani = new Veritabani(MainActivity.this);
@@ -71,11 +82,11 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiArsivle).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariArsivle(telefon, index);
+            mesajlarFragment.MesajlariArsivle(telefon, index, true);
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiSil).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariSil(telefon, index);
+            mesajlarFragment.MesajlariSil(telefon, index, false);
             bottomSheetDialog.dismiss();
         });
         bottomSheetDialog.setContentView(altMenuView);
