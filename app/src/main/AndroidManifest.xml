@@ -46,10 +46,10 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <service
             android:name=".Bildirimler.BildirimServisi"
-            android:exported="false"
+            android:enabled="true"
+            android:exported="true"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
