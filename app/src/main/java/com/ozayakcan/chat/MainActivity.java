@@ -40,15 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.anamenu);
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.menuArsiv){
-                startActivity(new Intent(MainActivity.this, ArsivActivity.class));
-                overridePendingTransition(0,0);
-                finish();
-            }
-            return false;
-        });
+
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         veritabani = new Veritabani(MainActivity.this);
@@ -59,9 +51,36 @@ public class MainActivity extends AppCompatActivity {
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
         vpAdapter.fragmentEkle(new KisilerFragment(MainActivity.this), getString(R.string.contacts));
         viewPager.setAdapter(vpAdapter);
-
+        MesajMenusu();
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (position == 0){
+                    MesajMenusu();
+                }else{
+                    KisilerMenusu();
+                }
+            }
+        });
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(vpAdapter.baslikGetir(position))).attach();
+    }
+
+    public void MesajMenusu(){
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.anamenu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menuArsiv){
+                startActivity(new Intent(MainActivity.this, ArsivActivity.class));
+                overridePendingTransition(0,0);
+                finish();
+            }
+            return false;
+        });
+    }
+    public void KisilerMenusu(){
+        toolbar.getMenu().clear();
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
