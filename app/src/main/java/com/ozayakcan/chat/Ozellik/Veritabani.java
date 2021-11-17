@@ -7,6 +7,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,7 +83,6 @@ public class Veritabani {
 
     public void TokenKaydet(FirebaseUser firebaseUser, String token){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(firebaseUser.getPhoneNumber());
-        reference.keepSynced(true);
         HashMap<String, Object> tokenMap = new HashMap<>();
         tokenMap.put(FCMTokenKey, token);
         reference.updateChildren(tokenMap, (error, ref) -> {
@@ -105,7 +105,10 @@ public class Veritabani {
         }
         return map;
     }
-    public void KisileriEkle(FirebaseUser firebaseUser){
+    public interface KisilerListener{
+        void Tamamlandi();
+    }
+    public void KisileriEkle(FirebaseUser firebaseUser, KisilerListener kisilerListener){
         //Veritabanındaki kişiler siliniyor
         KisiSil(firebaseUser.getPhoneNumber());
         //Rehberdeki kişiler veritabanına ekleniyor
@@ -131,7 +134,6 @@ public class Veritabani {
                                     ContactsContract.CommonDataKinds.Phone.NUMBER));
                             String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
-                            databaseReference.keepSynced(true);
                             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -139,14 +141,14 @@ public class Veritabani {
                                     if (kullanici != null){
                                         if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
                                             kullanici.setIsim(isim);
-                                            KisiEkle(kullanici, firebaseUser.getPhoneNumber());
+                                            KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
                                         }
                                     }
                                 }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-
+                                    kisilerListener.Tamamlandi();
                                 }
                             });
                         }
@@ -157,7 +159,7 @@ public class Veritabani {
             cursor.close();
         }
     }
-    public static void KisiEkle(Kullanici kullanici, String telefon) {
+    public static void KisiEkle(Kullanici kullanici, String telefon, KisilerListener kisilerListener) {
         HashMap<String, Object> map = new HashMap<>();
         map.put(Veritabani.IDKey, kullanici.getID());
         map.put(Veritabani.IsimKey, kullanici.getIsim());
@@ -165,7 +167,7 @@ public class Veritabani {
         map.put(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
         map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+telefon+"/"+Veritabani.KisiTablosu).child(kullanici.getTelefon());
-		databaseReference.updateChildren(map);
+		databaseReference.updateChildren(map, (error, ref) -> kisilerListener.Tamamlandi());
     }
 
     public static void KisiSil(String telefon) {
@@ -184,19 +186,15 @@ public class Veritabani {
     }
     public void MesajGonder(Mesaj normalMesaj, int sira, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
         DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
-        ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
         mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
         DatabaseReference ekleBirPush = ekleBir.push();
-        ekleBirPush.keepSynced(true);
-
         ekleBirPush.setValue(mapBir, (error, ref) -> {
             if (error == null){
                 normalMesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
                 normalMesaj.setMesajKey(ekleBirPush.getKey());
                 mesajActivity.MesajDurumunuGuncelle(sira, normalMesaj);
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(KullaniciTablosu).child(gonderilecekTelefon);
-                databaseReference.keepSynced(true);
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -223,13 +221,11 @@ public class Veritabani {
                 boolean baglandi = snapshot.getValue(Boolean.class);
                 if (baglandi){
                     DatabaseReference guncelle = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(telefon);
-                    guncelle.keepSynced(true);
                     guncelle.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                                 DatabaseReference guncelle2 = guncelle.child(dataSnapshot.getKey());
-                                guncelle2.keepSynced(true);
                                 guncelle2.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot2) {
@@ -239,7 +235,6 @@ public class Veritabani {
                                                 HashMap<String, Object> guncelleMap = new HashMap<>();
                                                 guncelleMap.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
                                                 DatabaseReference databaseReference13 = dataSnapshot2.getRef();
-                                                databaseReference13.keepSynced(true);
                                                 databaseReference13.updateChildren(guncelleMap);
                                             }
                                         }
@@ -270,9 +265,7 @@ public class Veritabani {
     public void DurumKontrol(FirebaseUser firebaseUser){
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference sonGorulmeRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.SonGorulmeKey);
-        sonGorulmeRef.keepSynced(true);
         final DatabaseReference onlineDurumuRef = firebaseDatabase.getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.OnlineDurumuKey);
-        onlineDurumuRef.keepSynced(true);
         final DatabaseReference baglantiKontrol = firebaseDatabase.getReference(".info/connected");
         baglantiKontrol.addValueEventListener(new ValueEventListener() {
             @Override

@@ -114,14 +114,12 @@ public class MesajlarFragment extends Fragment {
             List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, getirilecekMesajlar);
             if (mesajList.size() > 0){
                 DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
-                kullaniciRef.keepSynced(true);
                 kullaniciRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Kullanici kullanici = snapshot.getValue(Kullanici.class);
                         if (kullanici != null){
                             DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
-                            kisilerRef.keepSynced(true);
                             kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @SuppressLint("NotifyDataSetChanged")
                                 @Override

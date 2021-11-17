@@ -75,7 +75,6 @@ public class BildirimClass {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
             DatabaseReference mesajKisileriRef= FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
-            mesajKisileriRef.keepSynced(true);
             mesajKisileriRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot mesajKisileriSnapshot) {
@@ -86,13 +85,11 @@ public class BildirimClass {
                         long finalMesajKisiSayisi = mesajKisiSayisi;
                         if (mesajKisileriDataSnapshot.getKey() != null){
                             DatabaseReference kullaniyicibul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisileriDataSnapshot.getKey());
-                            kullaniyicibul.keepSynced(true);
                             kullaniyicibul.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
                                     Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
                                     DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
-                                    kisiyiBul.keepSynced(true);
                                     kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
@@ -104,7 +101,6 @@ public class BildirimClass {
                                                 asilKullanici = kisi;
                                             }
                                             DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
-                                            mesajlarRef.keepSynced(true);
                                             Kullanici sonAsilKullanici = asilKullanici;
                                             String sonIsim = isim;
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {

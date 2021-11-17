@@ -76,7 +76,6 @@ public class Resimler {
                         String resimKonumu = downloadUri.toString();
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
-						reference.keepSynced(true);
 						reference.setValue(resimKonumu);
                         if (gosterilecekIW != null){
                             ResimGoster(resimKonumu, gosterilecekIW, R.drawable.ic_profil_resmi);
@@ -125,7 +124,6 @@ public class Resimler {
         }
         altMenuView.findViewById(R.id.resmiKaldir).setOnClickListener(v -> {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
-			databaseReference.keepSynced(true);
 			databaseReference.setValue(Veritabani.VarsayilanDeger);
             ResimGoster(Veritabani.VarsayilanDeger, resimIW, R.drawable.ic_profil_resmi);
             bottomSheetDialog.dismiss();

@@ -38,7 +38,6 @@ public class KisilerFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private RecyclerView kisilerRW;
     private KisiAdapter kisiAdapter;
-    private DatabaseReference kisilerRef;
     private List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
     public KisilerFragment(MainActivity mainActivity) {
@@ -55,24 +54,49 @@ public class KisilerFragment extends Fragment {
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);
         kisilerRW.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         kullaniciList = new ArrayList<>();
-        kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+firebaseUser.getPhoneNumber()+"/"+Veritabani.KisiTablosu);
-        kisilerRef.keepSynced(true);
         if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
-            KisileriBul(true);
+            KisileriGuncelle();
         }else{
             izinler.Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
         }
         return view;
     }
 
+    private void KisileriGuncelle() {
+        veritabani.KisileriEkle(firebaseUser, this::KisileriGoster);
+    }
+
+    private void KisileriGoster() {
+        DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu + "/" + firebaseUser.getPhoneNumber() + "/" + Veritabani.KisiTablosu);
+        kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                kullaniciList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Kullanici kullanici = dataSnapshot.getValue(Kullanici.class);
+                    if (kullanici != null){
+                        kullaniciList.add(kullanici);
+                    }
+                }
+                if (mainActivity != null){
+                    kisiAdapter = new KisiAdapter(kullaniciList, mainActivity);
+                }
+                kisilerRW.setAdapter(kisiAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     ActivityResultLauncher<String> kisiIzniResultLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
                 if (result){
-                    veritabani.KisileriEkle(firebaseUser);
-                    KisileriBul(true);
+                    KisileriGuncelle();
                 }else{
                     KisiIzniUyariKutusu();
                 }
@@ -80,60 +104,5 @@ public class KisilerFragment extends Fragment {
 
     private void KisiIzniUyariKutusu() {
         izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
-    }
-
-    private boolean kisilerGuncelleniyor = false;
-    private void KisileriBul(boolean goster){
-        //Kişiler veritabanından çekiliyor
-        if (kisilerGuncelleniyor != goster){
-            if (goster){
-                kisilerRef.addValueEventListener(kisilerValueEventListener);
-            }else{
-                kisilerRef.removeEventListener(kisilerValueEventListener);
-            }
-            kisilerGuncelleniyor = goster;
-        }
-    }
-    private final ValueEventListener kisilerValueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            KisileriGuncelle(snapshot);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
-        }
-    };
-    private void KisileriGuncelle(DataSnapshot veriler){
-        kullaniciList.clear();
-        for (DataSnapshot verilerSnapshot : veriler.getChildren()){
-            Kullanici kullanici = verilerSnapshot.getValue(Kullanici.class);
-            if (kullanici != null){
-                kullaniciList.add(kullanici);
-            }
-        }
-        if (mainActivity != null){
-            kisiAdapter = new KisiAdapter(kullaniciList, mainActivity);
-        }
-        kisilerRW.setAdapter(kisiAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        KisileriBul(true);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        KisileriBul(false);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        KisileriBul(false);
     }
 }
