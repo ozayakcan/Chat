@@ -62,7 +62,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         }else{
             holder.kisiAdi.setText(mesajlar.getIsim());
         }
-        holder.sonMesaj.setText(mesajlar.getMesaj().getMesaj());
+        holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
         holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih(), true));
         if (mesajlar.getMesaj().isGonderen()){
             holder.okunmamisMesajLayout.setVisibility(View.GONE);
