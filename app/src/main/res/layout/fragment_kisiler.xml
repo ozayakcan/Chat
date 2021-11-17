@@ -5,7 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragment.KisilerFragment">
-
+        <LinearLayout
+            android:id="@+id/progressBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/refreshing_contacts"/>
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:indeterminate="true"
+                    android:max="100"
+                    android:backgroundTint="@color/white"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:layout_marginTop="-7dp"/>
+        </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/kisilerRW"
             android:layout_width="match_parent"

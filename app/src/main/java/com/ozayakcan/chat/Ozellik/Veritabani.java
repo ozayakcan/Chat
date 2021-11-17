@@ -1,5 +1,6 @@
 package com.ozayakcan.chat.Ozellik;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -112,52 +113,54 @@ public class Veritabani {
         //Veritabanındaki kişiler siliniyor
         KisiSil(firebaseUser.getPhoneNumber());
         //Rehberdeki kişiler veritabanına ekleniyor
-        ContentResolver contentResolver = mContext.getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if (cursor != null) {
-            if (cursor.getCount() > 0){
-                while (cursor.moveToNext()) {
-                    String id = cursor.getString(
-                            cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    String isim = cursor.getString(cursor.getColumnIndex(
-                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+        ((Activity) mContext).runOnUiThread(() -> {
+            ContentResolver contentResolver = mContext.getContentResolver();
+            Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.getCount() > 0){
+                    while (cursor.moveToNext()) {
+                        String id = cursor.getString(
+                                cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                        String isim = cursor.getString(cursor.getColumnIndex(
+                                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
 
-                    if (cursor.getInt(cursor.getColumnIndex(
-                            ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                        Cursor pCur = contentResolver.query(
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, null);
-                        while (pCur.moveToNext()) {
-                            String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
-                                    ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                    if (kullanici != null){
-                                        if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
-                                            kullanici.setIsim(isim);
-                                            KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
+                        if (cursor.getInt(cursor.getColumnIndex(
+                                ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                            Cursor pCur = contentResolver.query(
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                    null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                    new String[]{id}, null);
+                            while (pCur.moveToNext()) {
+                                String telefonNumarasiNormal = pCur.getString(pCur.getColumnIndex(
+                                        ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                String telefonNumarasi = telefonNumarasiNormal.replace(" ", "");
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonNumarasi);
+                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                        if (kullanici != null){
+                                            if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
+                                                kullanici.setIsim(isim);
+                                                KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    kisilerListener.Tamamlandi();
-                                }
-                            });
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        kisilerListener.Tamamlandi();
+                                    }
+                                });
+                            }
+                            pCur.close();
                         }
-                        pCur.close();
                     }
                 }
+                cursor.close();
             }
-            cursor.close();
-        }
+        });
     }
     public static void KisiEkle(Kullanici kullanici, String telefon, KisilerListener kisilerListener) {
         HashMap<String, Object> map = new HashMap<>();

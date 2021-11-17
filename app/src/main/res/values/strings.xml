@@ -68,4 +68,6 @@
     <string name="messages_is_unarchiving">Messages is unarchiving.</string>
     <string name="there_is_already_an_unarchiving_or_deleting_progress">There is already an unarchiving or deleting progress.</string>
     <string name="unarchive">Unarchive</string>
+    <string name="refresh_contacts">Refresh Contacts</string>
+    <string name="refreshing_contacts">Refreshing contacts...</string>
 </resources>

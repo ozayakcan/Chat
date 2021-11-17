@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,7 +25,6 @@ import com.ozayakcan.chat.Adapter.KisiAdapter;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
-import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -36,6 +36,7 @@ public class KisilerFragment extends Fragment {
     private Izinler izinler;
     private Veritabani veritabani;
     private FirebaseUser firebaseUser;
+    private LinearLayout progressBarLayout;
     private RecyclerView kisilerRW;
     private KisiAdapter kisiAdapter;
     private List<Kullanici> kullaniciList;
@@ -51,20 +52,25 @@ public class KisilerFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         izinler = new Izinler(getContext());
         veritabani = new Veritabani(getContext());
+        progressBarLayout = view.findViewById(R.id.progressBarLayout);
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);
         kisilerRW.setLayoutManager(new LinearLayoutManager(getActivity()));
         kullaniciList = new ArrayList<>();
         if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
-            KisileriGuncelle();
+            KisileriGoster();
         }else{
             izinler.Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
         }
         return view;
     }
 
-    private void KisileriGuncelle() {
-        veritabani.KisileriEkle(firebaseUser, this::KisileriGoster);
+    public void KisileriYenile() {
+        progressBarLayout.setVisibility(View.VISIBLE);
+        veritabani.KisileriEkle(firebaseUser, () -> {
+            progressBarLayout.setVisibility(View.GONE);
+            KisileriGoster();
+        });
     }
 
     private void KisileriGoster() {
@@ -96,7 +102,7 @@ public class KisilerFragment extends Fragment {
             new ActivityResultContracts.RequestPermission(),
             result -> {
                 if (result){
-                    KisileriGuncelle();
+                    KisileriGoster();
                 }else{
                     KisiIzniUyariKutusu();
                 }

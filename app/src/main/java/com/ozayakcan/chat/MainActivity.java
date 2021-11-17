@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     TabLayout tabLayout;
     MesajlarFragment mesajlarFragment;
+    KisilerFragment kisilerFragment;
     Veritabani veritabani;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
         veritabani.TokenYenile();
         BildirimClass.MesajBildiriminiKaldir(MainActivity.this);
         mesajlarFragment = new MesajlarFragment(MainActivity.this);
+        kisilerFragment = new KisilerFragment(MainActivity.this);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
-        vpAdapter.fragmentEkle(new KisilerFragment(MainActivity.this), getString(R.string.contacts));
+        vpAdapter.fragmentEkle(kisilerFragment, getString(R.string.contacts));
         viewPager.setAdapter(vpAdapter);
         MesajMenusu();
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void MesajMenusu(){
         toolbar.getMenu().clear();
-        toolbar.inflateMenu(R.menu.anamenu);
+        toolbar.inflateMenu(R.menu.mesajlar);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menuArsiv){
                 startActivity(new Intent(MainActivity.this, ArsivActivity.class));
@@ -86,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public void KisilerMenusu(){
         toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.kisiler);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menuKisileriYenile){
+                kisilerFragment.KisileriYenile();
+            }
+            return false;
+        });
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
