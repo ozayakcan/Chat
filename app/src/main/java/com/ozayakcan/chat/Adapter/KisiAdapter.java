@@ -49,9 +49,8 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
-        if (kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            holder.kisiBasHarfi.setText(String.valueOf(kullanici.getIsim().charAt(0)));
-        }
+        holder.kisiBasHarfi.setText(kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)
+                ? String.valueOf(kullanici.getIsim().charAt(0)) : "");
         holder.kisi.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
     }
 

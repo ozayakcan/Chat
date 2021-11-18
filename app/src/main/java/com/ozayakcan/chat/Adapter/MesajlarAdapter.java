@@ -59,50 +59,36 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     public void onBindViewHolder(@NonNull MesajlarAdapter.ViewHolder holder, int position) {
         Mesajlar mesajlar = mesajlarList.get(position);
         holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
-        if (mesajlar.getIsim().equals("")){
-            holder.kisiAdi.setText(mesajlar.getKullanici().getTelefon());
-        }else{
-            holder.kisiAdi.setText(mesajlar.getIsim());
-        }
+        holder.kisiAdi.setText(mesajlar.getIsim().equals("") ? mesajlar.getKullanici().getTelefon() : mesajlar.getIsim());
         holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
         holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih(), true));
-        if (mesajlar.getMesaj().isGonderen()){
-            holder.okunmamisMesajLayout.setVisibility(View.GONE);
-            if (mesajlar.getMesaj().isGoruldu()){
-                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
-                holder.mesajDurumu.setVisibility(View.VISIBLE);
-            }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
-                holder.mesajDurumu.setText(mContext.getString(R.string.sending));
-                holder.mesajDurumu.setVisibility(View.VISIBLE);
-            }else if (mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
-                holder.mesajDurumu.setText(mContext.getString(R.string.sent));
-                holder.mesajDurumu.setVisibility(View.VISIBLE);
-            }else{
-                holder.mesajDurumu.setText("");
-                holder.mesajDurumu.setVisibility(View.GONE);
-            }
-        }else{
-            holder.mesajDurumu.setVisibility(View.VISIBLE);
-            holder.mesajDurumu.setText("");
-            if (mesajlar.getOkumamisMesaj() > 0){
-                if (mesajlar.getOkumamisMesaj() >= 99){
-                    holder.okunmamisMesaj.setText("99+");
-                }else{
-                    holder.okunmamisMesaj.setText(String.valueOf(mesajlar.getOkumamisMesaj()));
-                }
-                holder.okunmamisMesajLayout.setVisibility(View.VISIBLE);
-            }
-        }
+        holder.okunmamisMesaj.setText(mesajlar.getOkumamisMesaj() > 0
+                ? mesajlar.getOkumamisMesaj() >= 99
+                ? "99+" : String.valueOf(mesajlar.getOkumamisMesaj()) : "");
+        holder.okunmamisMesajLayout.setVisibility(mesajlar.getMesaj().isGonderen()
+                ? View.GONE
+                : mesajlar.getOkumamisMesaj() > 0
+                ? View.VISIBLE : View.GONE);
+        holder.mesajDurumu.setText(mesajlar.getMesaj().isGonderen()
+                ? mesajlar.getMesaj().isGoruldu()
+                ? mContext.getString(R.string.seen)
+                : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor
+                ? mContext.getString(R.string.sending)
+                : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi
+                ? mContext.getString(R.string.sent) : "" : "");
+        holder.mesajDurumu.setVisibility(mesajlar.getMesaj().isGonderen()
+                ? mesajlar.getMesaj().isGoruldu()
+                ? View.VISIBLE
+                : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor
+                ? View.VISIBLE
+                : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi
+                ? View.VISIBLE : View.GONE : View.VISIBLE);
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
             resimler.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
-        if (mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            if (mesajlar.getIsim().equals("")){
-                holder.kisiBasHarfi.setText("#");
-            }else{
-                holder.kisiBasHarfi.setText(String.valueOf(mesajlar.getIsim().charAt(0)));
-            }
-        }
+        holder.kisiBasHarfi.setText(mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)
+                ? mesajlar.getIsim().equals("")
+                ? "#" : String.valueOf(mesajlar.getIsim().charAt(0)) : "");
         holder.mesaj.setOnLongClickListener(v -> {
             mesajlar.setSecildi(!mesajlar.isSecildi());
             holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);

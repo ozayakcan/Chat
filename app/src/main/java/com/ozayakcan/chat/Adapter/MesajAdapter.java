@@ -52,28 +52,24 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull MesajAdapter.ViewHolder holder, int position) {
         Mesaj mesaj = mesajList.get(position);
-        if (mesaj.isTarihGoster()){
-            holder.tarihText.setText(ChatApp.MesajTarihiBul(mesaj.getTarih(), false));
-            holder.tarihLayout.setVisibility(View.VISIBLE);
-        }else{
-            holder.tarihLayout.setVisibility(View.GONE);
-        }
+        holder.tarihText.setText(mesaj.isTarihGoster() ? ChatApp.MesajTarihiBul(mesaj.getTarih(), false) : "");
+        holder.tarihLayout.setVisibility(mesaj.isTarihGoster() ? View.VISIBLE : View.GONE);
         holder.mesajText.setText(mesaj.getMesaj());
         holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
-        if (mesaj.isGonderen()){
-            if (mesaj.isGoruldu()){
-                holder.mesajDurumu.setText(mContext.getString(R.string.seen));
-                holder.mesajDurumu.setVisibility(View.VISIBLE);
-            }else{
-                if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
-                    holder.mesajDurumu.setText(mContext.getString(R.string.sending));
-                    holder.mesajDurumu.setVisibility(View.VISIBLE);
-                }else if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi){
-                    holder.mesajDurumu.setText(mContext.getString(R.string.sent));
-                    holder.mesajDurumu.setVisibility(View.VISIBLE);
-                }
-            }
-        }
+        holder.mesajDurumu.setText(mesaj.isGonderen()
+                ? mesaj.isGoruldu()
+                ? mContext.getString(R.string.seen)
+                : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor
+                ? mContext.getString(R.string.sending)
+                : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi
+                ? mContext.getString(R.string.sent) : "" : "");
+        holder.mesajDurumu.setVisibility(mesaj.isGonderen()
+                ? mesaj.isGoruldu()
+                ? View.VISIBLE
+                : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor
+                ? View.VISIBLE
+                : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi
+                ? View.VISIBLE : View.GONE : View.GONE);
         holder.mesajLayout.setVisibility(View.VISIBLE);
     }
 
