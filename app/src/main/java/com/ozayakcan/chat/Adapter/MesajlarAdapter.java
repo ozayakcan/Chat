@@ -58,7 +58,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MesajlarAdapter.ViewHolder holder, int position) {
         Mesajlar mesajlar = mesajlarList.get(position);
-        holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+        holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
         if (mesajlar.getIsim().equals("")){
             holder.kisiAdi.setText(mesajlar.getKullanici().getTelefon());
         }else{
@@ -105,7 +105,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         }
         holder.mesaj.setOnLongClickListener(v -> {
             mesajlar.setSecildi(!mesajlar.isSecildi());
-            holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+            holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
             if (mainActivity != null){
                 mainActivity.MesajBasiliTut(true);
             }
@@ -118,7 +118,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             if (mainActivity != null){
                 if (mainActivity.MesajSecildi){
                     mesajlar.setSecildi(!mesajlar.isSecildi());
-                    holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+                    holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
                 }else{
                     mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
                 }
@@ -126,7 +126,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             if (arsivActivity != null){
                 if (arsivActivity.MesajSecildi){
                     mesajlar.setSecildi(!mesajlar.isSecildi());
-                    holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+                    holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
                 }else{
                     arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
                 }
@@ -140,7 +140,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout mesaj;
+        public LinearLayout mesaj, secim;
         public CircleImageView profilResmi;
         public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu, okunmamisMesaj;
         public RelativeLayout okunmamisMesajLayout;
@@ -150,6 +150,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             mesaj = itemView.findViewById(R.id.mesaj);
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
+            secim = itemView.findViewById(R.id.secim);
             kisiAdi = itemView.findViewById(R.id.kisiAdi);
             tarih = itemView.findViewById(R.id.tarih);
             sonMesaj = itemView.findViewById(R.id.sonMesaj);
