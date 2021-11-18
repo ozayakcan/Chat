@@ -5,18 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +42,7 @@ public class MesajActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private TextView gonderText, altUyari;
-    private FrameLayout gonderBtn;
+    private LinearLayout gonderBtn, gonderTextLayout;
     private TextView durum;
 
     private String telefonString;
@@ -91,16 +89,18 @@ public class MesajActivity extends AppCompatActivity {
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
             }
         }
-        gonderBtn = findViewById(R.id.gonderBtn);
-        gonderText = findViewById(R.id.gonderText);
-        altUyari = findViewById(R.id.altUyari);
-        Uyari(tabloString.equals(Veritabani.ArsivTablosu), getString(R.string.you_cannot_send_messages_in_the_archive));
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        gonderBtn = findViewById(R.id.gonderBtn);
+        gonderText = findViewById(R.id.gonderText);
+        gonderTextLayout = findViewById(R.id.gonderTextLayout);
+        altUyari = findViewById(R.id.altUyari);
+        Uyari(tabloString.equals(Veritabani.ArsivTablosu), getString(R.string.you_cannot_send_messages_in_the_archive));
+
         mesajList = new ArrayList<>();
         mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
         mesajAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -136,25 +136,21 @@ public class MesajActivity extends AppCompatActivity {
         MesajlariGoster();
     }
 
-    private void Uyari(boolean goster, String... uyari) {
-        String uyariYazisi = uyari.length > 0 ? uyari[0] : "";
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
+    private void Uyari(boolean goster, String uyariYazisi) {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
         if (goster){
-            gonderText.setVisibility(View.GONE);
+            gonderTextLayout.setVisibility(View.GONE);
             gonderBtn.setVisibility(View.GONE);
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyari,ConstraintSet.TOP,0);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.altUyari);
         }else{
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.GONE);
-            gonderText.setVisibility(View.VISIBLE);
+            gonderTextLayout.setVisibility(View.VISIBLE);
             gonderBtn.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderTextLayout,ConstraintSet.TOP,0);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.gonderTextLayout);
         }
-        constraintSet.applyTo(constraintLayout);
     }
     private void GorulduOlarakIsaretle() {
         DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
