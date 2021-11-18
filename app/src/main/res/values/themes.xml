@@ -19,7 +19,9 @@
         <item name="background">@android:color/transparent</item>
     </style>
     <style name="MenuStil" parent="Theme.AppCompat.Light">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/menu_arkaplan</item>
     </style>
     <style name="EditTextThemeDefault" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorControlNormal">@color/black</item>

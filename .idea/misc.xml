@@ -8,10 +8,13 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default.xml" value="1.215625" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default_selector.xml" value="0.2703125" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_pressed.xml" value="0.2703125" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/menu_arkaplan.xml" value="0.43846153846153846" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners.xml" value="0.2703125" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_15.xml" value="0.43846153846153846" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_disabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_enabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_login.xml" value="0.264" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main.xml" value="0.20871327254305977" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main2.xml" value="0.13020833333333334" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_splash.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/fragment_kisiler.xml" value="0.20572916666666666" />
