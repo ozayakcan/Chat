@@ -312,7 +312,12 @@ public class MesajActivity extends AppCompatActivity {
         MesajlariGuncelle(false);
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
-        Intent intent = new Intent(MesajActivity.this, MainActivity.class);
+        Intent intent;
+        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
+            intent = new Intent(MesajActivity.this, ArsivActivity.class);
+        }else{
+            intent = new Intent(MesajActivity.this, MainActivity.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);

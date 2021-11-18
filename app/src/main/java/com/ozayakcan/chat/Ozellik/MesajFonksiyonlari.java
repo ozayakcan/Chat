@@ -1,6 +1,7 @@
 package com.ozayakcan.chat.Ozellik;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,6 +59,7 @@ public class MesajFonksiyonlari {
     public void MesajDuzenle(String kisi, List<Mesaj> mesajList){
         Gson gson = new Gson();
         String kaydedilecekMesaj = gson.toJson(mesajList);
+        kaydedilecekMesaj = kaydedilecekMesaj.replace("\"tarihGoster\":true", "\"tarihGoster\":false");
         sharedPreference.KaydetStringOzel(KaydedilecekTur,kisi, kaydedilecekMesaj);
     }
     public void MesajlariSil(String kisi, String silinecekYer){

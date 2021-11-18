@@ -76,13 +76,17 @@ public class ChatApp extends Application {
     }
 
     public static String MesajBol(String mesaj, int bolunecek){
-        List<String> bolunecekList = new ArrayList<>();
-        int index = 0;
-        while (index < mesaj.length()) {
-            bolunecekList.add(mesaj.substring(index, Math.min(index + bolunecek,mesaj.length())));
-            index += bolunecek;
+        if (mesaj.length() > bolunecek){
+            List<String> bolunecekList = new ArrayList<>();
+            int index = 0;
+            while (index < mesaj.length()) {
+                bolunecekList.add(mesaj.substring(index, Math.min(index + bolunecek,mesaj.length())));
+                index += bolunecek;
+            }
+            return bolunecekList.get(0)+"...";
+        }else{
+            return mesaj;
         }
-        return bolunecekList.get(0)+"...";
     }
     public static String MesajTarihiBul(long tarih, boolean saatiGoster){
         String tarihStr = DateFormat.format(TarihFormati, tarih).toString();
