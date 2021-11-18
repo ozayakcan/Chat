@@ -8,6 +8,6 @@
         app:showAsAction="always|withText"/>
     <item
         android:id="@+id/menuArsivle"
-        android:title="@string/archive_messages"/>
+        android:title="@string/archive"/>
 
 </menu>

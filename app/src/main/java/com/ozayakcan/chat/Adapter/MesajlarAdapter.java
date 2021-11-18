@@ -104,13 +104,13 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             }
         }
         holder.mesaj.setOnLongClickListener(v -> {
+            mesajlar.setSecildi(!mesajlar.isSecildi());
+            holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
             if (mainActivity != null){
-                mesajlar.setSecildi(!mesajlar.isSecildi());
-                holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
                 mainActivity.MesajBasiliTut(true);
             }
             if (arsivActivity != null){
-                arsivActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+                arsivActivity.MesajBasiliTut(true);
             }
             return true;
         });
@@ -124,7 +124,12 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 }
             }
             if (arsivActivity != null){
-                arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+                if (arsivActivity.MesajSecildi){
+                    mesajlar.setSecildi(!mesajlar.isSecildi());
+                    holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+                }else{
+                    arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+                }
             }
         });
     }

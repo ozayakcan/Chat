@@ -17,8 +17,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
+import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ArsivActivity extends AppCompatActivity {
@@ -34,39 +37,44 @@ public class ArsivActivity extends AppCompatActivity {
         setContentView(R.layout.activity_arsiv);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setTitle(getString(R.string.archive_title));
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
         viewPager = findViewById(R.id.viewPager);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
         mesajlarFragment = new MesajlarFragment(ArsivActivity.this);
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
         viewPager.setAdapter(vpAdapter);
+        ArsivMenusu();
     }
-
-    public void MesajBasiliTut(String id, String isim, String telefon, String profilResmi, int index){
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ArsivActivity.this, R.style.AltMenuTema);
-        View altMenuView = LayoutInflater.from(ArsivActivity.this).inflate(R.layout.layout_mesaj_islevleri, findViewById(R.id.altMenuLayout));
-        TextView mesajiArsivle =  altMenuView.findViewById(R.id.mesajiArsivle);
-        mesajiArsivle.setText(R.string.unarchive);
-        altMenuView.findViewById(R.id.mesajiGoruntule).setOnClickListener(v -> {
-            MesajGoster(id, isim, telefon, profilResmi);
-            bottomSheetDialog.dismiss();
-        });
-        altMenuView.findViewById(R.id.mesajiArsivle).setOnClickListener(v -> {
-            //mesajlarFragment.MesajlariArsivle(telefon, index, false);
-            bottomSheetDialog.dismiss();
-        });
-        altMenuView.findViewById(R.id.mesajiSil).setOnClickListener(v -> {
-            //mesajlarFragment.MesajlariSil(telefon, index);
-            bottomSheetDialog.dismiss();
-        });
-        bottomSheetDialog.setContentView(altMenuView);
-        bottomSheetDialog.show();
+    public void ArsivMenusu(){
+        MesajBasiliTut(false);
+        toolbar.getMenu().clear();
+    }
+    public boolean MesajSecildi = false;
+    public void MesajBasiliTut(boolean secildi){
+        if (secildi){
+            toolbar.getMenu().clear();
+            toolbar.inflateMenu(R.menu.mesajlar_islev);
+            toolbar.getMenu().findItem(R.id.menuArsivle).setTitle(getString(R.string.unarchive));
+            toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menuSil || item.getItemId() == R.id.menuArsivle){
+                    List<Mesajlar> mesajlarArrayList = new ArrayList<>();
+                    for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
+                        Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
+                        if (mesajlar.isSecildi()) {
+                            mesajlarArrayList.add(mesajlar);
+                        }
+                    }
+                    if(item.getItemId() == R.id.menuSil){
+                        mesajlarFragment.MesajlariSil(mesajlarArrayList, true);
+                    }else{
+                        mesajlarFragment.MesajlariArsivle(mesajlarArrayList, false);
+                    }
+                }
+                return false;
+            });
+        }
+        MesajSecildi = secildi;
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
@@ -82,9 +90,13 @@ public class ArsivActivity extends AppCompatActivity {
     }
 
     private void Geri() {
-        startActivity(new Intent(ArsivActivity.this, MainActivity.class));
-        overridePendingTransition(0,0);
-        finish();
+        if (MesajSecildi){
+            ArsivMenusu();
+        }else{
+            startActivity(new Intent(ArsivActivity.this, MainActivity.class));
+            overridePendingTransition(0,0);
+            finish();
+        }
     }
 
     @Override

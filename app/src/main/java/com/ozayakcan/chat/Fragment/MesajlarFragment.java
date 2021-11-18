@@ -216,6 +216,9 @@ public class MesajlarFragment extends Fragment {
                 if (mainActivity != null){
                     mainActivity.MesajMenusu();
                 }
+                if (arsivActivity != null){
+                    arsivActivity.ArsivMenusu();
+                }
             });
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
@@ -257,6 +260,9 @@ public class MesajlarFragment extends Fragment {
                 mesajlarArsivleniyor = false;
                 if (mainActivity != null){
                     mainActivity.MesajMenusu();
+                }
+                if (arsivActivity != null){
+                    arsivActivity.ArsivMenusu();
                 }
             });
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
