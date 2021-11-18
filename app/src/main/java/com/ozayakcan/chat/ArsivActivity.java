@@ -1,20 +1,16 @@
 package com.ozayakcan.chat;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
 import com.ozayakcan.chat.Model.Mesajlar;
@@ -22,7 +18,6 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ArsivActivity extends AppCompatActivity {
 
@@ -30,6 +25,7 @@ public class ArsivActivity extends AppCompatActivity {
     Toolbar toolbar;
     FirebaseUser firebaseUser;
     MesajlarFragment mesajlarFragment;
+    TextView baslik;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +35,7 @@ public class ArsivActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
+        baslik = findViewById(R.id.baslik);
         viewPager = findViewById(R.id.viewPager);
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), getLifecycle());
         mesajlarFragment = new MesajlarFragment(ArsivActivity.this);
@@ -49,6 +46,20 @@ public class ArsivActivity extends AppCompatActivity {
     public void ArsivMenusu(){
         MesajBasiliTut(false);
         toolbar.getMenu().clear();
+    }
+    private int SecilenMesajSayisi = 0;
+    public void SecilenMesajSayisiniGoster(boolean arttir) {
+        if (arttir){
+            SecilenMesajSayisi++;
+        }else{
+            SecilenMesajSayisi--;
+        }
+        if (SecilenMesajSayisi > 0){
+            baslik.setText(String.valueOf(SecilenMesajSayisi));
+        }else{
+            baslik.setText(getString(R.string.archive_title));
+            ArsivMenusu();
+        }
     }
     public boolean MesajSecildi = false;
     public void MesajBasiliTut(boolean secildi){

@@ -94,9 +94,11 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
             if (mainActivity != null){
                 mainActivity.MesajBasiliTut(true);
+                mainActivity.SecilenMesajSayisiniGoster(mesajlar.isSecildi());
             }
             if (arsivActivity != null){
                 arsivActivity.MesajBasiliTut(true);
+                arsivActivity.SecilenMesajSayisiniGoster(mesajlar.isSecildi());
             }
             return true;
         });
@@ -105,6 +107,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 if (mainActivity.MesajSecildi){
                     mesajlar.setSecildi(!mesajlar.isSecildi());
                     holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
+                    mainActivity.SecilenMesajSayisiniGoster(mesajlar.isSecildi());
                 }else{
                     mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
                 }
@@ -113,6 +116,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 if (arsivActivity.MesajSecildi){
                     mesajlar.setSecildi(!mesajlar.isSecildi());
                     holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
+                    arsivActivity.SecilenMesajSayisiniGoster(mesajlar.isSecildi());
                 }else{
                     arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
                 }

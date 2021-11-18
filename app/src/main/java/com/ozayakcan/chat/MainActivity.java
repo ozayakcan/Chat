@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     MesajlarFragment mesajlarFragment;
     KisilerFragment kisilerFragment;
     Veritabani veritabani;
+    TextView baslik;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.toolbar);
-
+        baslik = findViewById(R.id.baslik);
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         veritabani = new Veritabani(MainActivity.this);
@@ -114,6 +117,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
+    }
+
+    private int SecilenMesajSayisi = 0;
+    public void SecilenMesajSayisiniGoster(boolean arttir) {
+        if (arttir){
+            SecilenMesajSayisi++;
+        }else{
+            SecilenMesajSayisi--;
+        }
+        if (SecilenMesajSayisi > 0){
+            baslik.setText(String.valueOf(SecilenMesajSayisi));
+        }else{
+            baslik.setText(getString(R.string.app_name));
+            MesajMenusu();
+        }
     }
     public boolean MesajSecildi = false;
     @SuppressLint("NotifyDataSetChanged")
@@ -191,5 +209,4 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
-
 }
