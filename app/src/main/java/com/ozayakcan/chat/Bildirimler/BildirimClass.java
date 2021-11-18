@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -39,8 +38,6 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +86,7 @@ public class BildirimClass {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
                                     Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
-                                    if (kullanici == null || kullanici.getTelefon().equals("")){
+                                    if (kullanici == null){
                                         return;
                                     }
                                     DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
@@ -97,20 +94,15 @@ public class BildirimClass {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
                                             Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
-                                            String isim = mesajKisileriDataSnapshot.getKey();
-                                            if (kisi != null && !kisi.getTelefon().equals("")){
-                                                isim = kisi.getIsim();
-                                                kullanici.setIsim(isim);
-                                            }
+                                            String isim = kisi != null ? kisi.getIsim() : mesajKisileriDataSnapshot.getKey();
                                             DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
-                                            String sonIsim = isim;
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
                                                     for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
                                                         Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
                                                         if (mesaj != null && !mesaj.getMesaj().equals("")){
-                                                            Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), kullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
+                                                            MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), kullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
                                                         }
                                                     }
                                                     long mesajSayisi = 0;
@@ -119,7 +111,7 @@ public class BildirimClass {
                                                         if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
                                                             mesajSayisi++;
                                                             Mesaj mesajlar123 = kisiMesajListesi.get(i);
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), sonIsim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
+                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), isim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
                                                         }
                                                     }
