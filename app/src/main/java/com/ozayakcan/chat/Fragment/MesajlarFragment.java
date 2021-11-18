@@ -45,9 +45,9 @@ import java.util.List;
 public class MesajlarFragment extends Fragment {
 
     private FirebaseUser firebaseUser;
-    private List<Mesajlar> mesajlarList;
+    public List<Mesajlar> mesajlarList;
     private RecyclerView mesajlarRW;
-    private MesajlarAdapter mesajlarAdapter;
+    public MesajlarAdapter mesajlarAdapter;
     private Veritabani veritabani;
     private final MainActivity mainActivity;
     private final ArsivActivity arsivActivity;
@@ -59,33 +59,34 @@ public class MesajlarFragment extends Fragment {
     private LinearLayout progressBarLayout;
     private TextView progressBarText;
 
-    private SharedPreference sharedPreference;
     private String getirilecekMesajlar = MesajFonksiyonlari.KaydedilecekTur;
 
     public MesajlarFragment(MainActivity mainActivity) {
         this.mContext = mainActivity;
         this.mainActivity = mainActivity;
         this.arsivActivity = null;
+        Init();
     }
     public MesajlarFragment(ArsivActivity arsivActivity) {
         this.mContext = arsivActivity;
         this.arsivActivity = arsivActivity;
         this.mainActivity = null;
+        Init();
     }
-
+    public void Init(){
+        mesajlarList = new ArrayList<>();
+        veritabani = new Veritabani(mContext);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mesajlar, container, false);
-        veritabani = new Veritabani(mContext);
-        sharedPreference = new SharedPreference(mContext);
         progressBarLayout = view.findViewById(R.id.progressBarLayout);
         progressBarText = view.findViewById(R.id.progressBarText);
         mesajlarRW = view.findViewById(R.id.mesajlarRW);
         mesajlarRW.setHasFixedSize(true);
         mesajlarRW.setLayoutManager(new LinearLayoutManager(getActivity()));
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mesajlarList = new ArrayList<>();
         if (arsivActivity != null){
             getirilecekMesajlar = MesajFonksiyonlari.KaydedilecekTurArsiv;
             mesajlarAdapter = new MesajlarAdapter(mesajlarList, arsivActivity);
@@ -108,6 +109,11 @@ public class MesajlarFragment extends Fragment {
     }
 
     private void MesajlariGetir() {
+        if(mainActivity != null){
+            if (mainActivity.MesajSecildi){
+                return;
+            }
+        }
         mesajlarList.clear();
         List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(getirilecekMesajlar);
         for (String kisi : kisiler){
@@ -188,38 +194,43 @@ public class MesajlarFragment extends Fragment {
         }
     };
 
-    public void MesajlariSil(String telefon, int index, boolean arsivde){
-        if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajlariSil(List<Mesajlar> mesajlarArrayList, boolean arsivde){
+        if (!mesajlarSiliniyor && !mesajlarArsivleniyor){
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
             builder.setCancelable(true);
             builder.setTitle(R.string.delete_messages);
             builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
             builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                 mesajlarSiliniyor = true;
-                progressBarText.setText(mContext.getString(R.string.messages_is_deleting));
+                progressBarText.setText(getString(R.string.messages_is_deleting));
                 progressBarLayout.setVisibility(View.VISIBLE);
-                MesajFonksiyonlari.getInstance(mContext).MesajlariSil(telefon, getirilecekMesajlar);
-                if (mesajlarList.size()>index){
-                    mesajlarList.remove(index);
+                for (Mesajlar mesajlar : mesajlarArrayList){
+                    MesajFonksiyonlari.getInstance(mContext).MesajlariSil(mesajlar.getKullanici().getTelefon(), getirilecekMesajlar);
                 }
-                mesajlarAdapter.notifyItemRemoved(index);
+                mesajlarList.removeAll(mesajlarArrayList);
+                mesajlarAdapter.notifyDataSetChanged();
                 progressBarLayout.setVisibility(View.GONE);
                 progressBarText.setText("");
                 mesajlarSiliniyor = false;
+                if (mainActivity != null){
+                    mainActivity.MesajMenusu();
+                }
             });
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
             dialog.show();
         }else{
             if (arsivde){
-                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
-            }else{
                 Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_unarchiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mContext, mContext.getString(R.string.there_is_already_an_archiving_or_deleting_progress), Toast.LENGTH_SHORT).show();
             }
         }
     }
-    public void MesajlariArsivle(String telefon, int index, boolean arsivle){
-        if (!mesajlarArsivleniyor && !mesajlarSiliniyor){
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajlariArsivle(List<Mesajlar> mesajlarArrayList, boolean arsivle){
+        if (!mesajlarSiliniyor && !mesajlarArsivleniyor){
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(mContext);
             builder.setCancelable(true);
             builder.setTitle(R.string.archive_messages);
@@ -231,19 +242,22 @@ public class MesajlarFragment extends Fragment {
             builder.setPositiveButton(R.string.yes, (dialog, which) -> {
                 mesajlarArsivleniyor = true;
                 if (arsivle){
-                    progressBarText.setText(mContext.getString(R.string.messages_is_archiving));
+                    progressBarText.setText(getString(R.string.messages_is_archiving));
                 }else{
-                    progressBarText.setText(mContext.getString(R.string.messages_is_unarchiving));
+                    progressBarText.setText(getString(R.string.messages_is_unarchiving));
                 }
                 progressBarLayout.setVisibility(View.VISIBLE);
-                MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(telefon, arsivle);
-                if (mesajlarList.size()>index){
-                    mesajlarList.remove(index);
+                for (Mesajlar mesajlar : mesajlarArrayList){
+                    MesajFonksiyonlari.getInstance(mContext).MesajlarArsiv(mesajlar.getKullanici().getTelefon(), arsivle);
                 }
-                mesajlarAdapter.notifyItemRemoved(index);
+                mesajlarList.removeAll(mesajlarArrayList);
+                mesajlarAdapter.notifyDataSetChanged();
                 progressBarLayout.setVisibility(View.GONE);
                 progressBarText.setText("");
                 mesajlarArsivleniyor = false;
+                if (mainActivity != null){
+                    mainActivity.MesajMenusu();
+                }
             });
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();

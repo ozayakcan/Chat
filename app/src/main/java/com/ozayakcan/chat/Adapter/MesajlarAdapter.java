@@ -2,6 +2,7 @@ package com.ozayakcan.chat.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MesajlarAdapter.ViewHolder holder, int position) {
         Mesajlar mesajlar = mesajlarList.get(position);
+        holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
         if (mesajlar.getIsim().equals("")){
             holder.kisiAdi.setText(mesajlar.getKullanici().getTelefon());
         }else{
@@ -103,7 +105,9 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         }
         holder.mesaj.setOnLongClickListener(v -> {
             if (mainActivity != null){
-                mainActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
+                mesajlar.setSecildi(!mesajlar.isSecildi());
+                holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+                mainActivity.MesajBasiliTut(true);
             }
             if (arsivActivity != null){
                 arsivActivity.MesajBasiliTut(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi(), position);
@@ -112,7 +116,12 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         });
         holder.mesaj.setOnClickListener(v -> {
             if (mainActivity != null){
-                mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+                if (mainActivity.MesajSecildi){
+                    mesajlar.setSecildi(!mesajlar.isSecildi());
+                    holder.mesaj.setBackgroundColor(mesajlar.isSecildi() ? Color.CYAN : Color.WHITE);
+                }else{
+                    mainActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());
+                }
             }
             if (arsivActivity != null){
                 arsivActivity.MesajGoster(mesajlar.getKullanici().getID(), mesajlar.getIsim(), mesajlar.getKullanici().getTelefon(), mesajlar.getKullanici().getProfilResmi());

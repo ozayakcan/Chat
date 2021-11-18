@@ -58,11 +58,11 @@ public class ArsivActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiArsivle).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariArsivle(telefon, index, false);
+            //mesajlarFragment.MesajlariArsivle(telefon, index, false);
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.mesajiSil).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariSil(telefon, index, true);
+            //mesajlarFragment.MesajlariSil(telefon, index);
             bottomSheetDialog.dismiss();
         });
         bottomSheetDialog.setContentView(altMenuView);

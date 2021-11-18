@@ -1,16 +1,17 @@
 package com.ozayakcan.chat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +20,11 @@ import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
+import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void MesajMenusu(){
+        MesajBasiliTut(false);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.mesajlar);
         toolbar.setOnMenuItemClickListener(item -> {
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void KisilerMenusu(){
+        MesajBasiliTut(false);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.kisiler);
         toolbar.setOnMenuItemClickListener(item -> {
@@ -108,23 +115,69 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
     }
-    public void MesajBasiliTut(String id, String isim, String telefon, String profilResmi, int index){
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this, R.style.AltMenuTema);
-        View altMenuView = LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_mesaj_islevleri, findViewById(R.id.altMenuLayout));
-        altMenuView.findViewById(R.id.mesajiGoruntule).setOnClickListener(v -> {
-            MesajGoster(id, isim, telefon, profilResmi);
-            bottomSheetDialog.dismiss();
-        });
-        altMenuView.findViewById(R.id.mesajiArsivle).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariArsivle(telefon, index, true);
-            bottomSheetDialog.dismiss();
-        });
-        altMenuView.findViewById(R.id.mesajiSil).setOnClickListener(v -> {
-            mesajlarFragment.MesajlariSil(telefon, index, false);
-            bottomSheetDialog.dismiss();
-        });
-        bottomSheetDialog.setContentView(altMenuView);
-        bottomSheetDialog.show();
+    public boolean MesajSecildi = false;
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajBasiliTut(boolean secildi){
+        if (secildi){
+            toolbar.setNavigationIcon(R.drawable.geri_butonu);
+            toolbar.setNavigationOnClickListener(v -> MesajBasiliTut(false));
+            toolbar.getMenu().clear();
+            toolbar.inflateMenu(R.menu.mesajlar_islev);
+            toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menuSil || item.getItemId() == R.id.menuArsivle){
+                    List<Mesajlar> mesajlarArrayList = new ArrayList<>();
+                    for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
+                        Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
+                        if (mesajlar.isSecildi()) {
+                            mesajlarArrayList.add(mesajlar);
+                        }
+                    }
+                    if(item.getItemId() == R.id.menuSil){
+                        mesajlarFragment.MesajlariSil(mesajlarArrayList, false);
+                    }else{
+                        mesajlarFragment.MesajlariArsivle(mesajlarArrayList, true);
+                    }
+                }
+                return false;
+            });
+        }else{
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(v -> {
+
+            });
+            for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
+                Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
+                if (mesajlar.isSecildi()) {
+                    mesajlarFragment.mesajlarList.get(i).setSecildi(false);
+                    mesajlarFragment.mesajlarAdapter.notifyItemChanged(i);
+                }
+            }
+        }
+        MesajSecildi = secildi;
+    }
+
+    private void Geri() {
+        if (MesajSecildi){
+            MesajMenusu();
+        }else{
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Geri();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            Geri();
+            return false;
+        }
+        else{
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
     @Override

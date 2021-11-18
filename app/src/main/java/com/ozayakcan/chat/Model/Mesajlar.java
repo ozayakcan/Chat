@@ -10,7 +10,10 @@ public class Mesajlar {
 
     public long okumamisMesaj;
 
+    public boolean secildi;
+
     public Mesajlar() {
+        this.secildi = false;
     }
 
     public Mesajlar(Kullanici kullanici, Mesaj mesaj, String isim, long okumamisMesaj) {
@@ -18,6 +21,7 @@ public class Mesajlar {
         this.mesaj = mesaj;
         this.isim = isim;
         this.okumamisMesaj = okumamisMesaj;
+        this.secildi = false;
     }
 
     public Kullanici getKullanici() {
@@ -50,5 +54,13 @@ public class Mesajlar {
 
     public void setOkumamisMesaj(long okumamisMesaj) {
         this.okumamisMesaj = okumamisMesaj;
+    }
+
+    public boolean isSecildi() {
+        return secildi;
+    }
+
+    public void setSecildi(boolean secildi) {
+        this.secildi = secildi;
     }
 }
