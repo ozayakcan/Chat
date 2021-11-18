@@ -73,6 +73,14 @@ public class ArsivActivity extends AppCompatActivity {
                 }
                 return false;
             });
+        }else{
+            for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
+                Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
+                if (mesajlar.isSecildi()) {
+                    mesajlarFragment.mesajlarList.get(i).setSecildi(false);
+                    mesajlarFragment.mesajlarAdapter.notifyItemChanged(i);
+                }
+            }
         }
         MesajSecildi = secildi;
     }
