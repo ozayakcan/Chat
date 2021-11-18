@@ -89,36 +89,37 @@ public class BildirimClass {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
                                     Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
+                                    if (kullanici == null || kullanici.getTelefon().equals("")){
+                                        return;
+                                    }
                                     DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
                                     kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
                                             Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
-                                            Kullanici asilKullanici = kullanici;
                                             String isim = mesajKisileriDataSnapshot.getKey();
-                                            if (kisi != null){
+                                            if (kisi != null && !kisi.getTelefon().equals("")){
                                                 isim = kisi.getIsim();
-                                                asilKullanici = kisi;
+                                                kullanici.setIsim(isim);
                                             }
                                             DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
-                                            Kullanici sonAsilKullanici = asilKullanici;
                                             String sonIsim = isim;
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
                                                     for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
                                                         Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
-                                                        if (mesaj != null && sonAsilKullanici != null){
-                                                            Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), sonAsilKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
+                                                        if (mesaj != null && !mesaj.getMesaj().equals("")){
+                                                            Mesaj mesaj123 = MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), kullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
                                                         }
                                                     }
                                                     long mesajSayisi = 0;
-                                                    List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(sonAsilKullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
+                                                    List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
                                                     for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
                                                         if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
                                                             mesajSayisi++;
                                                             Mesaj mesajlar123 = kisiMesajListesi.get(i);
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(sonAsilKullanici.getID(), sonIsim, sonAsilKullanici.getProfilResmi(), sonAsilKullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
+                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), sonIsim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
                                                             bildirimMesajList.add(bildirimMesaj);
                                                         }
                                                     }

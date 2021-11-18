@@ -136,7 +136,7 @@ public class MesajlarFragment extends Fragment {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                     Kullanici kisi = snapshot1.getValue(Kullanici.class);
-                                    String isim = kisi != null ? kisi.getIsim() : kullanici.getIsim();
+                                    String isim = kisi != null ? kisi.getIsim() : kullanici.getTelefon();
                                     long okunmamisMesaj = 0;
                                     for (Mesaj mesaj123 : mesajList){
                                         if (!mesaj123.isGonderen() && !mesaj123.isGoruldu()){
