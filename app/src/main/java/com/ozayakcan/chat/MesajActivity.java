@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -137,20 +139,23 @@ public class MesajActivity extends AppCompatActivity {
     }
 
     private void Uyari(boolean goster, String uyariYazisi) {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
         if (goster){
             gonderTextLayout.setVisibility(View.GONE);
             gonderBtn.setVisibility(View.GONE);
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.VISIBLE);
-            layoutParams.addRule(RelativeLayout.ABOVE, R.id.altUyari);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyari,ConstraintSet.TOP,0);
         }else{
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.GONE);
             gonderTextLayout.setVisibility(View.VISIBLE);
             gonderBtn.setVisibility(View.VISIBLE);
-            layoutParams.addRule(RelativeLayout.ABOVE, R.id.gonderTextLayout);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderTextLayout,ConstraintSet.TOP,0);
         }
+        constraintSet.applyTo(constraintLayout);
     }
     private void GorulduOlarakIsaretle() {
         DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
@@ -184,7 +189,6 @@ public class MesajActivity extends AppCompatActivity {
             mesajList.add(mesaj);
         }
         mesajAdapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(mesajList.size() - 1);
         MesajlariGuncelle(true);
     }
     boolean mesajlarGuncelleniyor = false;
