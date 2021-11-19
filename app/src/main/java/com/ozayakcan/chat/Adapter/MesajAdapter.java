@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,14 +28,11 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
 
     public static  final int MESAJ_TURU_SOL = 0;
     public static  final int MESAJ_TURU_SAG = 1;
-
-    private final MesajActivity mesajActivity;
     private final Context mContext;
     List<Mesaj> mesajList;
 
 
     public MesajAdapter(MesajActivity mesajActivity, List<Mesaj> mesajList){
-        this.mesajActivity = mesajActivity;
         this.mContext = mesajActivity;
         this.mesajList = mesajList;
     }
@@ -81,7 +77,6 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
                 ? View.VISIBLE
                 : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi
                 ? View.VISIBLE : View.GONE : View.GONE);
-        holder.mesajLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
