@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Ornek">
+        <attr name="ornekBool" format="boolean"/>
+        <attr name="ornekEnum" format="enum">
+            <enum name="test1" value="0"/>
+            <enum name="test2" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>
