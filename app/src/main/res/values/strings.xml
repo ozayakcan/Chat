@@ -70,4 +70,5 @@
     <string name="unarchive">Unarchive</string>
     <string name="refresh_contacts">Refresh Contacts</string>
     <string name="refreshing_contacts">Refreshing contacts…</string>
+    <string name="copied_to_clipboard">Copied to clipboard.</string>
 </resources>

@@ -3,11 +3,13 @@ package com.ozayakcan.chat.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
 import java.util.List;
+
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> {
 
@@ -55,6 +60,12 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         holder.tarihText.setText(mesaj.isTarihGoster() ? ChatApp.MesajTarihiBul(mesaj.getTarih(), false) : "");
         holder.tarihLayout.setVisibility(mesaj.isTarihGoster() ? View.VISIBLE : View.GONE);
         holder.mesajText.setText(mesaj.getMesaj());
+        holder.mesajText.setMovementMethod(BetterLinkMovementMethod.newInstance());
+        Linkify.addLinks(holder.mesajText, Linkify.ALL);
+        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.mesajText).setOnLinkLongClickListener((textView, url) -> {
+            Metinler.PanoyaKopyala(mContext, url);
+            return true;
+        });
         holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());
         holder.mesajDurumu.setText(mesaj.isGonderen()
                 ? mesaj.isGoruldu()
