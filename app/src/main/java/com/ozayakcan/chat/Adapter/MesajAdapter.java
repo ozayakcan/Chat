@@ -40,13 +40,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     @NonNull
     @Override
     public MesajAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == MESAJ_TURU_SAG){
-            view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sag, parent, false);
-        }else{
-            view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_sol, parent, false);
-        }
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(viewType == MESAJ_TURU_SAG ? R.layout.mesaj_sag : R.layout.mesaj_sol, parent, false));
     }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
