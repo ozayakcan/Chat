@@ -36,7 +36,9 @@
             android:maxWidth="255dp"
             android:textSize="18sp"
             android:textColor="@color/white"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:autoLink="all"
+            android:linksClickable="true" />
         <TextView
             android:id="@+id/saat"
             android:layout_width="wrap_content"
