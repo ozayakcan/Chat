@@ -47,6 +47,8 @@ public class MesajActivity extends AppCompatActivity {
     private LinearLayout gonderBtn, gonderTextLayout;
     private TextView durum;
 
+    private boolean ilkAcilis = true;
+
     private String telefonString;
     private String tabloString = Veritabani.MesajTablosu;
 
@@ -176,7 +178,9 @@ public class MesajActivity extends AppCompatActivity {
     }
     @SuppressLint("NotifyDataSetChanged")
     private void MesajlariGoster(){
-        GorulduOlarakIsaretle();
+        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+            GorulduOlarakIsaretle();
+        }
         List<Mesaj> mesajlar = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, getirilecekMesaj);
         for (Mesaj mesaj : mesajlar){
             if (mesajList.size() > 0){
@@ -189,6 +193,10 @@ public class MesajActivity extends AppCompatActivity {
             mesajList.add(mesaj);
         }
         mesajAdapter.notifyDataSetChanged();
+        if (ilkAcilis){
+            recyclerView.scrollToPosition(mesajAdapter.getItemCount());
+            ilkAcilis = false;
+        }
         MesajlariGuncelle(true);
     }
     boolean mesajlarGuncelleniyor = false;
@@ -207,15 +215,17 @@ public class MesajActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(BildirimClass.MesajKey)){
-            mesajList.clear();
-            MesajlariGoster();
-        }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
-            if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
-                mesajList.clear();
-                MesajlariGoster();
+            if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+                if(intent.getAction().equals(BildirimClass.MesajKey)){
+                    mesajList.clear();
+                    MesajlariGoster();
+                }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+                    if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
+                        mesajList.clear();
+                        MesajlariGoster();
+                    }
+                }
             }
-        }
         }
     };
 
@@ -223,6 +233,9 @@ public class MesajActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void MesajGonder() {
+        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
+            return;
+        }
         String mesaj = gonderText.getText().toString();
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
