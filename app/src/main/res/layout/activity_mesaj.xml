@@ -75,65 +75,82 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/barLayout"
-        app:layout_constraintBottom_toTopOf="@id/gonderTextLayout" />
-    <TextView
-        android:id="@+id/altUyari"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:background="@drawable/varsayilan_arkaplan"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="15sp"
-        android:text="@string/you_cannot_send_messages_in_the_archive"/>
+        app:layout_constraintBottom_toTopOf="@id/gonderTextLayout1" />
     <LinearLayout
-        android:id="@+id/gonderBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/oval_arkaplan"
+        android:id="@+id/altUyariLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/altUyari"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:background="@drawable/varsayilan_arkaplan"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:text="@string/you_cannot_send_messages_in_the_archive"
+            android:visibility="gone"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/gonderBtnLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:padding="1dp"
-            android:src="@drawable/gonder_butonu"/>
+        <LinearLayout
+            android:id="@+id/gonderBtnLayout2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/oval_arkaplan">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:padding="1dp"
+                android:src="@drawable/gonder_butonu"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/gonderTextLayout"
+        android:id="@+id/gonderTextLayout1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="2dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:background="@drawable/gonder_edittext_arkaplan"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/gonderBtn">
-        <EditText
-            android:id="@+id/gonderText"
+        app:layout_constraintEnd_toStartOf="@id/gonderBtnLayout1">
+        <LinearLayout
+            android:id="@+id/gonderTextLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="36dp"
-            android:hint="@string/type_a_message"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="5"
-            android:scrollbars="vertical"
-            android:background="@color/white"
-            android:textSize="15sp">
-            <requestFocus/>
-        </EditText>
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="2dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:background="@drawable/gonder_edittext_arkaplan">
+            <EditText
+                android:id="@+id/gonderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
+                android:hint="@string/type_a_message"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="5"
+                android:scrollbars="vertical"
+                android:background="@color/white"
+                android:textSize="15sp">
+                <requestFocus/>
+            </EditText>
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

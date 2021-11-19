@@ -44,7 +44,7 @@ public class MesajActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private TextView gonderText, altUyari;
-    private LinearLayout gonderBtn, gonderTextLayout;
+    private LinearLayout gonderBtnLayout, gonderTextLayout;
     private TextView durum;
 
     private boolean ilkAcilis = true;
@@ -99,9 +99,9 @@ public class MesajActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        gonderBtn = findViewById(R.id.gonderBtn);
+        gonderBtnLayout = findViewById(R.id.gonderBtnLayout2);
         gonderText = findViewById(R.id.gonderText);
-        gonderTextLayout = findViewById(R.id.gonderTextLayout);
+        gonderTextLayout = findViewById(R.id.gonderTextLayout2);
         altUyari = findViewById(R.id.altUyari);
         Uyari(tabloString.equals(Veritabani.ArsivTablosu), getString(R.string.you_cannot_send_messages_in_the_archive));
 
@@ -136,7 +136,7 @@ public class MesajActivity extends AppCompatActivity {
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        gonderBtn.setOnClickListener(v -> MesajGonder());
+        gonderBtnLayout.setOnClickListener(v -> MesajGonder());
         MesajlariGoster();
     }
 
@@ -146,16 +146,16 @@ public class MesajActivity extends AppCompatActivity {
         constraintSet.clone(constraintLayout);
         if (goster){
             gonderTextLayout.setVisibility(View.GONE);
-            gonderBtn.setVisibility(View.GONE);
+            gonderBtnLayout.setVisibility(View.GONE);
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyari,ConstraintSet.TOP,0);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyariLayout,ConstraintSet.TOP,0);
         }else{
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.GONE);
             gonderTextLayout.setVisibility(View.VISIBLE);
-            gonderBtn.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderTextLayout,ConstraintSet.TOP,0);
+            gonderBtnLayout.setVisibility(View.VISIBLE);
+            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderBtnLayout1,ConstraintSet.TOP,0);
         }
         constraintSet.applyTo(constraintLayout);
     }
