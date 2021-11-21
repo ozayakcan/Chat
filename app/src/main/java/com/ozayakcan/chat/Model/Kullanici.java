@@ -16,7 +16,7 @@ public class Kullanici {
 
     private String hakkimda = "";
 
-    private long kayitZamani = 0;
+    private long kayitZamani;
 
     private long sonGorulme = 0;
 
@@ -60,6 +60,7 @@ public class Kullanici {
         return ID;
     }
 
+    @SuppressWarnings("unused")
     public void setID(String ID) {
         this.ID = ID;
     }
@@ -76,6 +77,7 @@ public class Kullanici {
         return onlineDurumu;
     }
 
+    @SuppressWarnings("unused")
     public void setOnlineDurumu(boolean onlineDurumu) {
         this.onlineDurumu = onlineDurumu;
     }
@@ -100,22 +102,27 @@ public class Kullanici {
         return hakkimda;
     }
 
+    @SuppressWarnings("unused")
     public void setHakkimda(String hakkimda) {
         this.hakkimda = hakkimda;
     }
 
+    @SuppressWarnings("unused")
     public long getKayitZamani() {
         return kayitZamani;
     }
 
+    @SuppressWarnings("unused")
     public void setKayitZamani(long kayitZamani) {
         this.kayitZamani = kayitZamani;
     }
 
+    @SuppressWarnings("unused")
     public long getSonGorulme() {
         return sonGorulme;
     }
 
+    @SuppressWarnings("unused")
     public void setSonGorulme(long sonGorulme) {
         this.sonGorulme = sonGorulme;
     }
@@ -124,6 +131,7 @@ public class Kullanici {
         return fcmToken;
     }
 
+    @SuppressWarnings("unused")
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
     }

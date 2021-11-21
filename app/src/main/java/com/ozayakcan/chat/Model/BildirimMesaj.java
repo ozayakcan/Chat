@@ -17,6 +17,7 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
 
     private long mesajSayisi = 0;
 
+    @SuppressWarnings("unused")
     public BildirimMesaj() {
     }
 
@@ -34,6 +35,7 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
         return ID;
     }
 
+    @SuppressWarnings("unused")
     public void setID(String ID) {
         this.ID = ID;
     }
@@ -58,6 +60,7 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
         return telefon;
     }
 
+    @SuppressWarnings("unused")
     public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
@@ -74,6 +77,7 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
         return tarih;
     }
 
+    @SuppressWarnings("unused")
     public void setTarih(long tarih) {
         this.tarih = tarih;
     }
@@ -82,6 +86,7 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
         return mesajSayisi;
     }
 
+    @SuppressWarnings("unused")
     public void setMesajSayisi(long mesajSayisi) {
         this.mesajSayisi = mesajSayisi;
     }

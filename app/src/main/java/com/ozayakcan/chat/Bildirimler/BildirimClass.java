@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -72,6 +73,7 @@ public class BildirimClass {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
             DatabaseReference mesajKisileriRef= FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(firebaseUser.getPhoneNumber());
+            mesajKisileriRef.keepSynced(true);
             mesajKisileriRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot mesajKisileriSnapshot) {
@@ -82,6 +84,7 @@ public class BildirimClass {
                         long finalMesajKisiSayisi = mesajKisiSayisi;
                         if (mesajKisileriDataSnapshot.getKey() != null){
                             DatabaseReference kullaniyicibul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisileriDataSnapshot.getKey());
+                            kullaniyicibul.keepSynced(true);
                             kullaniyicibul.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
@@ -90,12 +93,14 @@ public class BildirimClass {
                                         return;
                                     }
                                     DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
+                                    kisiyiBul.keepSynced(true);
                                     kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
                                             Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
                                             String isim = kisi != null ? kisi.getIsim() : mesajKisileriDataSnapshot.getKey();
                                             DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
+                                            mesajlarRef.keepSynced(true);
                                             mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
@@ -302,7 +307,7 @@ public class BildirimClass {
         retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
             @Override
             public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
-
+                Log.d("Bildirim", "Gönderildi");
             }
 
             @Override

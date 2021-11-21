@@ -75,6 +75,7 @@ public class KisilerFragment extends Fragment {
 
     private void KisileriGoster() {
         DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu + "/" + firebaseUser.getPhoneNumber() + "/" + Veritabani.KisiTablosu);
+        kisilerRef.keepSynced(true);
         kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

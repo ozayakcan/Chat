@@ -12,6 +12,7 @@ public class Mesaj {
     boolean goruldu = false;
     boolean tarihGoster = false;
 
+    @SuppressWarnings("unused")
     public Mesaj() {
     }
 
@@ -25,6 +26,7 @@ public class Mesaj {
         this.tarihGoster = tarihGoster;
     }
 
+    @SuppressWarnings("unused")
     public String getMesajKey() {
         return mesajKey;
     }
@@ -45,6 +47,7 @@ public class Mesaj {
         return tarih;
     }
 
+    @SuppressWarnings("unused")
     public void setTarih(long tarih) {
         this.tarih = tarih;
     }
@@ -61,6 +64,7 @@ public class Mesaj {
         return gonderen;
     }
 
+    @SuppressWarnings("unused")
     public void setGonderen(boolean gonderen) {
         this.gonderen = gonderen;
     }

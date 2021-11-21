@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Model.Mesajlar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,6 +37,9 @@ public class MesajFonksiyonlari {
             mesajList = new ArrayList<>();
         }else{
             mesajList = gson.fromJson(mesajlar, new TypeToken<List<Mesaj>>(){}.getType());
+        }
+        if (gonderen){
+            mesaj1.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
         }
         mesajList.add(mesaj1);
         String kaydedilecekMesaj = gson.toJson(mesajList);

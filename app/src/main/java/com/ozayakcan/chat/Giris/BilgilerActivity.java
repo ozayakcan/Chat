@@ -124,6 +124,7 @@ public class BilgilerActivity extends AppCompatActivity {
 
     private void BilgileriGetir() {
         DatabaseReference bilgilerReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
+        bilgilerReference.keepSynced(true);
         bilgilerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -210,24 +211,22 @@ public class BilgilerActivity extends AppCompatActivity {
         }else{
             bitirBtn.setEnabled(false);
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
-			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+			databaseReference.keepSynced(true);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("DB Kullanıcı Kaydet", snapshot.toString());
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                    if(kullanici == null){
-                        Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
-                        HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, true);
-                        databaseReference.updateChildren(map);
-                    }else{
-                        Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
-                        HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, false);
-                        databaseReference.updateChildren(map);
-                    }
-                    sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
-                    overridePendingTransition(0,0);
-                    startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
-                    finish();
+                    Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
+                    HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
+                    databaseReference.updateChildren(map, (error, ref) -> {
+                        if (error == null){
+                            Tamamlandi();
+                        }else{
+                            Toast.makeText(getApplicationContext(), getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                            bitirBtn.setEnabled(true);
+                        }
+                    });
                 }
 
                 @Override
@@ -238,6 +237,13 @@ public class BilgilerActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void Tamamlandi() {
+        sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
+        overridePendingTransition(0,0);
+        startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
+        finish();
     }
 
 

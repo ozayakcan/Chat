@@ -133,6 +133,7 @@ public class MesajActivity extends AppCompatActivity {
             isim.setText(isimString);
         }
         kisiBilgileriRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
+        kisiBilgileriRef.keepSynced(true);
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
@@ -161,6 +162,7 @@ public class MesajActivity extends AppCompatActivity {
     }
     private void GorulduOlarakIsaretle() {
         DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
+        gorulduKisiRef.keepSynced(true);
         gorulduKisiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -280,6 +280,7 @@ public class GirisActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
+                        databaseReference.keepSynced(true);
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {

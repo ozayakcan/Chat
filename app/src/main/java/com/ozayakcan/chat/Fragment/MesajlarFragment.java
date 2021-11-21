@@ -125,46 +125,50 @@ public class MesajlarFragment extends Fragment {
             List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kisi, getirilecekMesajlar);
             if (mesajList.size() > 0){
                 DatabaseReference kullaniciRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
+                kullaniciRef.keepSynced(true);
                 kullaniciRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Kullanici ornekKullanici = new Kullanici();
+                        ornekKullanici.setTelefon(kisi);
                         Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                        if (kullanici != null){
-                            DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
-                            kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @SuppressLint("NotifyDataSetChanged")
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                                    Kullanici kisi = snapshot1.getValue(Kullanici.class);
-                                    String isim = kisi != null ? kisi.getIsim() : kullanici.getTelefon();
-                                    long okunmamisMesaj = 0;
-                                    for (Mesaj mesaj123 : mesajList){
-                                        if (!mesaj123.isGonderen() && !mesaj123.isGoruldu()){
-                                            okunmamisMesaj++;
-                                        }
-                                    }
-                                    Mesajlar mesajlar = new Mesajlar(kullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
-
-                                    boolean kullaniciMevcut = false;
-                                    for (Mesajlar mesajlar123 : mesajlarList){
-                                        if (mesajlar123.getKullanici().getTelefon().equals(mesajlar.getKullanici().getTelefon())){
-                                            kullaniciMevcut = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!kullaniciMevcut){
-                                        mesajlarList.add(mesajlar);
-                                        mesajlarAdapter.notifyDataSetChanged();
-                                        MesajlariGuncelle(true);
+                        kullanici = kullanici != null ? kullanici : ornekKullanici;
+                        DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(kisi);
+                        kisilerRef.keepSynced(true);
+                        Kullanici finalKullanici = kullanici;
+                        kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                Kullanici kisi = snapshot1.getValue(Kullanici.class);
+                                String isim = kisi != null ? kisi.getIsim() : finalKullanici.getTelefon();
+                                long okunmamisMesaj = 0;
+                                for (Mesaj mesaj123 : mesajList){
+                                    if (!mesaj123.isGonderen() && !mesaj123.isGoruldu()){
+                                        okunmamisMesaj++;
                                     }
                                 }
+                                Mesajlar mesajlar = new Mesajlar(finalKullanici, mesajList.get(mesajList.size()-1), isim, okunmamisMesaj);
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
+                                boolean kullaniciMevcut = false;
+                                for (Mesajlar mesajlar123 : mesajlarList){
+                                    if (mesajlar123.getKullanici().getTelefon().equals(mesajlar.getKullanici().getTelefon())){
+                                        kullaniciMevcut = true;
+                                        break;
+                                    }
                                 }
-                            });
-                        }
+                                if (!kullaniciMevcut){
+                                    mesajlarList.add(mesajlar);
+                                    mesajlarAdapter.notifyDataSetChanged();
+                                    MesajlariGuncelle(true);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                     @Override

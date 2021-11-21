@@ -6,13 +6,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -76,7 +74,8 @@ public class Resimler {
                         String resimKonumu = downloadUri.toString();
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
-						reference.setValue(resimKonumu);
+						reference.keepSynced(true);
+                        reference.setValue(resimKonumu);
                         if (gosterilecekIW != null){
                             ResimGoster(resimKonumu, gosterilecekIW, R.drawable.ic_profil_resmi);
                         }
@@ -124,7 +123,8 @@ public class Resimler {
         }
         altMenuView.findViewById(R.id.resmiKaldir).setOnClickListener(v -> {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
-			databaseReference.setValue(Veritabani.VarsayilanDeger);
+			databaseReference.keepSynced(true);
+            databaseReference.setValue(Veritabani.VarsayilanDeger);
             ResimGoster(Veritabani.VarsayilanDeger, resimIW, R.drawable.ic_profil_resmi);
             bottomSheetDialog.dismiss();
         });

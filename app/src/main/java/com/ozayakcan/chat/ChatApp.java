@@ -31,7 +31,7 @@ public class ChatApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));
         Picasso build = builder.build();

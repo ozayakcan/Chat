@@ -19,9 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Giris.BilgilerActivity;
 import com.ozayakcan.chat.Giris.GirisActivity;
 import com.ozayakcan.chat.Model.Kullanici;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
@@ -46,7 +48,8 @@ public class SSActivity extends AppCompatActivity {
         if(user != null){
             //Giriş Yapıldı
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(user.getPhoneNumber());
-			databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+			databaseReference.keepSynced(true);
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
