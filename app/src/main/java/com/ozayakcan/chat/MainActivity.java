@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ozayakcan.chat.Baglanti.BaglantiServisi;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         testActivityBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        BaglantiServisi.ServisiBaslat(MainActivity.this);
         toolbar = findViewById(R.id.toolbar);
         baslik = findViewById(R.id.baslik);
         viewPager = findViewById(R.id.viewPager);
@@ -79,6 +81,18 @@ public class MainActivity extends AppCompatActivity {
         });
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(vpAdapter.baslikGetir(position))).attach();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService(new Intent(this, BaglantiServisi.class));
+    }
+
+    @Override
+    protected void onStop() {
+        //stopService(new Intent(this, BaglantiServisi.class));
+        super.onStop();
     }
 
     public void MesajMenusu(){
