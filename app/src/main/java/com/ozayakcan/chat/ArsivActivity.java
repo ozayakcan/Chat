@@ -85,6 +85,8 @@ public class ArsivActivity extends AppCompatActivity {
                 return false;
             });
         }else{
+            baslik.setText(getString(R.string.archive_title));
+            SecilenMesajSayisi = 0;
             for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
                 Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
                 if (mesajlar.isSecildi()) {

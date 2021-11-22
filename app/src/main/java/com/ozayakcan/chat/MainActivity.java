@@ -176,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setNavigationOnClickListener(v -> {
 
             });
+            baslik.setText(getString(R.string.app_name));
+            SecilenMesajSayisi = 0;
             for (int i = 0; i < mesajlarFragment.mesajlarList.size(); i++) {
                 Mesajlar mesajlar = mesajlarFragment.mesajlarList.get(i);
                 if (mesajlar.isSecildi()) {
