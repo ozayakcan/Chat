@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaglantiServisi extends JobService implements BaglantiReceiver.BaglantiListener {
@@ -37,11 +39,14 @@ public class BaglantiServisi extends JobService implements BaglantiReceiver.Bagl
 
     private BaglantiReceiver baglantiReceiver;
 
+    private Handler handler;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "Servis oluşturuldu");
         baglantiReceiver = new BaglantiReceiver(this);
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -77,57 +82,52 @@ public class BaglantiServisi extends JobService implements BaglantiReceiver.Bagl
         unregisterReceiver(baglantiReceiver);
         return false;
     }
-
     @Override
     public void Degisti(boolean baglandi) {
         if(baglandi){
-            Handler handler = new Handler();
             handler.postDelayed(() -> {
                 List<String> kisiler = MesajFonksiyonlari.getInstance(getApplicationContext()).BildirimGonderilecekKisiler();
-                if (kisiler.size() > 0){
-                    for (String kisi : kisiler){
-                        Log.d(TAG, kisi);
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
-                        databaseReference.keepSynced(true);
-                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                if (kullanici != null){
-                                    BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken(), new BildirimClass.BildirimListener() {
-                                        @Override
-                                        public void Gonderildi() {
-                                            List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(getApplicationContext()).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
-                                            for (int i = mesajList.size()-1; i >= 0; i--){
-                                                Mesaj mesaj = mesajList.get(i);
-                                                if (mesaj.isGonderen()){
-                                                    if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
-                                                        mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
-                                                        mesajList.set(i, mesaj);
-                                                    }else{
-                                                        break;
-                                                    }
+                for (String kisi : kisiler){
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
+                    databaseReference.keepSynced(true);
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                            if (kullanici != null){
+                                BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken(), new BildirimClass.BildirimListener() {
+                                    @Override
+                                    public void Gonderildi() {
+                                        List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(getApplicationContext()).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+                                        for (int i = mesajList.size()-1; i >= 0; i--){
+                                            Mesaj mesaj = mesajList.get(i);
+                                            if (mesaj.isGonderen()){
+                                                if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                                                    mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                                                    mesajList.set(i, mesaj);
+                                                }else{
+                                                    break;
                                                 }
                                             }
-                                            MesajFonksiyonlari.getInstance(getApplicationContext()).MesajDuzenle(kisi, mesajList);
-                                            MesajFonksiyonlari.getInstance(getApplicationContext()).BildirimGonderilecekKisiyiSil(kisi);
-                                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(BildirimClass.MesajKey));
                                         }
+                                        MesajFonksiyonlari.getInstance(getApplicationContext()).MesajDuzenle(kisi, mesajList);
+                                        MesajFonksiyonlari.getInstance(getApplicationContext()).BildirimGonderilecekKisiyiSil(kisi);
+                                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(BildirimClass.MesajKey));
+                                    }
 
-                                        @Override
-                                        public void Gonderilmedi() {
+                                    @Override
+                                    public void Gonderilmedi() {
 
-                                        }
-                                    });
-                                }
+                                    }
+                                });
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
-                    }
+                        }
+                    });
                 }
             }, 3000);
         }
