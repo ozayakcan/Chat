@@ -195,6 +195,7 @@ public class Veritabani {
         ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
         mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
+        MesajFonksiyonlari.getInstance(mContext).BildirimGonderilecekKisiyiEkle(gonderilecekTelefon);
         DatabaseReference ekleBirPush = ekleBir.push();
         ekleBirPush.keepSynced(true);
         ekleBirPush.setValue(mapBir, (error, ref) -> {
@@ -209,7 +210,17 @@ public class Veritabani {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Kullanici kullanici = snapshot.getValue(Kullanici.class);
                         if (kullanici != null){
-                            BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken());
+                            BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken(), new BildirimClass.BildirimListener() {
+                                @Override
+                                public void Gonderildi() {
+                                    MesajFonksiyonlari.getInstance(mContext).BildirimGonderilecekKisiyiSil(gonderilecekTelefon);
+                                }
+
+                                @Override
+                                public void Gonderilmedi() {
+
+                                }
+                            });
                         }
                     }
 
@@ -221,58 +232,6 @@ public class Veritabani {
             }
         });
 
-    }
-    public void MesajDurumuGuncelle(String telefon, boolean karsi){
-        DatabaseReference onlineDurumu = FirebaseDatabase.getInstance().getReference(".info/connected");
-        onlineDurumu.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean baglandi = snapshot.getValue(Boolean.class);
-                if (baglandi){
-                    DatabaseReference guncelle = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(telefon);
-                    guncelle.keepSynced(true);
-                    guncelle.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                DatabaseReference guncelle2 = guncelle.child(dataSnapshot.getKey());
-                                guncelle2.keepSynced(true);
-                                guncelle2.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                                        for (DataSnapshot dataSnapshot2 : snapshot2.getChildren()){
-                                            Mesaj mesaj = snapshot2.getValue(Mesaj.class);
-                                            if (mesaj != null && !mesaj.getMesaj().equals("") && mesaj.isGonderen() != karsi){
-                                                HashMap<String, Object> guncelleMap = new HashMap<>();
-                                                guncelleMap.put(Veritabani.MesajDurumuKey, Veritabani.MesajDurumuGonderildi);
-                                                DatabaseReference databaseReference13 = dataSnapshot2.getRef();
-                                                databaseReference13.keepSynced(true);
-                                                databaseReference13.updateChildren(guncelleMap);
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
     public void DurumKontrol(FirebaseUser firebaseUser){
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

@@ -53,7 +53,6 @@ public class SharedPreference {
         SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
         return sharedPreference.getString(key, varsayilanDeger);
     }
-
     public void KaydetBoolean(String key, boolean deger){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreference.edit();
@@ -84,6 +83,14 @@ public class SharedPreference {
     }
     public void BiriniTemizle(String key){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
+        if (sharedPreference.contains(key)){
+            SharedPreferences.Editor editor = sharedPreference.edit();
+            editor.remove(key).apply();
+        }
+    }
+
+    public void TemizleOzel(String tur, String key){
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
         if (sharedPreference.contains(key)){
             SharedPreferences.Editor editor = sharedPreference.edit();
             editor.remove(key).apply();

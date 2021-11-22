@@ -300,19 +300,23 @@ public class BildirimClass {
         notificationManager.cancel(MesajBildirimiID);
     }
 
-    public static void MesajBildirimiYolla(String token){
+    public interface BildirimListener{
+        void Gonderildi();
+        void Gonderilmedi();
+    }
+    public static void MesajBildirimiYolla(String token, BildirimListener bildirimListener){
         RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
         DataMesaj data = new DataMesaj(MesajKey);
         Gonder gonder = new Gonder(data, token);
         retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
             @Override
             public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
-                Log.d("Bildirim", "Gönderildi");
+                bildirimListener.Gonderildi();
             }
 
             @Override
             public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
-
+                bildirimListener.Gonderilmedi();
             }
         });
     }

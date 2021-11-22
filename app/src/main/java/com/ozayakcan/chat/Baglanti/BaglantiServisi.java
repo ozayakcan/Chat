@@ -10,10 +10,26 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
+import com.ozayakcan.chat.Bildirimler.BildirimServisi;
+import com.ozayakcan.chat.Model.Kullanici;
+import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
+import com.ozayakcan.chat.Ozellik.Veritabani;
+
+import java.util.List;
 
 public class BaglantiServisi extends JobService implements BaglantiReceiver.BaglantiListener {
 
@@ -64,7 +80,57 @@ public class BaglantiServisi extends JobService implements BaglantiReceiver.Bagl
 
     @Override
     public void Degisti(boolean baglandi) {
-        Toast.makeText(getApplicationContext(), baglandi ? "İnternet bağlantısı kuruldu." : "İnternet bağlantısı kesildi.", Toast.LENGTH_SHORT).show();
+        if(baglandi){
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                List<String> kisiler = MesajFonksiyonlari.getInstance(getApplicationContext()).BildirimGonderilecekKisiler();
+                if (kisiler.size() > 0){
+                    for (String kisi : kisiler){
+                        Log.d(TAG, kisi);
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
+                        databaseReference.keepSynced(true);
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                if (kullanici != null){
+                                    BildirimClass.MesajBildirimiYolla(kullanici.getFcmToken(), new BildirimClass.BildirimListener() {
+                                        @Override
+                                        public void Gonderildi() {
+                                            List<Mesaj> mesajList = MesajFonksiyonlari.getInstance(getApplicationContext()).MesajlariGetir(kisi, MesajFonksiyonlari.KaydedilecekTur);
+                                            for (int i = mesajList.size()-1; i >= 0; i--){
+                                                Mesaj mesaj = mesajList.get(i);
+                                                if (mesaj.isGonderen()){
+                                                    if (mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderiliyor){
+                                                        mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                                                        mesajList.set(i, mesaj);
+                                                    }else{
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            MesajFonksiyonlari.getInstance(getApplicationContext()).MesajDuzenle(kisi, mesajList);
+                                            MesajFonksiyonlari.getInstance(getApplicationContext()).BildirimGonderilecekKisiyiSil(kisi);
+                                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(new Intent(BildirimClass.MesajKey));
+                                        }
+
+                                        @Override
+                                        public void Gonderilmedi() {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }, 3000);
+        }
     }
 
 }

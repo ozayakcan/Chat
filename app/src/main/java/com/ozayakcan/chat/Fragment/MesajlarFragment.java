@@ -104,7 +104,6 @@ public class MesajlarFragment extends Fragment {
             }
         });
         MesajlariGetir();
-        veritabani.MesajDurumuGuncelle(firebaseUser.getPhoneNumber(), false);
         return view;
     }
 

@@ -28,6 +28,7 @@ public class MesajFonksiyonlari {
 
     public static final String KaydedilecekTur= "MESAJLAR";
     public static final String KaydedilecekTurArsiv= "ARSIVMESAJLAR";
+    public static final String BildirimGonderilecekKisiler = "BILDIRIMGONDERILECEKKISI";
     public Mesaj MesajiKaydet(String key, String kisi, String mesaj, long mesajDurumu, boolean gonderen){
         List<Mesaj> mesajList;
         Mesaj mesaj1 = new Mesaj(key, mesaj, System.currentTimeMillis(), mesajDurumu, gonderen, false, false);
@@ -38,7 +39,7 @@ public class MesajFonksiyonlari {
         }else{
             mesajList = gson.fromJson(mesajlar, new TypeToken<List<Mesaj>>(){}.getType());
         }
-        if (gonderen){
+        if (!gonderen){
             mesaj1.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
         }
         mesajList.add(mesaj1);
@@ -102,5 +103,14 @@ public class MesajFonksiyonlari {
                 sharedPreference.KaydetStringOzel(KaydedilecekTurArsiv, kisi, "");
             }
         }
+    }
+    public List<String> BildirimGonderilecekKisiler(){
+        return sharedPreference.CokluStringGetirOzel(BildirimGonderilecekKisiler);
+    }
+    public void BildirimGonderilecekKisiyiEkle(String telefon){
+        sharedPreference.KaydetStringOzel(BildirimGonderilecekKisiler, telefon, "gonder");
+    }
+    public void BildirimGonderilecekKisiyiSil(String telefon){
+        sharedPreference.TemizleOzel(BildirimGonderilecekKisiler, telefon);
     }
 }

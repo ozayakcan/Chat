@@ -16,7 +16,6 @@ public class BaglantiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         baglantiListener.Degisti(baglandi(context));
-
     }
 
     public static boolean baglandi(Context context) {
