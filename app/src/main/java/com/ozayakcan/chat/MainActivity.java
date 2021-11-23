@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.ozayakcan.chat.Baglanti.BaglantiServisi;
+import com.ozayakcan.chat.Servisler.BaglantiServisi;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
