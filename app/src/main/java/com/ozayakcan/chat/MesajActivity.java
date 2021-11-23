@@ -42,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView mesajlarRW;
     private TextView gonderText, altUyari;
     private LinearLayout gonderBtnLayout, gonderTextLayout;
     private TextView durum;
@@ -93,11 +93,11 @@ public class MesajActivity extends AppCompatActivity {
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
             }
         }
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
+        mesajlarRW = findViewById(R.id.mesajlarRW);
+        mesajlarRW.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        mesajlarRW.setLayoutManager(linearLayoutManager);
 
         gonderBtnLayout = findViewById(R.id.gonderBtnLayout2);
         gonderText = findViewById(R.id.gonderText);
@@ -111,10 +111,10 @@ public class MesajActivity extends AppCompatActivity {
             @Override
             public void onChanged() {
                 super.onChanged();
-                recyclerView.setAdapter(mesajAdapter);
+                mesajlarRW.setAdapter(mesajAdapter);
             }
         });
-        recyclerView.setAdapter(mesajAdapter);
+        mesajlarRW.setAdapter(mesajAdapter);
         CircleImageView profilResmi = findViewById(R.id.profilResmi);
         TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         TextView isim = findViewById(R.id.isim);
@@ -150,13 +150,13 @@ public class MesajActivity extends AppCompatActivity {
             gonderBtnLayout.setVisibility(View.GONE);
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.altUyariLayout,ConstraintSet.TOP,0);
+            constraintSet.connect(R.id.mesajlarRW,ConstraintSet.BOTTOM,R.id.altUyariLayout,ConstraintSet.TOP,0);
         }else{
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.GONE);
             gonderTextLayout.setVisibility(View.VISIBLE);
             gonderBtnLayout.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.recyclerView,ConstraintSet.BOTTOM,R.id.gonderBtnLayout1,ConstraintSet.TOP,0);
+            constraintSet.connect(R.id.mesajlarRW,ConstraintSet.BOTTOM,R.id.gonderBtnLayout1,ConstraintSet.TOP,0);
         }
         constraintSet.applyTo(constraintLayout);
     }
@@ -196,7 +196,7 @@ public class MesajActivity extends AppCompatActivity {
         }
         mesajAdapter.notifyDataSetChanged();
         if (ilkAcilis){
-            recyclerView.scrollToPosition(mesajAdapter.getItemCount());
+            mesajlarRW.scrollToPosition(mesajAdapter.getItemCount());
             ilkAcilis = false;
         }
         MesajlariGuncelle(true);
@@ -251,7 +251,7 @@ public class MesajActivity extends AppCompatActivity {
             }
             mesajList.add(mesajClass);
             mesajAdapter.notifyDataSetChanged();
-            recyclerView.scrollToPosition(mesajList.size() - 1);
+            mesajlarRW.scrollToPosition(mesajList.size() - 1);
             veritabani.MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
         }else{

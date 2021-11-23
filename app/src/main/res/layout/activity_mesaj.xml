@@ -71,7 +71,7 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/mesajlarRW"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/barLayout"
@@ -95,35 +95,12 @@
             android:text="@string/you_cannot_send_messages_in_the_archive"
             android:visibility="gone"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/gonderBtnLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout
-            android:id="@+id/gonderBtnLayout2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/oval_arkaplan">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:padding="1dp"
-                android:src="@drawable/gonder_butonu"/>
-        </LinearLayout>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/gonderTextLayout1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/dosyaGonder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/gonderBtnLayout1">
         <LinearLayout
@@ -137,7 +114,8 @@
             android:paddingEnd="15dp"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:background="@drawable/gonder_edittext_arkaplan">
+            android:background="@drawable/gonder_edittext_arkaplan"
+            tools:ignore="UselessParent">
             <EditText
                 android:id="@+id/gonderText"
                 android:layout_width="match_parent"
@@ -148,9 +126,47 @@
                 android:maxLines="5"
                 android:scrollbars="vertical"
                 android:background="@color/white"
-                android:textSize="15sp">
+                android:textSize="15sp"
+                android:importantForAutofill="no">
                 <requestFocus/>
             </EditText>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/gonderBtnLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/dosyaGonder">
+        <LinearLayout
+            android:id="@+id/gonderBtnLayout2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/oval_arkaplan"
+            tools:ignore="UselessParent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:padding="1dp"
+                android:src="@drawable/gonder_butonu"
+                android:contentDescription="@string/send" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/dosyaGonder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
