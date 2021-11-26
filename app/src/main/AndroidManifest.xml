@@ -24,6 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat">
         <activity
+            android:name=".Resimler.ProfilResmiGoruntuleActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"/>
+        <activity
             android:name=".ArsivActivity"
             android:exported="false" />
         <activity

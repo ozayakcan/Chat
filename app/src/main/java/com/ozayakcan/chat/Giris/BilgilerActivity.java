@@ -33,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
-import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Resimler.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
@@ -50,7 +50,7 @@ public class BilgilerActivity extends AppCompatActivity {
     private EditText isimET, hakkimdaET;
     private TextView isimHata;
     private Button bitirBtn;
-    private Resimler resimler;
+    private ResimlerClass resimlerClass;
     private Veritabani veritabani;
     private SharedPreference sharedPreference;
     private Izinler izinler;
@@ -63,7 +63,7 @@ public class BilgilerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bilgiler);
-        resimler = new Resimler(BilgilerActivity.this);
+        resimlerClass = new ResimlerClass(BilgilerActivity.this);
         izinler = new Izinler(BilgilerActivity.this);
         veritabani = new Veritabani(BilgilerActivity.this);
         sharedPreference = new SharedPreference(BilgilerActivity.this);
@@ -82,7 +82,7 @@ public class BilgilerActivity extends AppCompatActivity {
         if (isimString.equals("")){
             BilgileriGetir();
         }else{
-            resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+            resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
             resimBaglantisi = profilResmiString;
             isimET.setText(isimString);
             isimET.setSelection(isimET.getText().length());
@@ -130,7 +130,7 @@ public class BilgilerActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Kullanici kullanici = snapshot.getValue(Kullanici.class);
                 if (kullanici != null){
-                    resimler.ResimGoster(kullanici.getProfilResmi(), profilResmi, R.drawable.ic_profil_resmi);
+                    resimlerClass.ResimGoster(kullanici.getProfilResmi(), profilResmi, R.drawable.ic_profil_resmi);
                     resimBaglantisi = kullanici.getProfilResmi();
                     isimET.setText(kullanici.getIsim());
                     isimET.setSelection(isimET.getText().length());
@@ -146,7 +146,7 @@ public class BilgilerActivity extends AppCompatActivity {
     }
 
     private void ProfilResmiDegistir() {
-        resimler.ProfilResmiDegistir(firebaseUser, resimBaglantisi, profilResmi, resimYukleActivityResult, kameraIzniResultLauncher, dosyaIzniResultLauncher);
+        resimlerClass.ProfilResmiDegistir(firebaseUser, resimBaglantisi, profilResmi, resimYukleActivityResult, kameraIzniResultLauncher, dosyaIzniResultLauncher);
     }
 
     ActivityResultLauncher<String> kameraIzniResultLauncher = registerForActivityResult(
@@ -160,7 +160,7 @@ public class BilgilerActivity extends AppCompatActivity {
             });
 
     private void KameraIzniVerildi(){
-        resimler.KameradanYukle(resimYukleActivityResult);
+        resimlerClass.KameradanYukle(resimYukleActivityResult);
     }
     private void KameraIzniVerilmedi(){
         izinler.ZorunluIzinUyariKutusu(Manifest.permission.CAMERA, kameraIzniResultLauncher);
@@ -175,7 +175,7 @@ public class BilgilerActivity extends AppCompatActivity {
                 }
             });
     private void DosyaIzniVerildi(){
-        resimler.GaleridenYukle(resimYukleActivityResult);
+        resimlerClass.GaleridenYukle(resimYukleActivityResult);
     }
     private void DosyaIzniVerilmedi(){
         izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
@@ -187,7 +187,7 @@ public class BilgilerActivity extends AppCompatActivity {
                     Intent intent = result.getData();
                     if (intent != null){
                         Uri sonuc = intent.getData();
-                        resimler.ResimKirp(sonuc);
+                        resimlerClass.ResimKirp(sonuc);
                     }else{
                         Toast.makeText(BilgilerActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     }
@@ -199,7 +199,7 @@ public class BilgilerActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                resimler.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid()+"/"+Veritabani.ProfilResmiDosyaAdi+Resimler.VarsayilanResimUzantisi, progressBarLayout);
+                resimlerClass.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid()+"/"+Veritabani.ProfilResmiDosyaAdi+ ResimlerClass.VarsayilanResimUzantisi, progressBarLayout);
             }
         }
     }

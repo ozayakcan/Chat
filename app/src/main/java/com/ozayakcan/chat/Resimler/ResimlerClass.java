@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Ozellik;
+package com.ozayakcan.chat.Resimler;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ozayakcan.chat.Ozellik.Izinler;
+import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -31,13 +33,13 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 
-public class Resimler {
+public class ResimlerClass {
 
     private final Context mContext;
     public UploadTask resimYukleUploadTask;
     public static final String VarsayilanResimUzantisi = ".jpg";
 
-    public Resimler(Context context) {mContext = context;}
+    public ResimlerClass(Context context) {mContext = context;}
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void ResimGoster(String resim, ImageView resimIW, int varsayilanResimID){
@@ -162,5 +164,12 @@ public class Resimler {
         options.setToolbarWidgetColor(ContextCompat.getColor(mContext, R.color.white));
         options.setToolbarTitle(mContext.getString(R.string.crop_profile_photo));
         return options;
+    }
+
+    public void ProfilResmiGoruntule(String isim, String profilResmi) {
+        Intent intent = new Intent(mContext, ProfilResmiGoruntuleActivity.class);
+        intent.putExtra(Veritabani.IsimKey, isim);
+        intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
+        mContext.startActivity(intent);
     }
 }

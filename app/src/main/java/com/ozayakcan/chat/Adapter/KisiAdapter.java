@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
-import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Resimler.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -22,7 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
 
-    private Resimler resimler;
+    private ResimlerClass resimlerClass;
     List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
     private final Context mContext;
@@ -37,7 +38,7 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
     @Override
     public KisiAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.kisi_listesi, parent, false);
-        resimler = new Resimler(mContext);
+        resimlerClass = new ResimlerClass(mContext);
         return new ViewHolder(view);
     }
 
@@ -47,11 +48,12 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         holder.kisiAdi.setText(kullanici.getIsim());
         holder.kisiHakkinda.setText(kullanici.getHakkimda());
         if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            resimler.ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
+            resimlerClass.ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
         holder.kisiBasHarfi.setText(kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)
                 ? String.valueOf(kullanici.getIsim().charAt(0)) : "");
-        holder.kisi.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
+        holder.kisiBilgileriLayout.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
+        holder.profilResmiLayout.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), kullanici.getProfilResmi()));
     }
 
     @Override
@@ -60,13 +62,15 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout kisi;
+        public LinearLayout kisiBilgileriLayout;
+        public RelativeLayout profilResmiLayout;
         public CircleImageView profilResmi;
         public TextView kisiBasHarfi, kisiAdi, kisiHakkinda;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            kisi = itemView.findViewById(R.id.kisi);
+            profilResmiLayout = itemView.findViewById(R.id.profilResmiLayout);
+            kisiBilgileriLayout = itemView.findViewById(R.id.kisiBilgileriLayout);
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
             kisiAdi = itemView.findViewById(R.id.kisiAdi);

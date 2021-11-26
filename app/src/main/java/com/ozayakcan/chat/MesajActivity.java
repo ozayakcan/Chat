@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
-import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Resimler.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class MesajActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mesaj);
-        Resimler resimler = new Resimler(MesajActivity.this);
+        ResimlerClass resimlerClass = new ResimlerClass(MesajActivity.this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null){
@@ -119,7 +118,7 @@ public class MesajActivity extends AppCompatActivity {
         TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         TextView isim = findViewById(R.id.isim);
         durum = findViewById(R.id.durum);
-        resimler.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
+        resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
         if (profilResmiString.equals(Veritabani.VarsayilanDeger)){
             if (isimString.equals("")){
                 kisiBasHarfi.setText("#");

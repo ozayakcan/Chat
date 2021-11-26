@@ -16,7 +16,7 @@ import com.ozayakcan.chat.ArsivActivity;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Mesajlar;
-import com.ozayakcan.chat.Ozellik.Resimler;
+import com.ozayakcan.chat.Resimler.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -26,7 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHolder> {
 
-    private Resimler resimler;
+    private ResimlerClass resimlerClass;
     List<Mesajlar> mesajlarList;
     private final MainActivity mainActivity;
     private final ArsivActivity arsivActivity;
@@ -49,7 +49,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     @Override
     public MesajlarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_listesi, parent, false);
-        resimler = new Resimler(mContext);
+        resimlerClass = new ResimlerClass(mContext);
         return new ViewHolder(view);
     }
 
@@ -83,12 +83,12 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi
                 ? View.VISIBLE : View.GONE : View.VISIBLE);
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            resimler.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
+            resimlerClass.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
         holder.kisiBasHarfi.setText(mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)
                 ? mesajlar.getIsim().equals("")
                 ? "#" : String.valueOf(mesajlar.getIsim().charAt(0)) : "");
-        holder.mesaj.setOnLongClickListener(v -> {
+        holder.mesajBilgileriLayout.setOnLongClickListener(v -> {
             mesajlar.setSecildi(!mesajlar.isSecildi());
             holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
             if (mainActivity != null){
@@ -101,7 +101,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
             }
             return true;
         });
-        holder.mesaj.setOnClickListener(v -> {
+        holder.mesajBilgileriLayout.setOnClickListener(v -> {
             if (mainActivity != null){
                 if (mainActivity.MesajSecildi){
                     mesajlar.setSecildi(!mesajlar.isSecildi());
@@ -121,6 +121,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 }
             }
         });
+        holder.profilResmiLayout.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), mesajlar.getKullanici().getProfilResmi()));
     }
 
     @Override
@@ -129,14 +130,15 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout mesaj, secim;
+        public LinearLayout secim, mesajBilgileriLayout;
         public CircleImageView profilResmi;
         public TextView kisiBasHarfi, kisiAdi, tarih, sonMesaj, mesajDurumu, okunmamisMesaj;
-        public RelativeLayout okunmamisMesajLayout;
+        public RelativeLayout okunmamisMesajLayout, profilResmiLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mesaj = itemView.findViewById(R.id.mesaj);
+            profilResmiLayout = itemView.findViewById(R.id.profilResmiLayout);
+            mesajBilgileriLayout = itemView.findViewById(R.id.mesajBilgileriLayout);
             profilResmi = itemView.findViewById(R.id.profilResmi);
             kisiBasHarfi = itemView.findViewById(R.id.kisiBasHarfi);
             secim = itemView.findViewById(R.id.secim);
