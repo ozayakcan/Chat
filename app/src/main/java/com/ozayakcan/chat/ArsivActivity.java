@@ -11,13 +11,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
 import com.ozayakcan.chat.Model.Mesajlar;
-import com.ozayakcan.chat.Ozellik.KullaniciActivity;
+import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArsivActivity extends KullaniciActivity {
+public class ArsivActivity extends KullaniciAppCompatActivity {
 
     ViewPager2 viewPager;
     Toolbar toolbar;

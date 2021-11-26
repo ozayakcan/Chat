@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.ozayakcan.chat.Ozellik.KullaniciActivity;
+import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 
-public class TestActivity extends KullaniciActivity {
+public class TestActivity extends KullaniciAppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     @Override

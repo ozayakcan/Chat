@@ -28,7 +28,7 @@ import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
-import com.ozayakcan.chat.Ozellik.KullaniciActivity;
+import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.Resimler.ResimlerClass;
 
@@ -37,7 +37,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MesajActivity extends KullaniciActivity {
+public class MesajActivity extends KullaniciAppCompatActivity {
 
     private RecyclerView mesajlarRW;
     private TextView gonderText, altUyari;

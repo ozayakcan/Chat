@@ -1,7 +1,6 @@
 package com.ozayakcan.chat;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,14 +19,14 @@ import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
 import com.ozayakcan.chat.Model.Mesajlar;
-import com.ozayakcan.chat.Ozellik.KullaniciActivity;
+import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.Servisler.BaglantiServisi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends KullaniciActivity {
+public class MainActivity extends KullaniciAppCompatActivity {
 
     ViewPager2 viewPager;
     Toolbar toolbar;

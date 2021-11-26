@@ -1,14 +1,14 @@
 package com.ozayakcan.chat.Ozellik;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class KullaniciActivity extends Activity {
+public class KullaniciAppCompatActivity extends AppCompatActivity {
 
     public FirebaseUser firebaseUser;
 
@@ -41,5 +41,4 @@ public class KullaniciActivity extends Activity {
         super.onDestroy();
         Veritabani.DurumGuncelle(firebaseUser, false);
     }
-
 }

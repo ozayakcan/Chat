@@ -89,7 +89,7 @@ public class BilgilerActivity extends AppCompatActivity {
             hakkimdaET.setText(hakkimdaString);
         }
         bitirBtn = findViewById(R.id.bitirBtn);
-        profilResmi.setOnClickListener(v -> ProfilResmiDegistir());
+        profilResmi.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule("", resimBaglantisi));
         kamera.setOnClickListener(v -> ProfilResmiDegistir());
         isimET.setOnEditorActionListener((v, actionId, event) -> {
             if(actionId == EditorInfo.IME_ACTION_NEXT){
