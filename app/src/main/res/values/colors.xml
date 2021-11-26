@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#0A027C</color>
+    <color name="menuRengi">#120A85</color>
     <color name="colorSecondary">#03002e</color>
     <color name="warningColor">#C80202</color>
     <color name="white">#FFFFFFFF</color>
