@@ -5,4 +5,8 @@
         android:id="@+id/menuKisileriYenile"
         android:title="@string/refresh_contacts"/>
 
+    <item
+        android:id="@+id/menuAyarlar"
+        android:title="@string/settings"/>
+
 </menu>

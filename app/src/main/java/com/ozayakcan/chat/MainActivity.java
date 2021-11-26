@@ -8,28 +8,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.ozayakcan.chat.Servisler.BaglantiServisi;
+import com.ozayakcan.chat.Ayarlar.AyarlarClass;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
 import com.ozayakcan.chat.Model.Mesajlar;
+import com.ozayakcan.chat.Ozellik.KullaniciActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.ozayakcan.chat.Servisler.BaglantiServisi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends KullaniciActivity {
 
-    FirebaseUser firebaseUser;
     ViewPager2 viewPager;
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -46,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         Button testActivityBtn = findViewById(R.id.testActivityBtn);
         testActivityBtn.setVisibility(View.GONE);
         testActivityBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         BaglantiServisi.ServisiBaslat(MainActivity.this);
         toolbar = findViewById(R.id.toolbar);
         baslik = findViewById(R.id.baslik);
@@ -104,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ArsivActivity.class));
                 overridePendingTransition(0,0);
                 finish();
+            }else if (item.getItemId() == R.id.menuAyarlar){
+                AyarlarClass.getInstance(MainActivity.this).AyarlariAc();
             }
             return false;
         });
@@ -115,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menuKisileriYenile){
                 kisilerFragment.KisileriYenile();
+            }else if (item.getItemId() == R.id.menuAyarlar){
+                AyarlarClass.getInstance(MainActivity.this).AyarlariAc();
             }
             return false;
         });
@@ -211,17 +211,5 @@ public class MainActivity extends AppCompatActivity {
         else{
             return super.onKeyDown(keyCode, event);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Veritabani.DurumGuncelle(firebaseUser, true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Veritabani.DurumGuncelle(firebaseUser, false);
     }
 }

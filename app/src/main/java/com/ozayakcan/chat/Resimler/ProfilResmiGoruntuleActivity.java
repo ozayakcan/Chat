@@ -1,16 +1,16 @@
 package com.ozayakcan.chat.Resimler;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ozayakcan.chat.Ozellik.KullaniciActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
-public class ProfilResmiGoruntuleActivity extends Activity {
+public class ProfilResmiGoruntuleActivity extends KullaniciActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

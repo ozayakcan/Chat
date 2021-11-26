@@ -12,15 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,15 +28,16 @@ import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
-import com.ozayakcan.chat.Resimler.ResimlerClass;
+import com.ozayakcan.chat.Ozellik.KullaniciActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.ozayakcan.chat.Resimler.ResimlerClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MesajActivity extends AppCompatActivity {
+public class MesajActivity extends KullaniciActivity {
 
     private RecyclerView mesajlarRW;
     private TextView gonderText, altUyari;
@@ -50,8 +48,6 @@ public class MesajActivity extends AppCompatActivity {
 
     private String telefonString;
     private String tabloString = Veritabani.MesajTablosu;
-
-    private FirebaseUser firebaseUser;
     private Veritabani veritabani;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
@@ -75,7 +71,6 @@ public class MesajActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> Geri());
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         veritabani = new Veritabani(MesajActivity.this);
 
         Intent intent = getIntent();
@@ -362,7 +357,6 @@ public class MesajActivity extends AppCompatActivity {
         super.onResume();
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        Veritabani.DurumGuncelle(firebaseUser, true);
         ChatApp.SuankiKisiyiAyarla(telefonString);
     }
 
@@ -371,7 +365,6 @@ public class MesajActivity extends AppCompatActivity {
         super.onPause();
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
-        Veritabani.DurumGuncelle(firebaseUser, false);
         ChatApp.SuankiKisiyiAyarla("");
     }
 

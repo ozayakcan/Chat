@@ -5,4 +5,8 @@
         android:id="@+id/menuArsiv"
         android:title="@string/archived_messages"/>
 
+    <item
+        android:id="@+id/menuAyarlar"
+        android:title="@string/settings"/>
+
 </menu>

@@ -5,25 +5,22 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
 import com.ozayakcan.chat.Fragment.VPAdapter;
 import com.ozayakcan.chat.Model.Mesajlar;
+import com.ozayakcan.chat.Ozellik.KullaniciActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArsivActivity extends AppCompatActivity {
+public class ArsivActivity extends KullaniciActivity {
 
     ViewPager2 viewPager;
     Toolbar toolbar;
-    FirebaseUser firebaseUser;
     MesajlarFragment mesajlarFragment;
     TextView baslik;
 
@@ -31,7 +28,6 @@ public class ArsivActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arsiv);
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
@@ -133,16 +129,5 @@ public class ArsivActivity extends AppCompatActivity {
         else{
             return super.onKeyDown(keyCode, event);
         }
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Veritabani.DurumGuncelle(firebaseUser, true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Veritabani.DurumGuncelle(firebaseUser, false);
     }
 }
