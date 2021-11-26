@@ -1,6 +1,7 @@
 package com.ozayakcan.chat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,7 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.ozayakcan.chat.Ayarlar.AyarlarClass;
+import com.ozayakcan.chat.Ayarlar.AyarlarActivity;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Fragment.MesajlarFragment;
@@ -101,7 +102,7 @@ public class MainActivity extends KullaniciActivity {
                 overridePendingTransition(0,0);
                 finish();
             }else if (item.getItemId() == R.id.menuAyarlar){
-                AyarlarClass.getInstance(MainActivity.this).AyarlariAc();
+                AyarlariAc();
             }
             return false;
         });
@@ -114,10 +115,17 @@ public class MainActivity extends KullaniciActivity {
             if (item.getItemId() == R.id.menuKisileriYenile){
                 kisilerFragment.KisileriYenile();
             }else if (item.getItemId() == R.id.menuAyarlar){
-                AyarlarClass.getInstance(MainActivity.this).AyarlariAc();
+                AyarlariAc();
             }
             return false;
         });
+    }
+
+    private void AyarlariAc() {
+        Intent intent = new Intent(MainActivity.this, AyarlarActivity.class);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(0,0);
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
