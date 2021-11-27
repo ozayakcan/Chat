@@ -26,6 +26,9 @@
             android:name=".Ayarlar.AyarlarActivity"
             android:exported="false" />
         <activity
+            android:name=".Ayarlar.ProfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".Resimler.ProfilResmiGoruntuleActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />

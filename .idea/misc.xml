@@ -3,11 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/alt_menu_arkaplan.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/backgroundtint_disabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/backgroundtint_enabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default.xml" value="1.215625" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default_selector.xml" value="0.2703125" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_pressed.xml" value="0.2703125" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_drag_handle_24.xml" value="0.2" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.2" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_phone_24.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/menu_arkaplan.xml" value="0.43846153846153846" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/oval_arkaplan.xml" value="0.2598958333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners.xml" value="0.2703125" />
@@ -15,12 +21,14 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_disabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_enabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_arsiv.xml" value="0.20697463768115942" />
-        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_ayarlar.xml" value="0.25" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_ayarlar.xml" value="0.4759259259259259" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_bilgiler.xml" value="0.25" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_giris.xml" value="0.11639492753623189" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main.xml" value="0.20871327254305977" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main2.xml" value="0.13020833333333334" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_mesaj.xml" value="0.33" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_profil.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_profil_resmi_goruntule.xml" value="0.22" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_resim_goruntule.xml" value="0.20260416666666667" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_splash.xml" value="0.2" />
@@ -28,6 +36,8 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/fragment_mesajlar.xml" value="0.12360688956433637" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/item_profil_resmi.xml" value="0.25" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/kisi_listesi.xml" value="0.11820652173913043" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/layout_metin_duzenle.xml" value="0.33" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/layout_resim_sec.xml" value="0.33" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_listesi.xml" value="0.23324396782841822" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_sag.xml" value="0.264" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_sol.xml" value="0.12360688956433637" />

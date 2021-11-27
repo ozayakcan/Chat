@@ -199,7 +199,17 @@ public class BilgilerActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                resimlerClass.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid()+"/"+Veritabani.ProfilResmiDosyaAdi+ ResimlerClass.VarsayilanResimUzantisi, progressBarLayout);
+                resimlerClass.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
+                    @Override
+                    public void Basarili(String resimUrl) {
+                        resimBaglantisi = resimUrl;
+                    }
+
+                    @Override
+                    public void Basarisiz() {
+
+                    }
+                });
             }
         }
     }

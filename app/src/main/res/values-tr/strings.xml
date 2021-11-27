@@ -74,4 +74,9 @@
     <string name="copied_to_clipboard">Panoya kopyalandı.</string>
     <string name="profile_picture">Profil Fotoğrafı</string>
     <string name="settings">Ayarlar</string>
+    <string name="profile">Profil</string>
+    <string name="phone_number">Telefon Numarası</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="cannot_be_empty">Bu kısım boş olamaz!</string>
 </resources>

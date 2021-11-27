@@ -55,9 +55,13 @@ public class ResimlerClass {
             }
         });
     }
-
-    public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum, LinearLayout progressBarLayout){
+    public interface ResimYukleSonuc{
+        void Basarili(String resimUrl);
+        void Basarisiz();
+    }
+    public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum, LinearLayout progressBarLayout, ResimYukleSonuc resimYukleSonuc){
         if (resimYukleUploadTask != null && resimYukleUploadTask.isInProgress()) {
+            resimYukleSonuc.Basarisiz();
             Toast.makeText(mContext, R.string.upload_in_progress, Toast.LENGTH_SHORT).show();
         } else {
             progressBarLayout.setVisibility(View.VISIBLE);
@@ -67,6 +71,7 @@ public class ResimlerClass {
                 resimYukleUploadTask.continueWithTask(task -> {
                     if (!task.isSuccessful()) {
                         Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        resimYukleSonuc.Basarisiz();
                         throw task.getException();
                     }
                     return storageReference.getDownloadUrl();
@@ -81,15 +86,19 @@ public class ResimlerClass {
                         if (gosterilecekIW != null){
                             ResimGoster(resimKonumu, gosterilecekIW, R.drawable.ic_profil_resmi);
                         }
+                        resimYukleSonuc.Basarili(resimKonumu);
                     } else {
+                        resimYukleSonuc.Basarisiz();
                         Toast.makeText(mContext, R.string.failed, Toast.LENGTH_SHORT).show();
                     }
                     progressBarLayout.setVisibility(View.GONE);
                 }).addOnFailureListener(e -> {
+                    resimYukleSonuc.Basarisiz();
                     Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     progressBarLayout.setVisibility(View.GONE);
                 });
             }else{
+                resimYukleSonuc.Basarisiz();
                 Toast.makeText(mContext, mContext.getString(R.string.no_image_selected), Toast.LENGTH_SHORT).show();
                 progressBarLayout.setVisibility(View.GONE);
             }
