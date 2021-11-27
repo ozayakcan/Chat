@@ -26,7 +26,8 @@
             android:exported="false" />
         <activity
             android:name=".Ayarlar.ProfilActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".Resimler.ProfilResmiGoruntuleActivity"
             android:exported="false"
@@ -36,10 +37,12 @@
             android:exported="false" />
         <activity
             android:name=".TestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".MesajActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

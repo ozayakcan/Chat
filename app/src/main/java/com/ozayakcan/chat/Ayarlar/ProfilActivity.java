@@ -80,54 +80,81 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         telefonText.setText(telefonString);
         resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
 
+        BilgiDegistirPenceresiTanimlari();
+
         isimLayout = findViewById(R.id.isimLayout);
         isimLayout.setOnClickListener(v -> BilgiDegistir(DEGISTIRILECEK_ISIM));
         hakkimdaLayout = findViewById(R.id.hakkimdaLayout);
         hakkimdaLayout.setOnClickListener(v -> BilgiDegistir(DEGISTIRILECEK_HAKKIMDA));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        klavyePopup.Durdur();
+    }
+
+    private BottomSheetDialog acilirMenuDialog;
+    private View acilirmenu;
+    private EditText acilirMenuEditText;
+    private View klavyeView;
+    private ProgressBar acilirMenuProgressBar;
+    private void BilgiDegistirPenceresiTanimlari() {
+        acilirMenuDialog = new BottomSheetDialog(ProfilActivity.this, R.style.AltMenuTema);
+        acilirmenu = LayoutInflater.from(ProfilActivity.this).inflate(R.layout.layout_metin_duzenle, (LinearLayout) findViewById(R.id.altMenuLayout));
+        View view = acilirmenu.findViewById(R.id.altMenuLayout);
+        view.post(() -> klavyePopup.Baslat());
+        acilirMenuEditText = acilirmenu.findViewById(R.id.editText);
+        klavyeView = acilirmenu.findViewById(R.id.klavye);
+        acilirMenuProgressBar = acilirmenu.findViewById(R.id.progressBar);
+        acilirMenuDialog.setContentView(acilirmenu);
+    }
+
+    @Override
+    public void KlavyeYuksekligiDegisti(int yukseklik) {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)klavyeView.getLayoutParams();
+        params.height = yukseklik;
+        klavyeView.setLayoutParams(params);
+        super.KlavyeYuksekligiDegisti(yukseklik);
+    }
+
     private final int DEGISTIRILECEK_ISIM = 0;
     private final int DEGISTIRILECEK_HAKKIMDA = 1;
 
     private void BilgiDegistir(int degistirilecekBilgi) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ProfilActivity.this, R.style.AltMenuTema);
-        View altMenuView = LayoutInflater.from(ProfilActivity.this).inflate(R.layout.layout_metin_duzenle, (LinearLayout) findViewById(R.id.altMenuLayout));
-        EditText editText = altMenuView.findViewById(R.id.editText);
         if (degistirilecekBilgi == DEGISTIRILECEK_ISIM){
-            editText.setText(isimText.getText().toString());
-            editText.setHint(getString(R.string.name));
-            editText.setMaxLines(1);
-            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+            acilirMenuEditText.setText(isimText.getText().toString());
+            acilirMenuEditText.setHint(getString(R.string.name));
+            acilirMenuEditText.setMaxLines(1);
+            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         }else if(degistirilecekBilgi == DEGISTIRILECEK_HAKKIMDA){
-            editText.setText(hakkimdaText.getText().toString());
-            editText.setHint(getString(R.string.about_me));
-            editText.setMaxLines(5);
-            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
+            acilirMenuEditText.setText(hakkimdaText.getText().toString());
+            acilirMenuEditText.setHint(getString(R.string.about_me));
+            acilirMenuEditText.setMaxLines(5);
+            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
         }
-        ProgressBar progressBar = altMenuView.findViewById(R.id.progressBar);
-        editText.setSelection(editText.getText().length());
-        editText.setOnEditorActionListener((v, actionId, event) -> {
+        acilirMenuEditText.setSelection(acilirMenuEditText.getText().length());
+        acilirMenuEditText.setOnEditorActionListener((v, actionId, event) -> {
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                Kaydet(bottomSheetDialog, progressBar, editText, degistirilecekBilgi);
+                Kaydet(degistirilecekBilgi);
             }
             return false;
         });
-        Button iptalBtn = altMenuView.findViewById(R.id.iptalBtn);
-        Button kaydetBtn = altMenuView.findViewById(R.id.kaydetBtn);
-        iptalBtn.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        Button iptalBtn = acilirmenu.findViewById(R.id.iptalBtn);
+        Button kaydetBtn = acilirmenu.findViewById(R.id.kaydetBtn);
+        iptalBtn.setOnClickListener(v -> acilirMenuDialog.dismiss());
         kaydetBtn.setOnClickListener(v -> {
-            Kaydet(bottomSheetDialog, progressBar, editText, degistirilecekBilgi);
+            Kaydet(degistirilecekBilgi);
         });
-        bottomSheetDialog.setContentView(altMenuView);
-        bottomSheetDialog.show();
+        acilirMenuDialog.show();
     }
 
-    private void Kaydet(BottomSheetDialog bottomSheetDialog, ProgressBar progressBar, EditText editText, int degistirilecekBilgi) {
-        if (editText.getText().toString().equals("")){
+    private void Kaydet(int degistirilecekBilgi) {
+        if (acilirMenuEditText.getText().toString().equals("")){
             Toast.makeText(ProfilActivity.this, getString(R.string.cannot_be_empty), Toast.LENGTH_SHORT).show();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        acilirMenuProgressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
         String veri = "";
         if (degistirilecekBilgi == DEGISTIRILECEK_ISIM){
@@ -138,18 +165,18 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             return;
         }
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put(veri, editText.getText().toString());
+        hashMap.put(veri, acilirMenuEditText.getText().toString());
         String finalVeri = veri;
         databaseReference.updateChildren(hashMap, (error, ref) -> {
             Intent guncelle = new Intent(finalVeri);
-            guncelle.putExtra(finalVeri, editText.getText().toString());
+            guncelle.putExtra(finalVeri, acilirMenuEditText.getText().toString());
             LocalBroadcastManager.getInstance(ProfilActivity.this).sendBroadcast(guncelle);
-            progressBar.setVisibility(View.GONE);
-            bottomSheetDialog.dismiss();
+            acilirMenuProgressBar.setVisibility(View.GONE);
+            acilirMenuDialog.dismiss();
             if (degistirilecekBilgi == DEGISTIRILECEK_ISIM){
-                isimText.setText(editText.getText().toString());
+                isimText.setText(acilirMenuEditText.getText().toString());
             }else{
-                hakkimdaText.setText(editText.getText().toString());
+                hakkimdaText.setText(acilirMenuEditText.getText().toString());
             }
         });
     }

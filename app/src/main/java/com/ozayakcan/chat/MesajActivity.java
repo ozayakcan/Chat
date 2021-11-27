@@ -56,6 +56,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private String idString;
 
     private String getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
+    private int KlavyeYuksekligi = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> Geri());
 
         veritabani = new Veritabani(MesajActivity.this);
+
+        View view = findViewById(R.id.constraintLayout);
+        view.post(() -> klavyePopup.Baslat());
 
         Intent intent = getIntent();
         idString = intent.getStringExtra(Veritabani.IDKey);
@@ -133,6 +137,15 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder());
         MesajlariGoster();
+    }
+
+
+    @Override
+    public void KlavyeYuksekligiDegisti(int yukseklik) {
+        if (yukseklik > 0){
+            KlavyeYuksekligi = yukseklik;
+        }
+        super.KlavyeYuksekligiDegisti(yukseklik);
     }
 
     private void Uyari(boolean goster, String uyariYazisi) {
@@ -381,5 +394,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     protected void onDestroy() {
         ChatApp.SuankiKisiyiAyarla("");
         super.onDestroy();
+        klavyePopup.Durdur();
     }
 }
