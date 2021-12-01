@@ -229,22 +229,24 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         }
     }
     private void GorulduOlarakIsaretle() {
-        DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
-        gorulduKisiRef.keepSynced(true);
-        gorulduKisiRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                if (kullanici != null){
-                    BildirimClass.getInstance(MesajActivity.this).GorulduBildirimiYolla(kullanici.getFcmToken(), telefonString, firebaseUser.getPhoneNumber());
+        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+            DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
+            gorulduKisiRef.keepSynced(true);
+            gorulduKisiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                    if (kullanici != null){
+                        BildirimClass.getInstance(MesajActivity.this).GorulduBildirimiYolla(kullanici.getFcmToken(), telefonString, firebaseUser.getPhoneNumber());
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
     }
     @SuppressLint("NotifyDataSetChanged")
     private void MesajlariGoster(int sira){
@@ -256,6 +258,8 @@ public class MesajActivity extends KullaniciAppCompatActivity {
                     if (!YeniMesajlar(false, mesajlar.size() - mesajList.size())){
                         mesaj.setYeniMesajSayisi(mesajlar.size() - mesajList.size());
                     }
+                }else if (sira == 0){
+                    mesaj.setYeniMesajSayisi(0);
                 }
                 if (mesajList.size() > 0){
                     if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
@@ -277,9 +281,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             }
             MesajlariGuncelle(true);
         }
-        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
-            GorulduOlarakIsaretle();
-        }
+        GorulduOlarakIsaretle();
     }
     boolean mesajlarGuncelleniyor = false;
     private void MesajlariGuncelle(boolean goster) {
