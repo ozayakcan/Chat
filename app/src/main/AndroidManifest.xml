@@ -68,7 +68,7 @@
         <service
             android:name=".Bildirimler.BildirimServisi"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
