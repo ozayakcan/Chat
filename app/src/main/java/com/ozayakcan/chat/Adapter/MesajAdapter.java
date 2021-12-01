@@ -47,6 +47,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull MesajAdapter.ViewHolder holder, int position) {
         Mesaj mesaj = mesajList.get(position);
+        holder.yeniMesajSayisiText.setText(mesaj.getYeniMesajSayisi() > 0 ? mContext.getString(R.string.s_new_messages).replace("%s", String.valueOf(mesaj.getYeniMesajSayisi())) : "");
+        holder.yeniMesajSayisiLayout.setVisibility(mesaj.getYeniMesajSayisi() > 0 ? View.VISIBLE : View.GONE);
         holder.tarihText.setText(mesaj.isTarihGoster() ? ChatApp.MesajTarihiBul(mesaj.getTarih(), false) : "");
         holder.tarihLayout.setVisibility(mesaj.isTarihGoster() ? View.VISIBLE : View.GONE);
         holder.mesajText.setText(mesaj.getMesaj());
@@ -79,8 +81,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout mesajLayout, tarihLayout;
-        TextView mesajText, saat, mesajDurumu, tarihText;
+        RelativeLayout mesajLayout, tarihLayout, yeniMesajSayisiLayout;
+        TextView mesajText, saat, mesajDurumu, tarihText, yeniMesajSayisiText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +92,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
             mesajDurumu = itemView.findViewById(R.id.mesajDurumu);
             tarihLayout = itemView.findViewById(R.id.tarihLayout);
             tarihText = itemView.findViewById(R.id.tarihText);
+            yeniMesajSayisiLayout = itemView.findViewById(R.id.yeniMesajSayisiLayout);
+            yeniMesajSayisiText = itemView.findViewById(R.id.yeniMesajSayisiText);
         }
     }
 

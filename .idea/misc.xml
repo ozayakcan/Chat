@@ -9,6 +9,7 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default.xml" value="1.215625" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_default_selector.xml" value="0.2703125" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/button_pressed.xml" value="0.2703125" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_double_arrow_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_drag_handle_24.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2" />
@@ -16,6 +17,8 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_baseline_phone_24.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/ic_document.xml" value="0.22239583333333332" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/menu_arkaplan.xml" value="0.43846153846153846" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/mesaj_arkaplan_sol.xml" value="0.19583333333333333" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/mesaj_tarih.xml" value="0.19583333333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/oval_arkaplan.xml" value="0.2598958333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners.xml" value="0.2703125" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_15.xml" value="0.43846153846153846" />
@@ -28,7 +31,7 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main.xml" value="0.20871327254305977" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_main2.xml" value="0.13020833333333334" />
-        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_mesaj.xml" value="0.25" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_mesaj.xml" value="0.41466346153846156" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_profil.xml" value="0.2" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_profil_resmi_goruntule.xml" value="0.22" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_resim_goruntule.xml" value="0.20260416666666667" />
@@ -45,7 +48,7 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/menu_klavye.xml" value="0.11277173913043478" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_listesi.xml" value="0.23324396782841822" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_sag.xml" value="0.264" />
-        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_sol.xml" value="0.12360688956433637" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/mesaj_sol.xml" value="0.75" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/popupwindow.xml" value="0.20625" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/resim_listesi.xml" value="0.75" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/menu/kisiler.xml" value="0.42256410256410254" />

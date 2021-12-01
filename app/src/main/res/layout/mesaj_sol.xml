@@ -12,6 +12,7 @@
         android:paddingStart="10dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/mesaj_tarih"
+        android:layout_marginBottom="8dp"
         android:visibility="gone">
         <TextView
             android:id="@+id/tarihText"
@@ -23,11 +24,30 @@
             android:textAlignment="center"/>
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/yeniMesajSayisiLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tarihLayout"
+        android:background="@drawable/mesaj_yeni_mesajlar"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/yeniMesajSayisiText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textAlignment="center"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/mesajLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/tarihLayout"
+        android:layout_below="@id/yeniMesajSayisiLayout"
         android:background="@drawable/mesaj_arkaplan_sol">
         <TextView
             android:id="@+id/mesajText"

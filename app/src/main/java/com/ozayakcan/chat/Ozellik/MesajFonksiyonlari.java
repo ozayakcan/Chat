@@ -31,7 +31,7 @@ public class MesajFonksiyonlari {
     public static final String BildirimGonderilecekKisiler = "BILDIRIMGONDERILECEKKISI";
     public Mesaj MesajiKaydet(String key, String kisi, String mesaj, long mesajDurumu, boolean gonderen){
         List<Mesaj> mesajList;
-        Mesaj mesaj1 = new Mesaj(key, mesaj, System.currentTimeMillis(), mesajDurumu, gonderen, false, false);
+        Mesaj mesaj1 = new Mesaj(key, mesaj, System.currentTimeMillis(), mesajDurumu, gonderen, false, false, 0);
         Gson gson = new Gson();
         String mesajlar = sharedPreference.GetirStringOzel(KaydedilecekTur, kisi, "");
         if (mesajlar.equals("")){

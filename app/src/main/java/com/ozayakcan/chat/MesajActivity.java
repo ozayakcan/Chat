@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,8 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,8 +27,8 @@ import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
-import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.Resimler.ResimlerClass;
 
@@ -41,7 +41,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
     private RecyclerView mesajlarRW;
     private TextView gonderText, altUyari;
-    private LinearLayout gonderBtnLayout, gonderTextLayout;
+    private LinearLayout gonderBtnLayout, gonderTextLayout, kaydirBtnLayout;
     private TextView durum;
 
     private boolean ilkAcilis = true;
@@ -57,6 +57,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
     private String getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
     private int KlavyeYuksekligi = 0;
+
+    boolean kaydir = true;
+    private int sonMesaj = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +103,15 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         gonderBtnLayout = findViewById(R.id.gonderBtnLayout2);
         gonderText = findViewById(R.id.gonderText);
         gonderTextLayout = findViewById(R.id.gonderTextLayout2);
+        kaydirBtnLayout = findViewById(R.id.kaydirBtnLayout2);
+        kaydirBtnLayout.setOnClickListener(v -> AltaKaydir());
         altUyari = findViewById(R.id.altUyari);
         Uyari(tabloString.equals(Veritabani.ArsivTablosu), getString(R.string.you_cannot_send_messages_in_the_archive));
 
         mesajList = new ArrayList<>();
         mesajAdapter = new MesajAdapter(MesajActivity.this, mesajList);
-        mesajAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                mesajlarRW.setAdapter(mesajAdapter);
-            }
-        });
         mesajlarRW.setAdapter(mesajAdapter);
+        mesajlarRW.addOnScrollListener(scrollListener);
         CircleImageView profilResmi = findViewById(R.id.profilResmi);
         TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         TextView isim = findViewById(R.id.isim);
@@ -136,36 +135,98 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder());
-        MesajlariGoster();
+        MesajlariGoster(0);
     }
 
+    private boolean YeniMesajlar(boolean temizle, int ekle) {
+        for (int i = mesajList.size() - 1; i >= 0; i--){
+            Mesaj mesaj = mesajList.get(i);
+            if (mesaj.getYeniMesajSayisi() > 0){
+                if (temizle){
+                    mesaj.setYeniMesajSayisi(0);
+                }else{
+                    mesaj.setYeniMesajSayisi(mesaj.getYeniMesajSayisi() + ekle);
+                }
+                MesajDurumunuGuncelle(i, mesaj);
+                return true;
+            }
+        }
+        return false;
+    }
+    private void AltaKaydir() {
+        mesajlarRW.smoothScrollToPosition(mesajList.size()-1);
+    }
 
+    private final int KAYDIR_SCROLLSTATE = 0;
+    private final int KAYDIR_SCROLLED = 1;
+
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            switch (newState) {
+                case RecyclerView.SCROLL_STATE_IDLE:
+                    Kaydir(recyclerView, KAYDIR_SCROLLSTATE);
+                    Kaydir2();
+                    break;
+                case RecyclerView.SCROLL_STATE_DRAGGING:
+                    kaydir = false;
+                    break;
+                case RecyclerView.SCROLL_STATE_SETTLING:
+                    break;
+            }
+        }
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            Kaydir(recyclerView, KAYDIR_SCROLLED);
+        }
+    };
+
+    private void Kaydir(RecyclerView recyclerView, int durum) {
+        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+        LinearLayoutManager linearLayoutManager1 = (LinearLayoutManager) manager;
+        if (linearLayoutManager1 != null){
+            int sonMesaj1 = Math.max(linearLayoutManager1.findLastVisibleItemPosition(), 0);
+            if(durum == KAYDIR_SCROLLSTATE){
+                sonMesaj = sonMesaj1;
+                kaydir = !(sonMesaj1 < linearLayoutManager1.getItemCount()-1);
+            }
+            if(durum == KAYDIR_SCROLLED){
+                kaydirBtnLayout.setVisibility(sonMesaj1 < linearLayoutManager1.getItemCount()-1 ? View.VISIBLE : View.GONE);
+            }
+        }
+    }
+
+    private void Kaydir2() {
+        if (kaydir){
+            YeniMesajlar(true, 0);
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     @Override
     public void KlavyeYuksekligiDegisti(int yukseklik) {
         if (yukseklik > 0){
             KlavyeYuksekligi = yukseklik;
         }
+        mesajlarRW.scrollToPosition(kaydir ? mesajList.size()-1 : sonMesaj);
         super.KlavyeYuksekligiDegisti(yukseklik);
     }
 
     private void Uyari(boolean goster, String uyariYazisi) {
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
         if (goster){
             gonderTextLayout.setVisibility(View.GONE);
             gonderBtnLayout.setVisibility(View.GONE);
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.mesajlarRW,ConstraintSet.BOTTOM,R.id.altUyariLayout,ConstraintSet.TOP,0);
         }else{
             altUyari.setText(uyariYazisi);
             altUyari.setVisibility(View.GONE);
             gonderTextLayout.setVisibility(View.VISIBLE);
             gonderBtnLayout.setVisibility(View.VISIBLE);
-            constraintSet.connect(R.id.mesajlarRW,ConstraintSet.BOTTOM,R.id.gonderBtnLayout1,ConstraintSet.TOP,0);
         }
-        constraintSet.applyTo(constraintLayout);
     }
     private void GorulduOlarakIsaretle() {
         DatabaseReference gorulduKisiRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
@@ -186,27 +247,39 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         });
     }
     @SuppressLint("NotifyDataSetChanged")
-    private void MesajlariGoster(){
+    private void MesajlariGoster(int sira){
+        if (sira >= 0){
+            List<Mesaj> mesajlar = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, getirilecekMesaj);
+            for (int i = sira; i < mesajlar.size(); i++){
+                Mesaj mesaj = mesajlar.get(i);
+                if (sira > 0 && sira == i && !kaydir){
+                    if (!YeniMesajlar(false, mesajlar.size() - mesajList.size())){
+                        mesaj.setYeniMesajSayisi(mesajlar.size() - mesajList.size());
+                    }
+                }
+                if (mesajList.size() > 0){
+                    if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
+                        mesaj.setTarihGoster(true);
+                    }
+                }else{
+                    mesaj.setTarihGoster(true);
+                }
+                mesajList.add(mesaj);
+            }
+            mesajAdapter.notifyDataSetChanged();
+            if (ilkAcilis){
+                sonMesaj = Math.max(mesajList.size() - 1, 0);
+                kaydir = true;
+                ilkAcilis = false;
+            }
+            if (kaydir){
+                mesajlarRW.scrollToPosition(mesajList.size()-1);
+            }
+            MesajlariGuncelle(true);
+        }
         if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
             GorulduOlarakIsaretle();
         }
-        List<Mesaj> mesajlar = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajlariGetir(telefonString, getirilecekMesaj);
-        for (Mesaj mesaj : mesajlar){
-            if (mesajList.size() > 0){
-                if (!ChatApp.MesajTarihiBul(mesaj.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
-                    mesaj.setTarihGoster(true);
-                }
-            }else{
-                mesaj.setTarihGoster(true);
-            }
-            mesajList.add(mesaj);
-        }
-        mesajAdapter.notifyDataSetChanged();
-        if (ilkAcilis){
-            mesajlarRW.scrollToPosition(mesajAdapter.getItemCount());
-            ilkAcilis = false;
-        }
-        MesajlariGuncelle(true);
     }
     boolean mesajlarGuncelleniyor = false;
     private void MesajlariGuncelle(boolean goster) {
@@ -222,16 +295,27 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     }
     private final BroadcastReceiver mMesaj2BroadcastReceiver = new BroadcastReceiver() {
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
             if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
                 if(intent.getAction().equals(BildirimClass.MesajKey)){
-                    mesajList.clear();
-                    MesajlariGoster();
+                    if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+                        MesajlariGoster(mesajList.size());
+                    }
                 }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
-                    if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
-                        mesajList.clear();
-                        MesajlariGoster();
+                    if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+                        if (intent.getStringExtra(BildirimClass.KisiKey).equals(telefonString)){
+                            for (int i = mesajList.size() - 1; i >= 0; i--){
+                                Mesaj mesaj = mesajList.get(i);
+                                if (mesajList.get(i).isGonderen() && !mesajList.get(i).isGoruldu()){
+                                    mesaj.setMesajDurumu(Veritabani.MesajDurumuGonderildi);
+                                    mesaj.setGoruldu(true);
+                                    mesajList.set(i, mesaj);
+                                }
+                            }
+                            mesajAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }

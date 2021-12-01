@@ -75,12 +75,38 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/barLayout"
-        app:layout_constraintBottom_toTopOf="@id/gonderTextLayout1" />
+        app:layout_constraintBottom_toTopOf="@id/altUyariLayout" />
+    <LinearLayout
+        android:id="@+id/kaydirBtnLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toTopOf="@id/altUyariLayout">
+        <LinearLayout
+            android:id="@+id/kaydirBtnLayout2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/oval_arkaplan"
+            tools:ignore="UselessParent"
+            android:visibility="visible">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                android:padding="1dp"
+                android:src="@drawable/ic_baseline_double_arrow_24"
+                android:contentDescription="@string/scroll" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/altUyariLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gonderBtnLayout1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <TextView
@@ -166,7 +192,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:ignore="UselessParent">
+            tools:ignore="UselessLeaf,UselessParent">
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

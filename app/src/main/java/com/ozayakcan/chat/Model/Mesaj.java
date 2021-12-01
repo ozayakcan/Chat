@@ -11,12 +11,13 @@ public class Mesaj {
     boolean gonderen = true;
     boolean goruldu = false;
     boolean tarihGoster = false;
+    int yeniMesajSayisi = 0;
 
     @SuppressWarnings("unused")
     public Mesaj() {
     }
 
-    public Mesaj(String mesajKey, String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean tarihGoster) {
+    public Mesaj(String mesajKey, String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean tarihGoster, int yeniMesajSayisi) {
         this.mesajKey = mesajKey;
         this.mesaj = mesaj;
         this.tarih = tarih;
@@ -24,6 +25,7 @@ public class Mesaj {
         this.gonderen = gonderen;
         this.goruldu = goruldu;
         this.tarihGoster = tarihGoster;
+        this.yeniMesajSayisi = yeniMesajSayisi;
     }
 
     @SuppressWarnings("unused")
@@ -83,5 +85,13 @@ public class Mesaj {
 
     public void setTarihGoster(boolean tarihGoster) {
         this.tarihGoster = tarihGoster;
+    }
+
+    public int getYeniMesajSayisi() {
+        return yeniMesajSayisi;
+    }
+
+    public void setYeniMesajSayisi(int yeniMesajSayisi) {
+        this.yeniMesajSayisi = yeniMesajSayisi;
     }
 }

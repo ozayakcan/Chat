@@ -114,9 +114,7 @@ public class MesajlarFragment extends Fragment {
             }
         }
         if(arsivActivity != null){
-            if (arsivActivity.MesajSecildi){
-                return;
-            }
+            return;
         }
         mesajlarList.clear();
         List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(getirilecekMesajlar);
