@@ -10,11 +10,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
+import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 import com.ozayakcan.chat.Resimler.ResimlerClass;
@@ -140,13 +140,18 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             }
             return false;
         });
-        Button iptalBtn = acilirmenu.findViewById(R.id.iptalBtn);
-        Button kaydetBtn = acilirmenu.findViewById(R.id.kaydetBtn);
-        iptalBtn.setOnClickListener(v -> acilirMenuDialog.dismiss());
+        TextView iptalBtn = acilirmenu.findViewById(R.id.iptalBtn);
+        TextView kaydetBtn = acilirmenu.findViewById(R.id.kaydetBtn);
+        iptalBtn.setOnClickListener(v -> {
+            Metinler.KlavyeKapat(getApplicationContext(), acilirMenuEditText);
+            acilirMenuDialog.dismiss();
+        });
         kaydetBtn.setOnClickListener(v -> {
             Kaydet(degistirilecekBilgi);
         });
         acilirMenuDialog.show();
+        acilirMenuEditText.selectAll();
+        Metinler.KlavyeAc(getApplicationContext());
     }
 
     private void Kaydet(int degistirilecekBilgi) {
@@ -172,6 +177,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             guncelle.putExtra(finalVeri, acilirMenuEditText.getText().toString());
             LocalBroadcastManager.getInstance(ProfilActivity.this).sendBroadcast(guncelle);
             acilirMenuProgressBar.setVisibility(View.GONE);
+            Metinler.KlavyeKapat(getApplicationContext(), acilirMenuEditText);
             acilirMenuDialog.dismiss();
             if (degistirilecekBilgi == DEGISTIRILECEK_ISIM){
                 isimText.setText(acilirMenuEditText.getText().toString());

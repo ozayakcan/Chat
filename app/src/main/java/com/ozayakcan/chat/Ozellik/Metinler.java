@@ -2,6 +2,8 @@ package com.ozayakcan.chat.Ozellik;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ozayakcan.chat.R;
@@ -19,5 +21,16 @@ public class Metinler {
         clipboardManager.setPrimaryClip(clip);
 
         Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show();
+    }
+
+    public static void KlavyeAc(Context context){
+        InputMethodManager inputMethodManager = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public static void KlavyeKapat(Context context, EditText editText){
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }

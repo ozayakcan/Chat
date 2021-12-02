@@ -35,26 +35,30 @@
         android:gravity="end"
         android:paddingBottom="5dp"
         android:orientation="horizontal">
-        <Button
+        <TextView
             android:id="@+id/iptalBtn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/rounded_corners_15"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/white"
-            android:text="@string/cancel"
-            style="?android:attr/buttonBarButtonStyle" />
-        <Button
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@color/gray"
+            android:textAllCaps="true"
+            android:text="@string/cancel" />
+        <TextView
             android:id="@+id/kaydetBtn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/rounded_corners_15"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/white"
-            android:text="@string/save"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@color/gray"
+            android:textAllCaps="true"
+            android:text="@string/save"/>
     </LinearLayout>
     <View
         android:id="@+id/klavye"
