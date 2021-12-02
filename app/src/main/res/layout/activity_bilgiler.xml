@@ -17,17 +17,23 @@
 
         <include layout="@layout/item_profil_resmi"/>
 
-        <EditText
-            android:id="@+id/isimET"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/name"
-            android:imeOptions="actionNext"
-            android:inputType="textCapSentences"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:textSize="20sp"
-            android:theme="@style/EditTextThemeDefault" />
+            android:layout_height="wrap_content"
+            app:counterEnabled="true"
+            app:counterMaxLength="@integer/maxKarakterIsim">
+            <EditText
+                android:id="@+id/isimET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/name"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:maxLength="@integer/maxKarakterIsim"
+                android:maxLines="1"
+                android:textSize="20sp"
+                android:theme="@style/EditTextThemeDefault" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/isimHata"
@@ -37,19 +43,24 @@
             android:textColor="@color/warningColor"
             android:textSize="20sp"
             android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/hakkimdaET"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/about_me"
-            android:imeOptions="actionDone"
-            android:inputType="textCapSentences"
-            android:maxLength="100"
-            android:maxLines="5"
-            android:minHeight="50dp"
-            android:textSize="20sp"
-            android:theme="@style/EditTextThemeDefault" />
+            app:counterEnabled="true"
+            app:counterMaxLength="@integer/maxKarakterHakkimda">
+            <EditText
+                android:id="@+id/hakkimdaET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/about_me"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:maxLength="@integer/maxKarakterHakkimda"
+                android:maxLines="5"
+                android:minHeight="50dp"
+                android:textSize="20sp"
+                android:theme="@style/EditTextThemeDefault" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/bitirBtn"

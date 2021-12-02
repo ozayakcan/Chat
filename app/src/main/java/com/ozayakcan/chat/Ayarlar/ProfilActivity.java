@@ -24,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ozayakcan.chat.Ozellik.Izinler;
@@ -99,11 +100,13 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
     private EditText acilirMenuEditText;
     private View klavyeView;
     private ProgressBar acilirMenuProgressBar;
+    private TextInputLayout acilirMenuTextInputLayout;
     private void BilgiDegistirPenceresiTanimlari() {
         acilirMenuDialog = new BottomSheetDialog(ProfilActivity.this, R.style.AltMenuTema);
         acilirmenu = LayoutInflater.from(ProfilActivity.this).inflate(R.layout.layout_metin_duzenle, (LinearLayout) findViewById(R.id.altMenuLayout));
         View view = acilirmenu.findViewById(R.id.altMenuLayout);
         view.post(() -> klavyePopup.Baslat());
+        acilirMenuTextInputLayout = acilirmenu.findViewById(R.id.acilirMenuTextInputLayout);
         acilirMenuEditText = acilirmenu.findViewById(R.id.editText);
         klavyeView = acilirmenu.findViewById(R.id.klavye);
         acilirMenuProgressBar = acilirmenu.findViewById(R.id.progressBar);
@@ -126,12 +129,14 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             acilirMenuEditText.setText(isimText.getText().toString());
             acilirMenuEditText.setHint(getString(R.string.name));
             acilirMenuEditText.setMaxLines(1);
-            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getResources().getInteger(R.integer.maxKarakterIsim))});
+            acilirMenuTextInputLayout.setCounterMaxLength(getResources().getInteger(R.integer.maxKarakterIsim));
         }else if(degistirilecekBilgi == DEGISTIRILECEK_HAKKIMDA){
             acilirMenuEditText.setText(hakkimdaText.getText().toString());
             acilirMenuEditText.setHint(getString(R.string.about_me));
             acilirMenuEditText.setMaxLines(5);
-            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
+            acilirMenuEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getResources().getInteger(R.integer.maxKarakterHakkimda))});
+            acilirMenuTextInputLayout.setCounterMaxLength(getResources().getInteger(R.integer.maxKarakterHakkimda));
         }
         acilirMenuEditText.setSelection(acilirMenuEditText.getText().length());
         acilirMenuEditText.setOnEditorActionListener((v, actionId, event) -> {
