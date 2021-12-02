@@ -89,7 +89,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/oval_arkaplan"
+            android:background="@drawable/oval_arkaplan_beyaz"
             tools:ignore="UselessParent"
             android:visibility="visible">
             <ImageView
@@ -98,7 +98,7 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginEnd="3dp"
                 android:padding="1dp"
-                android:src="@drawable/ic_baseline_double_arrow_24"
+                android:src="@drawable/kaydir_butonu"
                 android:contentDescription="@string/scroll" />
         </LinearLayout>
     </LinearLayout>
