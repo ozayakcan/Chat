@@ -76,8 +76,8 @@
     <string name="settings">Ayarlar</string>
     <string name="profile">Profil</string>
     <string name="phone_number">Telefon Numarası</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
+    <string name="cancel">İptal</string>
+    <string name="save">Kaydet</string>
     <string name="cannot_be_empty">Bu kısım boş olamaz!</string>
     <string name="scroll">Kaydır</string>
 </resources>
