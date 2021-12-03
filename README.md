@@ -1,4 +1,4 @@
-Kodları indirmek için kullanılacak git komutu
+﻿Kodları indirmek için kullanılacak git komutu
 
 ```
 git clone https://github.com/ozayakcan/Chat.git
@@ -6,12 +6,16 @@ git clone https://github.com/ozayakcan/Chat.git
 
 
 Uygulama bir emulatörde çalıştırılacaksa emülatorde Google Play Services etkin olmalıdır.
-Uygulamanın çalışabilmesi için:
-Firebase bağlantısı yapılmalı, (google-services.json dosyası app klasöründe olmalı)
-Firebase üzerinde Realtime Database ve Storage etkinleştirilmeli ve alttaki kurallar eklenmeli,
-local.properties dosyasına FCM_KEY değişkeni eklenmelidir.
-Örnek
+
+**Uygulamanın çalışabilmesi için:**
+
+ - Firebase bağlantısı yapılmalı, (google-services.json dosyası app klasöründe olmalı)
+ - Firebase üzerinde Realtime Database ve Storage etkinleştirilmeli ve alttaki kurallar eklenmeli,
+ - Bildirimlerin çalışabilmesi için local.properties dosyasına Cloud Messaging Server Key'i, FCM_KEY değişkeni olarak eklenmelidir.
+
+Örnek local.properties:
 ```
+sdk.dir=C\:\\Users\\OzayAkcan\\AppData\\Local\\Android\\Sdk
 FCM_KEY=AAAAxxxxxxx:xxxxxxxx....
 ```
 
