@@ -4,9 +4,16 @@ Kodları indirmek için kullanılacak git komutu
 git clone https://github.com/ozayakcan/Chat.git
 ```
 
-Kodlar Android Studio ile açıldıktan sonra uygulamanın çalışabilmesi için Firebase ile bağlantısı yapılmalıdır.
-Uygulama bir emulatörde çalıştırılacaksa emülatorde Google Play Services etkin olmalıdır.
 
+Uygulama bir emulatörde çalıştırılacaksa emülatorde Google Play Services etkin olmalıdır.
+Uygulamanın çalışabilmesi için:
+Firebase bağlantısı yapılmalı, (google-services.json dosyası app klasöründe olmalı)
+Firebase üzerinde Realtime Database ve Storage etkinleştirilmeli ve alttaki kurallar eklenmeli,
+local.properties dosyasına FCM_KEY değişkeni eklenmelidir.
+Örnek
+```
+FCM_KEY=AAAAxxxxxxx:xxxxxxxx....
+```
 
 Firebase Realtime Database Kuralları
 ------
