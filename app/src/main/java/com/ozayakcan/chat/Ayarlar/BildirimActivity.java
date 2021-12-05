@@ -2,7 +2,7 @@ package com.ozayakcan.chat.Ayarlar;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -34,11 +34,11 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         sharedPreference = new SharedPreference(BildirimActivity.this);
         bildirimDurumuSwitch = findViewById(R.id.bildirimDurumuSwitch);
         bildirimDurumuSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true));
-        LinearLayout bildirimDurumu = findViewById(R.id.bildirimDurumu);
+        RelativeLayout bildirimDurumu = findViewById(R.id.bildirimDurumu);
         bildirimDurumu.setOnClickListener(v -> BildirimDurumu());
         bildirimSesiSwitch = findViewById(R.id.bildirimSesiSwitch);
         bildirimSesiSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true));
-        LinearLayout bildirimSesi = findViewById(R.id.bildirimSesi);
+        RelativeLayout bildirimSesi = findViewById(R.id.bildirimSesi);
         bildirimSesi.setOnClickListener(v -> BildirimSesi());
     }
     private void BildirimDurumu() {

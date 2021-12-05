@@ -35,76 +35,79 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/bildirimDurumu"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:orientation="vertical">
-                <RelativeLayout
+                android:paddingEnd="10dp">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp">
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/bildirimDurumuSwitch"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="18sp"
-                        android:text="@string/show_notifications"
-                        android:layout_toStartOf="@id/bildirimDurumuSwitch"/>
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/bildirimDurumuSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:clickable="false"
-                        android:checked="true"
-                        android:layout_alignParentEnd="true"
-                        android:theme="@style/SwitchCompatVarsayilan"/>
-                </RelativeLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/ignores_all_options_below_if_disabled"
-                    android:textColor="@color/gray"
-                    android:textSize="15sp"/>
-            </LinearLayout>
-            <LinearLayout
+                        android:text="@string/show_notifications"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/ignores_all_options_below_if_disabled"
+                        android:textColor="@color/gray"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/bildirimDurumuSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:theme="@style/SwitchCompatVarsayilan"/>
+            </RelativeLayout>
+            <RelativeLayout
                 android:id="@+id/bildirimSesi"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
-                <RelativeLayout
+                android:layout_marginTop="5dp">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp">
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/bildirimSesiSwitch"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="18sp"
-                        android:text="@string/sounds"
-                        android:layout_toStartOf="@id/bildirimSesiSwitch"/>
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/bildirimSesiSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:clickable="false"
-                        android:layout_alignParentEnd="true"
-                        android:theme="@style/SwitchCompatVarsayilan"/>
-                </RelativeLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/enables_notification_sounds"
-                    android:textColor="@color/gray"
-                    android:textSize="15sp"/>
-            </LinearLayout>
+                        android:text="@string/sounds"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/enables_notification_sounds"
+                        android:textColor="@color/gray"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/bildirimSesiSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:theme="@style/SwitchCompatVarsayilan"/>
+            </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>
