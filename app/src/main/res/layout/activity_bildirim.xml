@@ -58,7 +58,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:clickable="false"
-                        android:layout_alignParentEnd="true"/>
+                        android:checked="true"
+                        android:layout_alignParentEnd="true"
+                        android:theme="@style/SwitchCompatVarsayilan"/>
                 </RelativeLayout>
                 <TextView
                     android:layout_width="match_parent"
@@ -92,7 +94,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:clickable="false"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        android:theme="@style/SwitchCompatVarsayilan"/>
                 </RelativeLayout>
                 <TextView
                     android:layout_width="match_parent"

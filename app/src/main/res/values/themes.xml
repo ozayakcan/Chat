@@ -28,4 +28,9 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
+    <style name="SwitchCompatVarsayilan" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorSwitchThumbNormal">@color/colorSecondary</item>
+        <item name="android:colorForeground">@color/colorSecondary</item>
+    </style>
 </resources>

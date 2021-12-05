@@ -27,6 +27,9 @@
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_15.xml" value="0.43846153846153846" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_disabled.xml" value="0.14270833333333333" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/rounded_corners_enabled.xml" value="0.14270833333333333" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/switch_aktif.xml" value="0.22239583333333332" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/switch_devredisi.xml" value="0.22239583333333332" />
+        <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/drawable/switch_varsayilan.xml" value="0.22239583333333332" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_arsiv.xml" value="0.20697463768115942" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_ayarlar.xml" value="0.25" />
         <entry key="..\:/Projelerim/Android/Chat/app/src/main/res/layout/activity_bildirim.xml" value="1.25" />
