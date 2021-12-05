@@ -80,82 +80,132 @@ public class BildirimClass {
             mesajKisileriRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot mesajKisileriSnapshot) {
-                    List<BildirimMesaj> bildirimMesajList = new ArrayList<>();
                     long mesajKisiSayisi = 0;
-                    for (DataSnapshot mesajKisileriDataSnapshot : mesajKisileriSnapshot.getChildren()){
-                        mesajKisiSayisi++;
-                        long finalMesajKisiSayisi = mesajKisiSayisi;
-                        if (mesajKisileriDataSnapshot.getKey() != null){
-                            DatabaseReference kullaniyicibul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisileriDataSnapshot.getKey());
-                            kullaniyicibul.keepSynced(true);
-                            kullaniyicibul.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
-                                    Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
-                                    if (kullanici == null){
-                                        return;
-                                    }
-                                    DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
-                                    kisiyiBul.keepSynced(true);
-                                    kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
-                                            Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
-                                            String isim = kisi != null ? kisi.getIsim() : mesajKisileriDataSnapshot.getKey();
-                                            DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
-                                            mesajlarRef.keepSynced(true);
-                                            mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
-                                                    for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
-                                                        Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
-                                                        if (mesaj != null && !mesaj.getMesaj().equals("")){
-                                                            MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), kullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
-                                                        }
-                                                    }
-                                                    long mesajSayisi = 0;
-                                                    List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(kullanici.getTelefon(), MesajFonksiyonlari.KaydedilecekTur);
-                                                    for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
-                                                        if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
-                                                            mesajSayisi++;
-                                                            Mesaj mesajlar123 = kisiMesajListesi.get(i);
-                                                            BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), isim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
-                                                            bildirimMesajList.add(bildirimMesaj);
-                                                        }
-                                                    }
-                                                    mesajlarSnapshot.getRef().setValue(null);
-                                                    if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
-                                                        if (!bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
-                                                            if (sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true)){
-                                                                MesajBildirimiGoster(bildirimMesajList);
+                    if (mesajKisileriSnapshot.getChildrenCount() > 0){
+                        for (DataSnapshot mesajKisileriDataSnapshot : mesajKisileriSnapshot.getChildren()){
+                            mesajKisiSayisi++;
+                            long finalMesajKisiSayisi = mesajKisiSayisi;
+                            if (mesajKisileriDataSnapshot.getKey() != null){
+                                DatabaseReference kullaniyicibul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisileriDataSnapshot.getKey());
+                                kullaniyicibul.keepSynced(true);
+                                kullaniyicibul.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot kullaniciSnapshot) {
+                                        Kullanici kullanici = kullaniciSnapshot.getValue(Kullanici.class);
+                                        if (kullanici == null){
+                                            kullanici = new Kullanici();
+                                        }
+                                        DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisileriDataSnapshot.getKey());
+                                        kisiyiBul.keepSynced(true);
+                                        Kullanici finalKullanici = kullanici;
+                                        kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot kisiSnapshot) {
+                                                Kullanici kisi = kisiSnapshot.getValue(Kullanici.class);
+                                                String isim = kisi != null ? kisi.getIsim() : mesajKisileriDataSnapshot.getKey();
+                                                DatabaseReference mesajlarRef = mesajKisileriDataSnapshot.getRef();
+                                                mesajlarRef.keepSynced(true);
+                                                mesajlarRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot mesajlarSnapshot) {
+                                                        for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
+                                                            Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
+                                                            if (mesaj != null && !mesaj.getMesaj().equals("")){
+                                                                MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), finalKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
                                                             }
                                                         }
-                                                        Intent bildirimGonder = new Intent(MesajKey);
-                                                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
+                                                        mesajlarSnapshot.getRef().setValue(null);
+                                                        if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi){
+                                                            YerelMesajlar(firebaseUser);
+                                                        }
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                                }
-                                            });
-                                        }
+                                                    }
+                                                });
+                                            }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
-                                }
+                                            }
+                                        });
+                                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
+                    }else{
+                        YerelMesajlar(firebaseUser);
                     }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    private void YerelMesajlar(FirebaseUser firebaseUser) {
+        List<BildirimMesaj> bildirimMesajList = new ArrayList<>();
+        List<String> mesajKisilerStr = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(MesajFonksiyonlari.KaydedilecekTur);
+        for (int i = 0; i < mesajKisilerStr.size(); i++){
+            DatabaseReference kullaniciyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(mesajKisilerStr.get(i));
+            kullaniciyiBul.keepSynced(true);
+            int finalI = i;
+            kullaniciyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot6231) {
+                    Kullanici kullanici = snapshot6231.getValue(Kullanici.class);
+                    if (kullanici == null){
+                        return;
+                    }
+                    DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.KisiTablosu).child(mesajKisilerStr.get(finalI));
+                    kisiyiBul.keepSynced(true);
+                    kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot87542) {
+                            Kullanici kisi = snapshot87542.getValue(Kullanici.class);
+                            String isim = "";
+                            if (kisi != null){
+                                isim = kisi.getIsim();
+                            }
+                            List<Mesaj> kisiMesajListesi = MesajFonksiyonlari.getInstance(mContext).MesajlariGetir(mesajKisilerStr.get(finalI), MesajFonksiyonlari.KaydedilecekTur);
+                            long mesajSayisi = 0;
+                            for (int i = kisiMesajListesi.size() - 1; i >= 0; i--){
+                                if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
+                                    mesajSayisi++;
+                                    Mesaj mesajlar123 = kisiMesajListesi.get(i);
+                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), isim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
+                                    bildirimMesajList.add(bildirimMesaj);
+                                }
+                            }
+                            if (finalI == mesajKisilerStr.size() - 1 && bildirimMesajList.size() > 0){
+                                if (!bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
+                                    if (sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true)){
+                                        MesajBildirimiGoster(bildirimMesajList);
+                                    }
+                                }
+                                Intent bildirimGonder = new Intent(MesajKey);
+                                LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
 
                 @Override

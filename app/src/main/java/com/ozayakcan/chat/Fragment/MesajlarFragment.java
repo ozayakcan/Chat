@@ -114,7 +114,9 @@ public class MesajlarFragment extends Fragment {
             }
         }
         if(arsivActivity != null){
-            return;
+            if (arsivActivity.MesajSecildi){
+                return;
+            }
         }
         mesajlarList.clear();
         List<String> kisiler = MesajFonksiyonlari.getInstance(mContext).CokKisiliMesajlariGetir(getirilecekMesajlar);
@@ -192,10 +194,12 @@ public class MesajlarFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(BildirimClass.MesajKey)){
-            MesajlariGetir();
-        }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
-            MesajlariGetir();
+        if (arsivActivity == null){
+            if(intent.getAction().equals(BildirimClass.MesajKey)){
+                MesajlariGetir();
+            }else if (intent.getAction().equals(BildirimClass.GorulduKey)){
+                MesajlariGetir();
+            }
         }
         }
     };

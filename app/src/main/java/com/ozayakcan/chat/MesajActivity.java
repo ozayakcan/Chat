@@ -29,6 +29,7 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
+import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.Resimler.ResimlerClass;
 
@@ -86,12 +87,15 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
+        gonderText = findViewById(R.id.gonderText);
         if (intentTabloString != null && !intentTabloString.equals("")){
             tabloString = intentTabloString;
             if (tabloString.equals(Veritabani.ArsivTablosu)){
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTurArsiv;
             }else{
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
+                gonderText.requestFocus();
+                Metinler.KlavyeAc(MesajActivity.this);
             }
         }
         mesajlarRW = findViewById(R.id.mesajlarRW);
@@ -101,7 +105,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         mesajlarRW.setLayoutManager(linearLayoutManager);
 
         gonderBtnLayout = findViewById(R.id.gonderBtnLayout2);
-        gonderText = findViewById(R.id.gonderText);
         gonderTextLayout = findViewById(R.id.gonderTextLayout2);
         kaydirBtnLayout = findViewById(R.id.kaydirBtnLayout2);
         kaydirBtnLayout.setOnClickListener(v -> AltaKaydir());
@@ -194,7 +197,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
                 kaydir = !(sonMesaj1 < linearLayoutManager1.getItemCount()-1);
             }
             if(durum == KAYDIR_SCROLLED){
-                kaydirBtnLayout.setVisibility(sonMesaj1 < linearLayoutManager1.getItemCount()-1 ? View.VISIBLE : View.GONE);
+                if(linearLayoutManager1.getItemCount() > 0){
+                    kaydirBtnLayout.setVisibility(sonMesaj1 < linearLayoutManager1.getItemCount()-1 ? View.VISIBLE : View.GONE);
+                }
             }
         }
     }
