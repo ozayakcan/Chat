@@ -218,6 +218,12 @@ public class BilgilerActivity extends AppCompatActivity {
                     Log.d("DB Kullanıcı Kaydet", snapshot.toString());
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
                     Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), Veritabani.VarsayilanHakkimdaYazisi(BilgilerActivity.this), true);
+                    if (kullanici != null){
+                        kullaniciEkle.setBildirimDurumu(kullanici.isBildirimDurumu());
+                        sharedPreference.KaydetBoolean(Veritabani.BildirimDurumuKey, kullanici.isBildirimDurumu());
+                        kullaniciEkle.setBildirimSesi(kullanici.isBildirimSesi());
+                        sharedPreference.KaydetBoolean(Veritabani.BildirimSesiKey, kullanici.isBildirimSesi());
+                    }
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
                         if (error == null){

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,11 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.IsimKey);
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.HakkimdaKey);
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.ProfilResmiKey);
+        LinearLayout bildirimLayout = findViewById(R.id.bildirimLayout);
+        bildirimLayout.setOnClickListener(v -> {
+            startActivity(new Intent(AyarlarActivity.this, BildirimActivity.class));
+            overridePendingTransition(0,0);
+        });
     }
 
     @Override
@@ -79,6 +85,7 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
                     intent.putExtra(Veritabani.TelefonKey, kullanici.getTelefon());
                     intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
                     startActivity(intent);
+                    overridePendingTransition(0,0);
                 });
             }
 

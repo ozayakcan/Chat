@@ -35,6 +35,7 @@ import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -53,8 +54,10 @@ import retrofit2.Response;
 public class BildirimClass {
 
     private final Context mContext;
+    private SharedPreference sharedPreference;
     private BildirimClass(Context context){
         this.mContext = context;
+        sharedPreference = new SharedPreference(mContext);
     }
 
     public static synchronized BildirimClass getInstance(Context context){
@@ -123,7 +126,9 @@ public class BildirimClass {
                                                     mesajlarSnapshot.getRef().setValue(null);
                                                     if (mesajKisileriSnapshot.getChildrenCount() == finalMesajKisiSayisi && bildirimMesajList.size() > 0){
                                                         if (!bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
-                                                            MesajBildirimiGoster(bildirimMesajList);
+                                                            if (sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true)){
+                                                                MesajBildirimiGoster(bildirimMesajList);
+                                                            }
                                                         }
                                                         Intent bildirimGonder = new Intent(MesajKey);
                                                         LocalBroadcastManager.getInstance(mContext).sendBroadcast(bildirimGonder);
@@ -254,7 +259,9 @@ public class BildirimClass {
         mBuilder.setVibrate(new long[] {NotificationCompat.DEFAULT_VIBRATE, 0, NotificationCompat.DEFAULT_VIBRATE, 0});
         mBuilder.setLights(Color.RED, 3000, 3000);
         Uri varsayilanBildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        mBuilder.setSound(varsayilanBildirimSesi);
+        if (sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true)){
+            mBuilder.setSound(varsayilanBildirimSesi);
+        }
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

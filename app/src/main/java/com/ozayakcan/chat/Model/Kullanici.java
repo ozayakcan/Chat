@@ -22,6 +22,10 @@ public class Kullanici {
 
     private String fcmToken = "0";
 
+    private boolean bildirimDurumu = true;
+
+    private boolean bildirimSesi = true;
+
     public Kullanici() {
         kayitZamani = System.currentTimeMillis();
         sonGorulme = System.currentTimeMillis();
@@ -44,7 +48,7 @@ public class Kullanici {
         this.onlineDurumu = onlineDurumu;
     }
 
-    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu, long sonGorulme, String fcmToken) {
+    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu, long sonGorulme, String fcmToken, boolean bildirimDurumu, boolean bildirimSesi) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
@@ -54,6 +58,8 @@ public class Kullanici {
         this.onlineDurumu = onlineDurumu;
         this.sonGorulme = sonGorulme;
         this.fcmToken = fcmToken;
+        this.bildirimDurumu = bildirimDurumu;
+        this.bildirimSesi = bildirimSesi;
     }
 
     public String getID() {
@@ -73,7 +79,7 @@ public class Kullanici {
         this.isim = isim;
     }
 
-    public boolean getOnlineDurumu() {
+    public boolean isOnlineDurumu() {
         return onlineDurumu;
     }
 
@@ -134,5 +140,21 @@ public class Kullanici {
     @SuppressWarnings("unused")
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public boolean isBildirimDurumu() {
+        return bildirimDurumu;
+    }
+
+    public void setBildirimDurumu(boolean bildirimDurumu) {
+        this.bildirimDurumu = bildirimDurumu;
+    }
+
+    public boolean isBildirimSesi() {
+        return bildirimSesi;
+    }
+
+    public void setBildirimSesi(boolean bildirimSesi) {
+        this.bildirimSesi = bildirimSesi;
     }
 }

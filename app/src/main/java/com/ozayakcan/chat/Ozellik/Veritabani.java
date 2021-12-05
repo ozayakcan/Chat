@@ -38,6 +38,8 @@ public class Veritabani {
     public static String ProfilResmiKey = "profilResmi";
     public static String TelefonKey = "telefon";
     public static String HakkimdaKey = "hakkimda";
+    public static String BildirimDurumuKey = "bildirimDurumu";
+    public static String BildirimSesiKey = "bildirimSesi";
     public static String VarsayilanHakkimdaYazisi(Context context) {
         return "";
     }
@@ -103,7 +105,7 @@ public class Veritabani {
         map.put(Veritabani.IsimKey, kullanici.getIsim());
         map.put(Veritabani.TelefonKey, kullanici.getTelefon());
         map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
-        map.put(Veritabani.OnlineDurumuKey, kullanici.getOnlineDurumu());
+        map.put(Veritabani.OnlineDurumuKey, kullanici.isOnlineDurumu());
         if (tarih){
             map.put(Veritabani.KayitZamaniKey, ServerValue.TIMESTAMP);
         }

@@ -79,4 +79,10 @@
     <string name="save">Save</string>
     <string name="cannot_be_empty">Cannot be empty!</string>
     <string name="scroll">Scroll</string>
+    <string name="notifications">Notifications</string>
+    <string name="change_notification_settings">Change notification settings</string>
+    <string name="show_notifications">Show Notifications</string>
+    <string name="ignores_all_options_below_if_disabled">Ignores all options below if disabled</string>
+    <string name="sounds">Sounds</string>
+    <string name="enables_notification_sounds">Enables notification sounds</string>
 </resources>

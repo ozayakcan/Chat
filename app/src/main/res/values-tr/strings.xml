@@ -80,4 +80,10 @@
     <string name="save">Kaydet</string>
     <string name="cannot_be_empty">Bu kısım boş olamaz!</string>
     <string name="scroll">Kaydır</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="change_notification_settings">Bildirim ayarlarını değiştir</string>
+    <string name="show_notifications">Bildirimleri Göster</string>
+    <string name="ignores_all_options_below_if_disabled">Devredışıysa alttaki tüm ayarları yoksayar</string>
+    <string name="sounds">Sesler</string>
+    <string name="enables_notification_sounds">Bildirim seslerini etkinleştirir</string>
 </resources>

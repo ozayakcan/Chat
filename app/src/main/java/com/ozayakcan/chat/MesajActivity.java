@@ -376,7 +376,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             Kullanici kullanici = snapshot.getValue(Kullanici.class);
             if (kullanici != null){
-                if (kullanici.getOnlineDurumu()){
+                if (kullanici.isOnlineDurumu()){
                     durum.setText(getString(R.string.online));
                 }else{
                     durum.setText(getString(R.string.offline));
