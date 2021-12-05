@@ -47,10 +47,12 @@
             android:exported="false" />
         <activity
             android:name=".Giris.BilgilerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".Giris.GirisActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".SSActivity"
             android:exported="true">
