@@ -7,8 +7,8 @@
     android:gravity="center">
     <RelativeLayout
         android:id="@+id/profilResmiLayout"
-        android:layout_width="150dp"
-        android:layout_height="150dp">
+        android:layout_width="130dp"
+        android:layout_height="130dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilResmi"
             android:layout_width="match_parent"
@@ -17,8 +17,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/kamera"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:src="@drawable/ic_kamera" />
