@@ -1,6 +1,5 @@
 package com.ozayakcan.chat;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +18,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Giris.BilgilerActivity;
 import com.ozayakcan.chat.Giris.GirisActivity;
 import com.ozayakcan.chat.Model.Kullanici;
-import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 
@@ -57,7 +54,6 @@ public class SSActivity extends AppCompatActivity {
                         Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
                         intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
                         intent.putExtra(Veritabani.IsimKey, "");
-                        intent.putExtra(Veritabani.HakkimdaKey, "");
                         startActivity(intent);
                     }else{
                         if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
@@ -68,7 +64,6 @@ public class SSActivity extends AppCompatActivity {
                             Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);
                             intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
                             intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
-                            intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
                             startActivity(intent);
                         }
                     }

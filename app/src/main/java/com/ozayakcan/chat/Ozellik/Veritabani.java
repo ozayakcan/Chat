@@ -38,6 +38,9 @@ public class Veritabani {
     public static String ProfilResmiKey = "profilResmi";
     public static String TelefonKey = "telefon";
     public static String HakkimdaKey = "hakkimda";
+    public static String VarsayilanHakkimdaYazisi(Context context) {
+        return "";
+    }
     public static String KayitZamaniKey = "kayitZamani";
     public static String SonGorulmeKey = "sonGorulme";
     public static String FCMTokenKey = "fcmToken";

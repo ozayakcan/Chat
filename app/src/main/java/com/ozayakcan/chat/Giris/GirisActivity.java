@@ -289,11 +289,9 @@ public class GirisActivity extends AppCompatActivity {
                                 if (kullanici == null){
                                     intent.putExtra(Veritabani.ProfilResmiKey, Veritabani.VarsayilanDeger);
                                     intent.putExtra(Veritabani.IsimKey, "");
-                                    intent.putExtra(Veritabani.HakkimdaKey, "");
                                 }else{
                                     intent.putExtra(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
                                     intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
-                                    intent.putExtra(Veritabani.HakkimdaKey, kullanici.getHakkimda());
                                 }
                                 overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
                                 startActivity(intent);

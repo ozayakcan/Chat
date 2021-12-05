@@ -47,7 +47,7 @@ public class BilgilerActivity extends AppCompatActivity {
 
     private LinearLayout progressBarLayout;
     private CircleImageView profilResmi;
-    private EditText isimET, hakkimdaET;
+    private EditText isimET;
     private TextView isimHata;
     private Button bitirBtn;
     private ResimlerClass resimlerClass;
@@ -57,7 +57,7 @@ public class BilgilerActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private String resimBaglantisi = Veritabani.VarsayilanDeger;
 
-    String profilResmiString, isimString, hakkimdaString;
+    String profilResmiString, isimString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +76,7 @@ public class BilgilerActivity extends AppCompatActivity {
         Intent intent = getIntent();
         profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         isimString = intent.getStringExtra(Veritabani.IsimKey);
-        hakkimdaString = intent.getStringExtra(Veritabani.HakkimdaKey);
         isimHata = findViewById(R.id.isimHata);
-        hakkimdaET = findViewById(R.id.hakkimdaET);
         if (isimString.equals("")){
             BilgileriGetir();
         }else{
@@ -86,14 +84,13 @@ public class BilgilerActivity extends AppCompatActivity {
             resimBaglantisi = profilResmiString;
             isimET.setText(isimString);
             isimET.setSelection(isimET.getText().length());
-            hakkimdaET.setText(hakkimdaString);
         }
         bitirBtn = findViewById(R.id.bitirBtn);
         profilResmi.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule("", resimBaglantisi));
         kamera.setOnClickListener(v -> ProfilResmiDegistir());
         isimET.setOnEditorActionListener((v, actionId, event) -> {
-            if(actionId == EditorInfo.IME_ACTION_NEXT){
-                hakkimdaET.requestFocus();
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                Kaydet();
             }
             return false;
         });
@@ -113,12 +110,6 @@ public class BilgilerActivity extends AppCompatActivity {
 
             }
         });
-        hakkimdaET.setOnEditorActionListener((v, actionId, event) -> {
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                Kaydet();
-            }
-            return false;
-        });
         bitirBtn.setOnClickListener(v -> Kaydet());
     }
 
@@ -134,7 +125,6 @@ public class BilgilerActivity extends AppCompatActivity {
                     resimBaglantisi = kullanici.getProfilResmi();
                     isimET.setText(kullanici.getIsim());
                     isimET.setSelection(isimET.getText().length());
-                    hakkimdaET.setText(kullanici.getHakkimda());
                 }
             }
 
@@ -227,7 +217,7 @@ public class BilgilerActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("DB Kullanıcı Kaydet", snapshot.toString());
                     Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                    Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), hakkimdaET.getText().toString(), true);
+                    Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), Veritabani.VarsayilanHakkimdaYazisi(BilgilerActivity.this), true);
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
                         if (error == null){
