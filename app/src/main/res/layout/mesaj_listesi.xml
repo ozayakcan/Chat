@@ -32,7 +32,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/tik_ikon"/>
+                android:src="@drawable/tik_ikon"
+                android:contentDescription="@string/messages" />
         </LinearLayout>
         <TextView
             android:id="@+id/kisiBasHarfi"

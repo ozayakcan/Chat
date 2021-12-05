@@ -40,7 +40,9 @@
                 android:inputType="phone"
                 android:textAlignment="center"
                 android:maxLength="13"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor" />
         </LinearLayout>
         <TextView
             android:id="@+id/bosNumaraUyari"
@@ -96,7 +98,8 @@
             android:hint="555555"
             android:maxLines="1"
             android:maxLength="6"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:importantForAutofill="no"/>
         <TextView
             android:id="@+id/geriSayimText"
             android:layout_width="match_parent"
