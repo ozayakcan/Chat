@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     id 'kotlin-android'
     id 'com.google.secrets_gradle_plugin' version '0.4'
 }
@@ -64,6 +65,7 @@ dependencies {
     //Firebase
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-auth'
