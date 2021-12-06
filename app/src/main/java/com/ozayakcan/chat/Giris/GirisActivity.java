@@ -95,6 +95,7 @@ public class GirisActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 bosNumaraUyari.setVisibility(View.GONE);
+                GirisButonDurumu(true);
             }
 
             @Override
