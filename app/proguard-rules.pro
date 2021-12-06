@@ -26,15 +26,29 @@
 -keepclassmembers class com.ozayakcan.chat.Bildirimler.** {
 *;
 }
+-keepclassmembers class com.ozayakcan.chat.Ozellik.** {
+*;
+}
 
+-keepattributes Signature
+-keepattributes *Annotation*
 #Firebase Ayarları
--keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
+-keep class persistence.** {
+  *;
+}
 -keep class com.firebase.** { *; }
 -keep class org.apache.** { *; }
 -keepnames class com.fasterxml.jackson.** { *; }
 -keepnames class javax.servlet.** { *; }
 -keepnames class org.ietf.jgss.** { *; }
+-dontwarn org.apache.**
+-dontwarn org.w3c.dom.**
+
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.android.gms.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 -dontwarn org.w3c.dom.**
 -dontwarn org.joda.time.**
 -dontwarn org.shaded.apache.**
@@ -55,8 +69,6 @@
 -keep interface com.yalantis.ucrop** { *; }
 
 #Gson Ayarları
--keepattributes Signature
--keepattributes *Annotation*
 -dontwarn sun.misc.**
 -keep class com.google.gson.examples.android.model.** { <fields>; }
 -keep class * extends com.google.gson.TypeAdapter
