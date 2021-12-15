@@ -64,7 +64,9 @@ dependencies {
     implementation 'org.whispersystems:signal-protocol-android:2.3.0'
     implementation 'com.google.code.gson:gson:2.8.8'
     //Firebase
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
+    debugImplementation('com.google.firebase:firebase-appcheck-debug:16.0.0-beta04')
+    androidTestImplementation 'com.google.firebase:firebase-appcheck-debug-testing:16.0.0-beta04'
+    releaseImplementation('com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04')
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-database'
