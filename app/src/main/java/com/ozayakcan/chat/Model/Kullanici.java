@@ -30,6 +30,8 @@ public class Kullanici {
 
     private long bildirimTitresim = 0;
 
+    private long bildirimIsigi = 1;
+
     public Kullanici() {
         kayitZamani = System.currentTimeMillis();
         sonGorulme = System.currentTimeMillis();
@@ -56,7 +58,8 @@ public class Kullanici {
     public Kullanici(String ID, String isim, String profilResmi, String telefon,
                      String hakkimda, long kayitZamani, boolean onlineDurumu,
                      long sonGorulme, String fcmToken, boolean bildirimDurumu,
-                     boolean bildirimSesi, boolean bildirimOncelik, long bildirimTitresim) {
+                     boolean bildirimSesi, boolean bildirimOncelik, long bildirimTitresim,
+                     long bildirimIsigi) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
@@ -70,6 +73,7 @@ public class Kullanici {
         this.bildirimSesi = bildirimSesi;
         this.bildirimOncelik = bildirimOncelik;
         this.bildirimTitresim = bildirimTitresim;
+        this.bildirimIsigi = bildirimIsigi;
     }
 
     public String getID() {
@@ -182,5 +186,13 @@ public class Kullanici {
 
     public void setBildirimTitresim(long bildirimTitresim) {
         this.bildirimTitresim = bildirimTitresim;
+    }
+
+    public long getBildirimIsigi() {
+        return bildirimIsigi;
+    }
+
+    public void setBildirimIsigi(long bildirimIsigi) {
+        this.bildirimIsigi = bildirimIsigi;
     }
 }

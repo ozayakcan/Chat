@@ -91,4 +91,12 @@
     <string name="default1">Varsayılan</string>
     <string name="long1">Uzun</string>
     <string name="short1">Kısa</string>
+    <string name="none">Hiçbiri</string>
+    <string name="white">Beyaz</string>
+    <string name="red">Kırmızı</string>
+    <string name="yellow">Sarı</string>
+    <string name="green">Yeşil</string>
+    <string name="cyan">Camgöbeği</string>
+    <string name="blue">Mavi</string>
+    <string name="light">Light</string>
 </resources>

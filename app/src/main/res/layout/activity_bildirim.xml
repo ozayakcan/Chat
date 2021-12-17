@@ -144,34 +144,54 @@
                     android:layout_alignParentTop="true"
                     android:theme="@style/SwitchCompatVarsayilan"/>
             </RelativeLayout>
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/bildirimTitresim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_marginTop="5dp">
-                <LinearLayout
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:text="@string/vibration"/>
-                    <TextView
-                        android:id="@+id/titresimText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:text="@string/default1"
-                        android:textColor="@color/gray"
-                        android:textSize="15sp"/>
-                </LinearLayout>
-            </RelativeLayout>
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="@string/vibration"/>
+                <TextView
+                    android:id="@+id/titresimText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/default1"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/bildirimIsik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="@string/light"/>
+                <TextView
+                    android:id="@+id/isikText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/white"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"/>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

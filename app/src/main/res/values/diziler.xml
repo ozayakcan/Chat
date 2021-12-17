@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="titresim_ayarlari">
+        <item>@string/default1</item>
+        <item>@string/long1</item>
+        <item>@string/short1</item>
+    </string-array>
+    <string-array name="bildirim_isigi">
+        <item>@string/none</item>
+        <item>@string/white</item>
+        <item>@string/cyan</item>
+        <item>@string/blue</item>
+        <item>@string/red</item>
+        <item>@string/green</item>
+        <item>@string/yellow</item>
+    </string-array>
+</resources>

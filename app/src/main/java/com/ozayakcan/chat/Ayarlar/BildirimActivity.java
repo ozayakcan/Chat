@@ -1,9 +1,9 @@
 package com.ozayakcan.chat.Ayarlar;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +26,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
 
     private SwitchCompat bildirimDurumuSwitch, bildirimSesiSwitch, bildirimOncelikSwitch;
 
-    private TextView titresimText;
+    private TextView titresimText, isikText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +53,15 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         RelativeLayout bildirimOncelik = findViewById(R.id.bildirimOncelik);
         bildirimOncelik.setOnClickListener(v -> BildirimOncelik());
         // Titreşim
-        RelativeLayout bildirimTitresim = findViewById(R.id.bildirimTitresim);
+        LinearLayout bildirimTitresim = findViewById(R.id.bildirimTitresim);
         titresimText = findViewById(R.id.titresimText);
-        TitresimYazisi((int) sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0));
-        bildirimTitresim.setOnClickListener(v -> Titresim());
+        YaziDegistir((int) sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0), titresimText, R.array.titresim_ayarlari);
+        bildirimTitresim.setOnClickListener(v -> Diyalog(R.string.vibration, R.array.titresim_ayarlari, Veritabani.BildirimTitresimKey, titresimText));
+        // Işık
+        LinearLayout bildirimIsik = findViewById(R.id.bildirimIsik);
+        isikText = findViewById(R.id.isikText);
+        YaziDegistir((int) sharedPreference.GetirLong(Veritabani.BildirimIsigiKey, 1), isikText, R.array.bildirim_isigi);
+        bildirimIsik.setOnClickListener(v -> Diyalog(R.string.light, R.array.bildirim_isigi, Veritabani.BildirimIsigiKey, isikText));
     }
 
     private void BildirimDurumu() {
@@ -85,29 +90,23 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         });
     }
 
-    private void Titresim() {
+    private void Diyalog(int baslik, int diziID, String key, TextView textView) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(BildirimActivity.this);
-        alertDialog.setTitle(getString(R.string.vibration));
-        alertDialog.setItems(R.array.vibration_settings, (dialog, which) -> {
+        alertDialog.setTitle(getString(baslik));
+        alertDialog.setItems(diziID, (dialog, which) -> {
             dialog.dismiss();
-            Kaydet(which, Veritabani.BildirimTitresimKey);
-            TitresimYazisi(which);
+            Kaydet(which, key);
+            YaziDegistir(which, textView, diziID);
         });
         alertDialog.show();
     }
 
-    private void TitresimYazisi(int which) {
-        switch (which){
-            case 0:
-                titresimText.setText(getString(R.string.default1));
-                break;
-            case 1:
-                titresimText.setText(getString(R.string.long1));
-                break;
-            case 2:
-                titresimText.setText(getString(R.string.short1));
-                break;
-
+    private void YaziDegistir(int konum, TextView textView, int diziID) {
+        String[] dizi = getResources().getStringArray(diziID);
+        if (konum >= dizi.length){
+            textView.setText(dizi[0]);
+        }else{
+            textView.setText(dizi[konum]);
         }
     }
 

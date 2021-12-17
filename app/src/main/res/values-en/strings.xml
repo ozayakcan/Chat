@@ -92,4 +92,12 @@
     <string name="default1">Default</string>
     <string name="long1">Long</string>
     <string name="short1">Short</string>
+    <string name="none">None</string>
+    <string name="white">White</string>
+    <string name="red">Red</string>
+    <string name="yellow">Yellow</string>
+    <string name="green">Green</string>
+    <string name="cyan">Cyan</string>
+    <string name="blue">Blue</string>
+    <string name="light">Light</string>
 </resources>

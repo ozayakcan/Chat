@@ -311,10 +311,39 @@ public class BildirimClass {
         mBuilder.setOnlyAlertOnce(false);
         mBuilder.setPriority(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true) ?
                 NotificationCompat.PRIORITY_HIGH : NotificationCompat.PRIORITY_DEFAULT);
-        mBuilder.setVibrate(sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0) == 1 ?
-                TitresimUzun : sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0) == 2 ?
-                TitresimKisa : TitresimVarsayilan);
-        mBuilder.setLights(Color.RED, 3000, 3000);
+        long titresim = sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0);
+        switch ((int) titresim){
+            case 1:
+                mBuilder.setVibrate(TitresimUzun);
+                break;
+            case 2:
+                mBuilder.setVibrate(TitresimKisa);
+                break;
+            default:
+                mBuilder.setVibrate(TitresimVarsayilan);
+                break;
+        }
+        long isik = sharedPreference.GetirLong(Veritabani.BildirimIsigiKey, 1);
+        switch ((int) isik){
+            case 1:
+                mBuilder.setLights(Color.WHITE, 3000, 3000);
+                break;
+            case 2:
+                mBuilder.setLights(Color.CYAN, 3000, 3000);
+                break;
+            case 3:
+                mBuilder.setLights(Color.BLUE, 3000, 3000);
+                break;
+            case 4:
+                mBuilder.setLights(Color.RED, 3000, 3000);
+                break;
+            case 5:
+                mBuilder.setLights(Color.GREEN, 3000, 3000);
+                break;
+            case 6:
+                mBuilder.setLights(Color.YELLOW, 3000, 3000);
+                break;
+        }
         Uri varsayilanBildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true)){
             mBuilder.setSound(varsayilanBildirimSesi);

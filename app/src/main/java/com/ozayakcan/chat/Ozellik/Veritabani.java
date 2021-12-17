@@ -42,6 +42,7 @@ public class Veritabani {
     public static String BildirimSesiKey = "bildirimSesi";
     public static String BildirimOncelikKey = "bildirimOncelik";
     public static String BildirimTitresimKey = "bildirimTitresim";
+    public static String BildirimIsigiKey = "bildirimIsigi";
     public static String VarsayilanHakkimdaYazisi(Context context) {
         return "";
     }

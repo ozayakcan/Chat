@@ -230,6 +230,9 @@ public class BilgilerActivity extends AppCompatActivity {
 
                         kullaniciEkle.setBildirimTitresim(kullanici.getBildirimTitresim());
                         sharedPreference.KaydetLong(Veritabani.BildirimTitresimKey, kullanici.getBildirimTitresim());
+
+                        kullaniciEkle.setBildirimIsigi(kullanici.getBildirimIsigi());
+                        sharedPreference.KaydetLong(Veritabani.BildirimIsigiKey, kullanici.getBildirimIsigi());
                     }
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
