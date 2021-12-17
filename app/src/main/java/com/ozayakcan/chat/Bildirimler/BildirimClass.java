@@ -344,9 +344,12 @@ public class BildirimClass {
                 mBuilder.setLights(Color.YELLOW, 3000, 3000);
                 break;
         }
-        Uri varsayilanBildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri bildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (!sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("")){
+            bildirimSesi = Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, ""));
+        }
         if (sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true)){
-            mBuilder.setSound(varsayilanBildirimSesi);
+            mBuilder.setSound(bildirimSesi);
         }
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;

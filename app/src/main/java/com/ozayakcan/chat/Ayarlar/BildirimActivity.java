@@ -1,6 +1,11 @@
 package com.ozayakcan.chat.Ayarlar;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.LinearLayout;
@@ -8,6 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
@@ -26,7 +35,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
 
     private SwitchCompat bildirimDurumuSwitch, bildirimSesiSwitch, bildirimOncelikSwitch;
 
-    private TextView titresimText, isikText;
+    private TextView tonText, titresimText, isikText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +56,12 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         bildirimSesiSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true));
         RelativeLayout bildirimSesi = findViewById(R.id.bildirimSesi);
         bildirimSesi.setOnClickListener(v -> BildirimSesi());
-        // Öncelik
-        bildirimOncelikSwitch = findViewById(R.id.bildirimOncelikSwitch);
-        bildirimOncelikSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true));
-        RelativeLayout bildirimOncelik = findViewById(R.id.bildirimOncelik);
-        bildirimOncelik.setOnClickListener(v -> BildirimOncelik());
+        // Bildirim Sesi
+        LinearLayout bildirimTon = findViewById(R.id.bildirimTon);
+        tonText = findViewById(R.id.tonText);
+        BildirimSesiGoster(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "")));
+        bildirimTon.setOnClickListener(v -> BildirimSesiDegistir());
         // Titreşim
         LinearLayout bildirimTitresim = findViewById(R.id.bildirimTitresim);
         titresimText = findViewById(R.id.titresimText);
@@ -62,6 +72,40 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         isikText = findViewById(R.id.isikText);
         YaziDegistir((int) sharedPreference.GetirLong(Veritabani.BildirimIsigiKey, 1), isikText, R.array.bildirim_isigi);
         bildirimIsik.setOnClickListener(v -> Diyalog(R.string.light, R.array.bildirim_isigi, Veritabani.BildirimIsigiKey, isikText));
+        // Öncelik
+        bildirimOncelikSwitch = findViewById(R.id.bildirimOncelikSwitch);
+        bildirimOncelikSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true));
+        RelativeLayout bildirimOncelik = findViewById(R.id.bildirimOncelik);
+        bildirimOncelik.setOnClickListener(v -> BildirimOncelik());
+    }
+
+    private void BildirimSesiDegistir() {
+        Intent bildirimSesiIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
+        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.notification_tone));
+        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "")));
+        bildirimSesiActivityResult.launch(bildirimSesiIntent);
+    }
+    ActivityResultLauncher<Intent> bildirimSesiActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK){
+                    Intent veri = result.getData();
+                    if (veri != null){
+                        Uri ses = veri.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                        if (ses != null){
+                            sharedPreference.KaydetString(Veritabani.BildirimTonuKey, ses.toString());
+                            BildirimSesiGoster(ses);
+                        }
+                    }
+                }
+            });
+
+    private void BildirimSesiGoster(Uri ses) {
+        Ringtone muzik = RingtoneManager.getRingtone(BildirimActivity.this, ses);
+        tonText.setText(muzik.getTitle(BildirimActivity.this));
     }
 
     private void BildirimDurumu() {

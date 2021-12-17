@@ -98,5 +98,6 @@
     <string name="green">Yeşil</string>
     <string name="cyan">Camgöbeği</string>
     <string name="blue">Mavi</string>
-    <string name="light">Light</string>
+    <string name="light">Işık</string>
+    <string name="notification_tone">Bildirim Sesi</string>
 </resources>

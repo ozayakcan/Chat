@@ -100,4 +100,5 @@
     <string name="cyan">Cyan</string>
     <string name="blue">Blue</string>
     <string name="light">Light</string>
+    <string name="notification_tone">Notification Tone</string>
 </resources>
