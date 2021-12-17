@@ -221,10 +221,15 @@ public class BilgilerActivity extends AppCompatActivity {
                     if (kullanici != null){
                         kullaniciEkle.setBildirimDurumu(kullanici.isBildirimDurumu());
                         sharedPreference.KaydetBoolean(Veritabani.BildirimDurumuKey, kullanici.isBildirimDurumu());
+
                         kullaniciEkle.setBildirimSesi(kullanici.isBildirimSesi());
                         sharedPreference.KaydetBoolean(Veritabani.BildirimSesiKey, kullanici.isBildirimSesi());
+
                         kullaniciEkle.setBildirimOncelik(kullanici.isBildirimOncelik());
                         sharedPreference.KaydetBoolean(Veritabani.BildirimOncelikKey, kullanici.isBildirimOncelik());
+
+                        kullaniciEkle.setBildirimTitresim(kullanici.getBildirimTitresim());
+                        sharedPreference.KaydetLong(Veritabani.BildirimTitresimKey, kullanici.getBildirimTitresim());
                     }
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
