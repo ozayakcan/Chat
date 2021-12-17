@@ -26,6 +26,10 @@ public class Kullanici {
 
     private boolean bildirimSesi = true;
 
+    private boolean bildirimOncelik = true;
+
+    private long bildirimTitresim = 0;
+
     public Kullanici() {
         kayitZamani = System.currentTimeMillis();
         sonGorulme = System.currentTimeMillis();
@@ -39,7 +43,8 @@ public class Kullanici {
         kayitZamani = System.currentTimeMillis();
         this.onlineDurumu = onlineDurumu;
     }
-    public Kullanici(String ID, String isim, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu) {
+    public Kullanici(String ID, String isim, String telefon, String hakkimda,
+                     long kayitZamani, boolean onlineDurumu) {
         this.ID = ID;
         this.isim = isim;
         this.telefon = telefon;
@@ -48,7 +53,10 @@ public class Kullanici {
         this.onlineDurumu = onlineDurumu;
     }
 
-    public Kullanici(String ID, String isim, String profilResmi, String telefon, String hakkimda, long kayitZamani, boolean onlineDurumu, long sonGorulme, String fcmToken, boolean bildirimDurumu, boolean bildirimSesi) {
+    public Kullanici(String ID, String isim, String profilResmi, String telefon,
+                     String hakkimda, long kayitZamani, boolean onlineDurumu,
+                     long sonGorulme, String fcmToken, boolean bildirimDurumu,
+                     boolean bildirimSesi, boolean bildirimOncelik, long bildirimTitresim) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
@@ -60,6 +68,8 @@ public class Kullanici {
         this.fcmToken = fcmToken;
         this.bildirimDurumu = bildirimDurumu;
         this.bildirimSesi = bildirimSesi;
+        this.bildirimOncelik = bildirimOncelik;
+        this.bildirimTitresim = bildirimTitresim;
     }
 
     public String getID() {
@@ -156,5 +166,21 @@ public class Kullanici {
 
     public void setBildirimSesi(boolean bildirimSesi) {
         this.bildirimSesi = bildirimSesi;
+    }
+
+    public boolean isBildirimOncelik() {
+        return bildirimOncelik;
+    }
+
+    public void setBildirimOncelik(boolean bildirimOncelik) {
+        this.bildirimOncelik = bildirimOncelik;
+    }
+
+    public long getBildirimTitresim() {
+        return bildirimTitresim;
+    }
+
+    public void setBildirimTitresim(long bildirimTitresim) {
+        this.bildirimTitresim = bildirimTitresim;
     }
 }

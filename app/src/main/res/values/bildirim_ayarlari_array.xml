@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vibration_settings">
+        <item>@string/default1</item>
+        <item>@string/long1</item>
+        <item>@string/short1</item>
+    </string-array>
+</resources>

@@ -108,6 +108,70 @@
                     android:layout_alignParentTop="true"
                     android:theme="@style/SwitchCompatVarsayilan"/>
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/bildirimOncelik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginTop="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/bildirimOncelikSwitch"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="@string/show_on_screen"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/shows_notifications_at_the_top_of_the_screen_when_the_screen_is_on"
+                        android:textColor="@color/gray"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/bildirimOncelikSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:theme="@style/SwitchCompatVarsayilan"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/bildirimTitresim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginTop="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="@string/vibration"/>
+                    <TextView
+                        android:id="@+id/titresimText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="@string/default1"
+                        android:textColor="@color/gray"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

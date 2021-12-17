@@ -72,6 +72,10 @@ public class BildirimClass {
     public static int MesajBildirimiID = 1923;
     public static int MaxMesajSayisi = 7;
 
+    public static long[] TitresimVarsayilan = new long[] {1000, 0, 1000, 0};
+    public static long[] TitresimUzun = new long[] {2000, 0, 2000, 0};
+    public static long[] TitresimKisa = new long[] {400, 0, 400, 0};
+
     public void MesajBildirimi() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.getPhoneNumber() != null){
@@ -305,8 +309,11 @@ public class BildirimClass {
             mBuilder.setContentText(bildirimMesajList.get(0).getMesaj());
         }
         mBuilder.setOnlyAlertOnce(false);
-        mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        mBuilder.setVibrate(new long[] {NotificationCompat.DEFAULT_VIBRATE, 0, NotificationCompat.DEFAULT_VIBRATE, 0});
+        mBuilder.setPriority(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true) ?
+                NotificationCompat.PRIORITY_HIGH : NotificationCompat.PRIORITY_DEFAULT);
+        mBuilder.setVibrate(sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0) == 1 ?
+                TitresimUzun : sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0) == 2 ?
+                TitresimKisa : TitresimVarsayilan);
         mBuilder.setLights(Color.RED, 3000, 3000);
         Uri varsayilanBildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true)){
@@ -345,6 +352,7 @@ public class BildirimClass {
         inbox.setSummaryText(mContext.getString(R.string.s_new_messages).replace("%s", bildirimMesajList.size()+""));
         return inbox;
     }
+
     public static void MesajBildiriminiKaldir(Context mContext){
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

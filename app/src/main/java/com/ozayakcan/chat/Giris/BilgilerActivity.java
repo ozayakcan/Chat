@@ -223,6 +223,8 @@ public class BilgilerActivity extends AppCompatActivity {
                         sharedPreference.KaydetBoolean(Veritabani.BildirimDurumuKey, kullanici.isBildirimDurumu());
                         kullaniciEkle.setBildirimSesi(kullanici.isBildirimSesi());
                         sharedPreference.KaydetBoolean(Veritabani.BildirimSesiKey, kullanici.isBildirimSesi());
+                        kullaniciEkle.setBildirimOncelik(kullanici.isBildirimOncelik());
+                        sharedPreference.KaydetBoolean(Veritabani.BildirimOncelikKey, kullanici.isBildirimOncelik());
                     }
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
