@@ -40,7 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp">
+                android:paddingEnd="10dp"
+                android:padding="15dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,6 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:layout_marginTop="3dp"
                         android:text="@string/ignores_all_options_below_if_disabled"
                         android:textColor="@color/gray"
                         android:textSize="15sp"/>
@@ -77,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,6 +97,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:layout_marginTop="3dp"
                         android:text="@string/enables_notification_sounds"
                         android:textColor="@color/gray"
                         android:textSize="15sp"/>
@@ -114,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -128,6 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
+                    android:layout_marginTop="3dp"
                     android:text="@string/default1"
                     android:textColor="@color/gray"
                     android:textSize="15sp"/>
@@ -138,6 +144,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -152,6 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
+                    android:layout_marginTop="3dp"
                     android:text="@string/default1"
                     android:textColor="@color/gray"
                     android:textSize="15sp"/>
@@ -162,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -176,6 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
+                    android:layout_marginTop="3dp"
                     android:text="@string/white"
                     android:textColor="@color/gray"
                     android:textSize="15sp"/>
@@ -186,6 +196,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -203,6 +214,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:layout_marginTop="3dp"
                         android:text="@string/shows_notifications_at_the_top_of_the_screen_when_the_screen_is_on"
                         android:textColor="@color/gray"
                         android:textSize="15sp"/>
