@@ -57,6 +57,12 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
             startActivity(new Intent(AyarlarActivity.this, BildirimActivity.class));
             overridePendingTransition(0,0);
         });
+
+        LinearLayout gizlilikLayout = findViewById(R.id.gizlilikLayout);
+        gizlilikLayout.setOnClickListener(v -> {
+            startActivity(new Intent(AyarlarActivity.this, GizlilikAyarlariActivity.class));
+            overridePendingTransition(0,0);
+        });
     }
 
     @Override
