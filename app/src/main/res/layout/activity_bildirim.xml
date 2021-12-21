@@ -39,9 +39,7 @@
                 android:id="@+id/bildirimDurumu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp">
+                android:padding="10dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,9 +75,7 @@
                 android:id="@+id/bildirimSesi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:layout_marginTop="5dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,9 +112,7 @@
                 android:id="@+id/bildirimTon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -142,9 +136,7 @@
                 android:id="@+id/bildirimTitresim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -168,9 +160,7 @@
                 android:id="@+id/bildirimIsik"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <TextView
@@ -194,9 +184,7 @@
                 android:id="@+id/bildirimOncelik"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:layout_marginTop="5dp">
                 <LinearLayout
                     android:layout_width="match_parent"
