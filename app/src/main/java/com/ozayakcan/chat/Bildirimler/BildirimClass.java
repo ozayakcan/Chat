@@ -54,10 +54,8 @@ import retrofit2.Response;
 public class BildirimClass {
 
     private final Context mContext;
-    private SharedPreference sharedPreference;
     private BildirimClass(Context context){
         this.mContext = context;
-        sharedPreference = new SharedPreference(mContext);
     }
 
     public static synchronized BildirimClass getInstance(Context context){
@@ -195,7 +193,7 @@ public class BildirimClass {
                             }
                             if (finalI == mesajKisilerStr.size() - 1 && bildirimMesajList.size() > 0){
                                 if (!bildirimMesajList.get(bildirimMesajList.size()-1).getTelefon().equals(ChatApp.SuankiKisiyiBul())){
-                                    if (sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true)){
+                                    if (SharedPreference.getInstance(mContext).GetirBoolean(Veritabani.BildirimDurumuKey, true)){
                                         MesajBildirimiGoster(bildirimMesajList);
                                     }
                                 }
@@ -309,9 +307,9 @@ public class BildirimClass {
             mBuilder.setContentText(bildirimMesajList.get(0).getMesaj());
         }
         mBuilder.setOnlyAlertOnce(false);
-        mBuilder.setPriority(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true) ?
+        mBuilder.setPriority(SharedPreference.getInstance(mContext).GetirBoolean(Veritabani.BildirimOncelikKey, true) ?
                 NotificationCompat.PRIORITY_HIGH : NotificationCompat.PRIORITY_DEFAULT);
-        long titresim = sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0);
+        long titresim = SharedPreference.getInstance(mContext).GetirLong(Veritabani.BildirimTitresimKey, 0);
         switch ((int) titresim){
             case 1:
                 mBuilder.setVibrate(TitresimUzun);
@@ -323,7 +321,7 @@ public class BildirimClass {
                 mBuilder.setVibrate(TitresimVarsayilan);
                 break;
         }
-        long isik = sharedPreference.GetirLong(Veritabani.BildirimIsigiKey, 1);
+        long isik = SharedPreference.getInstance(mContext).GetirLong(Veritabani.BildirimIsigiKey, 1);
         switch ((int) isik){
             case 1:
                 mBuilder.setLights(Color.WHITE, 3000, 3000);
@@ -345,10 +343,10 @@ public class BildirimClass {
                 break;
         }
         Uri bildirimSesi = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (!sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("")){
-            bildirimSesi = Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, ""));
+        if (!SharedPreference.getInstance(mContext).GetirString(Veritabani.BildirimTonuKey, "").equals("")){
+            bildirimSesi = Uri.parse(SharedPreference.getInstance(mContext).GetirString(Veritabani.BildirimTonuKey, ""));
         }
-        if (sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true)){
+        if (SharedPreference.getInstance(mContext).GetirBoolean(Veritabani.BildirimSesiKey, true)){
             mBuilder.setSound(bildirimSesi);
         }
         notification = mBuilder.build();

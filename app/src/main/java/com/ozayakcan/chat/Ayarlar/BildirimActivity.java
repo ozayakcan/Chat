@@ -31,8 +31,6 @@ import java.util.HashMap;
 
 public class BildirimActivity extends KullaniciAppCompatActivity {
 
-    private SharedPreference sharedPreference;
-
     private SwitchCompat bildirimDurumuSwitch, bildirimSesiSwitch, bildirimOncelikSwitch;
 
     private TextView tonText, titresimText, isikText;
@@ -45,36 +43,35 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
 
-        sharedPreference = new SharedPreference(BildirimActivity.this);
         // Bildirim
         bildirimDurumuSwitch = findViewById(R.id.bildirimDurumuSwitch);
-        bildirimDurumuSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimDurumuKey, true));
+        bildirimDurumuSwitch.setChecked(SharedPreference.getInstance(BildirimActivity.this).GetirBoolean(Veritabani.BildirimDurumuKey, true));
         RelativeLayout bildirimDurumu = findViewById(R.id.bildirimDurumu);
         bildirimDurumu.setOnClickListener(v -> BildirimDurumu());
         // Ses
         bildirimSesiSwitch = findViewById(R.id.bildirimSesiSwitch);
-        bildirimSesiSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimSesiKey, true));
+        bildirimSesiSwitch.setChecked(SharedPreference.getInstance(BildirimActivity.this).GetirBoolean(Veritabani.BildirimSesiKey, true));
         RelativeLayout bildirimSesi = findViewById(R.id.bildirimSesi);
         bildirimSesi.setOnClickListener(v -> BildirimSesi());
         // Bildirim Sesi
         LinearLayout bildirimTon = findViewById(R.id.bildirimTon);
         tonText = findViewById(R.id.tonText);
-        BildirimSesiGoster(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "")));
+        BildirimSesiGoster(SharedPreference.getInstance(BildirimActivity.this).GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(SharedPreference.getInstance(BildirimActivity.this).GetirString(Veritabani.BildirimTonuKey, "")));
         bildirimTon.setOnClickListener(v -> BildirimSesiDegistir());
         // Titreşim
         LinearLayout bildirimTitresim = findViewById(R.id.bildirimTitresim);
         titresimText = findViewById(R.id.titresimText);
-        YaziDegistir((int) sharedPreference.GetirLong(Veritabani.BildirimTitresimKey, 0), titresimText, R.array.titresim_ayarlari);
+        YaziDegistir((int) SharedPreference.getInstance(BildirimActivity.this).GetirLong(Veritabani.BildirimTitresimKey, 0), titresimText, R.array.titresim_ayarlari);
         bildirimTitresim.setOnClickListener(v -> Diyalog(R.string.vibration, R.array.titresim_ayarlari, Veritabani.BildirimTitresimKey, titresimText));
         // Işık
         LinearLayout bildirimIsik = findViewById(R.id.bildirimIsik);
         isikText = findViewById(R.id.isikText);
-        YaziDegistir((int) sharedPreference.GetirLong(Veritabani.BildirimIsigiKey, 1), isikText, R.array.bildirim_isigi);
+        YaziDegistir((int) SharedPreference.getInstance(BildirimActivity.this).GetirLong(Veritabani.BildirimIsigiKey, 1), isikText, R.array.bildirim_isigi);
         bildirimIsik.setOnClickListener(v -> Diyalog(R.string.light, R.array.bildirim_isigi, Veritabani.BildirimIsigiKey, isikText));
         // Öncelik
         bildirimOncelikSwitch = findViewById(R.id.bildirimOncelikSwitch);
-        bildirimOncelikSwitch.setChecked(sharedPreference.GetirBoolean(Veritabani.BildirimOncelikKey, true));
+        bildirimOncelikSwitch.setChecked(SharedPreference.getInstance(BildirimActivity.this).GetirBoolean(Veritabani.BildirimOncelikKey, true));
         RelativeLayout bildirimOncelik = findViewById(R.id.bildirimOncelik);
         bildirimOncelik.setOnClickListener(v -> BildirimOncelik());
     }
@@ -84,8 +81,8 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
         bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.notification_tone));
-        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, sharedPreference.GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(sharedPreference.GetirString(Veritabani.BildirimTonuKey, "")));
+        bildirimSesiIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, SharedPreference.getInstance(BildirimActivity.this).GetirString(Veritabani.BildirimTonuKey, "").equals("") ?
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(SharedPreference.getInstance(BildirimActivity.this).GetirString(Veritabani.BildirimTonuKey, "")));
         bildirimSesiActivityResult.launch(bildirimSesiIntent);
     }
     ActivityResultLauncher<Intent> bildirimSesiActivityResult = registerForActivityResult(
@@ -96,7 +93,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
                     if (veri != null){
                         Uri ses = veri.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                         if (ses != null){
-                            sharedPreference.KaydetString(Veritabani.BildirimTonuKey, ses.toString());
+                            SharedPreference.getInstance(BildirimActivity.this).KaydetString(Veritabani.BildirimTonuKey, ses.toString());
                             BildirimSesiGoster(ses);
                         }
                     }
@@ -124,7 +121,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         bildirimSwitch.setChecked(!bildirimSwitch.isChecked());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
         reference.keepSynced(true);
-        sharedPreference.KaydetBoolean(key, bildirimSwitch.isChecked());
+        SharedPreference.getInstance(BildirimActivity.this).KaydetBoolean(key, bildirimSwitch.isChecked());
         HashMap<String, Object> map = new HashMap<>();
         map.put(key, bildirimSwitch.isChecked());
         reference.updateChildren(map, (error, ref) -> {
@@ -157,7 +154,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
     private void Kaydet(int deger, String key) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber());
         reference.keepSynced(true);
-        sharedPreference.KaydetLong(key, deger);
+        SharedPreference.getInstance(BildirimActivity.this).KaydetLong(key, deger);
         HashMap<String, Object> map = new HashMap<>();
         map.put(key, deger);
         reference.updateChildren(map, (error, ref) -> {

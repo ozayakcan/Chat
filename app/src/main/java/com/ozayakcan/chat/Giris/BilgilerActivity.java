@@ -52,7 +52,6 @@ public class BilgilerActivity extends AppCompatActivity {
     private Button bitirBtn;
     private ResimlerClass resimlerClass;
     private Veritabani veritabani;
-    private SharedPreference sharedPreference;
     private Izinler izinler;
     FirebaseUser firebaseUser;
     private String resimBaglantisi = Veritabani.VarsayilanDeger;
@@ -66,7 +65,6 @@ public class BilgilerActivity extends AppCompatActivity {
         resimlerClass = new ResimlerClass(BilgilerActivity.this);
         izinler = new Izinler(BilgilerActivity.this);
         veritabani = new Veritabani(BilgilerActivity.this);
-        sharedPreference = new SharedPreference(BilgilerActivity.this);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         progressBarLayout = findViewById(R.id.progressBarLayout);
@@ -220,19 +218,19 @@ public class BilgilerActivity extends AppCompatActivity {
                     Kullanici kullaniciEkle = new Kullanici(firebaseUser.getUid(), isimET.getText().toString(), firebaseUser.getPhoneNumber(), Veritabani.VarsayilanHakkimdaYazisi(BilgilerActivity.this), true);
                     if (kullanici != null){
                         kullaniciEkle.setBildirimDurumu(kullanici.isBildirimDurumu());
-                        sharedPreference.KaydetBoolean(Veritabani.BildirimDurumuKey, kullanici.isBildirimDurumu());
+                        SharedPreference.getInstance(BilgilerActivity.this).KaydetBoolean(Veritabani.BildirimDurumuKey, kullanici.isBildirimDurumu());
 
                         kullaniciEkle.setBildirimSesi(kullanici.isBildirimSesi());
-                        sharedPreference.KaydetBoolean(Veritabani.BildirimSesiKey, kullanici.isBildirimSesi());
+                        SharedPreference.getInstance(BilgilerActivity.this).KaydetBoolean(Veritabani.BildirimSesiKey, kullanici.isBildirimSesi());
 
                         kullaniciEkle.setBildirimOncelik(kullanici.isBildirimOncelik());
-                        sharedPreference.KaydetBoolean(Veritabani.BildirimOncelikKey, kullanici.isBildirimOncelik());
+                        SharedPreference.getInstance(BilgilerActivity.this).KaydetBoolean(Veritabani.BildirimOncelikKey, kullanici.isBildirimOncelik());
 
                         kullaniciEkle.setBildirimTitresim(kullanici.getBildirimTitresim());
-                        sharedPreference.KaydetLong(Veritabani.BildirimTitresimKey, kullanici.getBildirimTitresim());
+                        SharedPreference.getInstance(BilgilerActivity.this).KaydetLong(Veritabani.BildirimTitresimKey, kullanici.getBildirimTitresim());
 
                         kullaniciEkle.setBildirimIsigi(kullanici.getBildirimIsigi());
-                        sharedPreference.KaydetLong(Veritabani.BildirimIsigiKey, kullanici.getBildirimIsigi());
+                        SharedPreference.getInstance(BilgilerActivity.this).KaydetLong(Veritabani.BildirimIsigiKey, kullanici.getBildirimIsigi());
                     }
                     HashMap<String, Object> map = veritabani.KayitHashMap(kullaniciEkle, kullanici == null);
                     databaseReference.updateChildren(map, (error, ref) -> {
@@ -256,7 +254,7 @@ public class BilgilerActivity extends AppCompatActivity {
     }
 
     private void Tamamlandi() {
-        sharedPreference.KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
+        SharedPreference.getInstance(BilgilerActivity.this).KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
         overridePendingTransition(0,0);
         startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
         finish();

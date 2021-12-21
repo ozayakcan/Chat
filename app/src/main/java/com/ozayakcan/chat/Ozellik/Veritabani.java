@@ -86,8 +86,7 @@ public class Veritabani {
     }
 
     public String TokenAl(){
-        SharedPreference sharedPreference = new SharedPreference(mContext);
-        return sharedPreference.GetirString(FCMTokenKey, "0");
+        return SharedPreference.getInstance(mContext).GetirString(FCMTokenKey, "0");
     }
 
     public void TokenKaydet(FirebaseUser firebaseUser, String token){
@@ -97,8 +96,7 @@ public class Veritabani {
         tokenMap.put(FCMTokenKey, token);
         reference.updateChildren(tokenMap, (error, ref) -> {
             if (error == null){
-                SharedPreference sharedPreference = new SharedPreference(mContext);
-                sharedPreference.KaydetString(FCMTokenKey, token);
+                SharedPreference.getInstance(mContext).KaydetString(FCMTokenKey, token);
             }
         });
     }

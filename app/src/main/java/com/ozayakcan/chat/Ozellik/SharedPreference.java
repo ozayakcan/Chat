@@ -18,6 +18,10 @@ public class SharedPreference {
 
     public SharedPreference(Context context) {mContext = context;}
 
+    public static SharedPreference getInstance(Context context){
+        return new SharedPreference(context);
+    }
+
     public void KaydetString(String key, String deger){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreference.edit();

@@ -27,8 +27,6 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class SSActivity extends AppCompatActivity {
 
-    private SharedPreference sharedPreference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +41,6 @@ public class SSActivity extends AppCompatActivity {
             firebaseAppCheck.installAppCheckProviderFactory(
                     SafetyNetAppCheckProviderFactory.getInstance());
         }
-        sharedPreference = new SharedPreference(SSActivity.this);
         KullaniciyiKontrolEt();
     }
 
@@ -63,7 +60,7 @@ public class SSActivity extends AppCompatActivity {
                         intent.putExtra(Veritabani.IsimKey, "");
                         startActivity(intent);
                     }else{
-                        if (sharedPreference.GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
+                        if (SharedPreference.getInstance(SSActivity.this).GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                             //Kaydedildi
                             startActivity(new Intent(SSActivity.this, MainActivity.class));
                         }else{

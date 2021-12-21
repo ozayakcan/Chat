@@ -34,7 +34,6 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
-import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
