@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Chat" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Chat" parent="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -18,17 +18,17 @@
     <style name="AltMenuStil" parent="Widget.Design.BottomSheet.Modal">
         <item name="background">@android:color/transparent</item>
     </style>
-    <style name="MenuStil" parent="Theme.AppCompat.Light">
+    <style name="MenuStil" parent="@style/Theme.MaterialComponents.Light.Bridge">
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/menu_arkaplan</item>
     </style>
-    <style name="EditTextThemeDefault" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="EditTextThemeDefault" parent="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorControlNormal">@color/black</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
-    <style name="SwitchCompatVarsayilan" parent="Theme.AppCompat.Light">
+    <style name="SwitchCompatVarsayilan" parent="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorSwitchThumbNormal">@color/colorSecondary</item>
         <item name="android:colorForeground">@color/colorSecondary</item>
