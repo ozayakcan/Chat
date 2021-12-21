@@ -49,7 +49,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
     private String telefonString;
     private String tabloString = Veritabani.MesajTablosu;
-    private Veritabani veritabani;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
     private DatabaseReference kisiBilgileriRef;
@@ -66,7 +65,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mesaj);
-        ResimlerClass resimlerClass = new ResimlerClass(MesajActivity.this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null){
@@ -75,8 +73,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> Geri());
-
-        veritabani = new Veritabani(MesajActivity.this);
 
         View view = findViewById(R.id.constraintLayout);
         view.post(() -> klavyePopup.Baslat());
@@ -95,7 +91,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             }else{
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
                 gonderText.requestFocus();
-                Metinler.KlavyeAc(MesajActivity.this);
+                Metinler.getInstance(MesajActivity.this).KlavyeAc();
             }
         }
         mesajlarRW = findViewById(R.id.mesajlarRW);
@@ -119,7 +115,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         TextView kisiBasHarfi = findViewById(R.id.kisiBasHarfi);
         TextView isim = findViewById(R.id.isim);
         durum = findViewById(R.id.durum);
-        resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
+        ResimlerClass.getInstance(MesajActivity.this).ResimGoster(profilResmiString, profilResmi, R.drawable.varsayilan_arkaplan);
         if (profilResmiString.equals(Veritabani.VarsayilanDeger)){
             if (isimString.equals("")){
                 kisiBasHarfi.setText("#");
@@ -350,7 +346,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             mesajList.add(mesajClass);
             mesajAdapter.notifyDataSetChanged();
             mesajlarRW.scrollToPosition(mesajList.size() - 1);
-            veritabani.MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
+            Veritabani.getInstance(MesajActivity.this).MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
         }else{
             Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();

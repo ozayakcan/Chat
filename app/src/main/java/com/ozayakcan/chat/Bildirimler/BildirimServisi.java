@@ -32,8 +32,7 @@ public class BildirimServisi extends FirebaseMessagingService {
         Log.e(TAG, "Yeni token oluşturuldu.");
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null){
-            Veritabani veritabani = new Veritabani(getApplicationContext());
-            veritabani.TokenKaydet(firebaseUser, s);
+            Veritabani.getInstance(getApplicationContext()).TokenKaydet(firebaseUser, s);
         }
     }
     @Override

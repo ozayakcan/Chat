@@ -15,6 +15,10 @@ public class Izinler {
 
     public Izinler(Context context) {mContext = context;}
 
+    public static Izinler getInstance(Context context){
+        return new Izinler(context);
+    }
+
     public boolean KontrolEt(String izin){
         return ContextCompat.checkSelfPermission(mContext, izin) == PackageManager.PERMISSION_GRANTED;
     }

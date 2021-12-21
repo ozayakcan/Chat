@@ -26,7 +26,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHolder> {
 
-    private ResimlerClass resimlerClass;
     List<Mesajlar> mesajlarList;
     private final MainActivity mainActivity;
     private final ArsivActivity arsivActivity;
@@ -49,7 +48,6 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
     @Override
     public MesajlarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.mesaj_listesi, parent, false);
-        resimlerClass = new ResimlerClass(mContext);
         return new ViewHolder(view);
     }
 
@@ -83,7 +81,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 : mesajlar.getMesaj().getMesajDurumu() == Veritabani.MesajDurumuGonderildi
                 ? View.VISIBLE : View.GONE : View.VISIBLE);
         if (!mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            resimlerClass.ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
+            ResimlerClass.getInstance(mContext).ResimGoster(mesajlar.getKullanici().getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
         holder.kisiBasHarfi.setText(mesajlar.getKullanici().getProfilResmi().equals(Veritabani.VarsayilanDeger)
                 ? mesajlar.getIsim().equals("")
@@ -121,7 +119,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
                 }
             }
         });
-        holder.profilResmiLayout.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), mesajlar.getKullanici().getProfilResmi()));
+        holder.profilResmiLayout.setOnClickListener(v -> ResimlerClass.getInstance(mContext).ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), mesajlar.getKullanici().getProfilResmi()));
     }
 
     @Override

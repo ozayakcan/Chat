@@ -44,8 +44,6 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
     private RelativeLayout profilResmiLayout, isimLayout, hakkimdaLayout;
     private CircleImageView profilResmi, kamera;
     private TextView isimText, hakkimdaText, telefonText;
-    private Izinler izinler;
-    private ResimlerClass resimlerClass;
     private LinearLayout progressBarLayout;
 
     private String profilResmiString;
@@ -57,8 +55,6 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
-        resimlerClass = new ResimlerClass(this);
-        izinler = new Izinler(this);
 
         profilResmiLayout = findViewById(R.id.profilResmiLayout);
         profilResmi = findViewById(R.id.profilResmi);
@@ -70,8 +66,8 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         Intent intent = getIntent();
         profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
 
-        profilResmi.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule("", profilResmiString));
-        kamera.setOnClickListener(v -> resimlerClass.ProfilResmiDegistir(firebaseUser, profilResmiString, profilResmi, resimYukleActivityResult, kameraIzniResultLauncher, dosyaIzniResultLauncher));
+        profilResmi.setOnClickListener(v -> ResimlerClass.getInstance(ProfilActivity.this).ProfilResmiGoruntule("", profilResmiString));
+        kamera.setOnClickListener(v -> ResimlerClass.getInstance(ProfilActivity.this).ProfilResmiDegistir(firebaseUser, profilResmiString, profilResmi, resimYukleActivityResult, kameraIzniResultLauncher, dosyaIzniResultLauncher));
 
         String isimString = intent.getStringExtra(Veritabani.IsimKey);
         isimText.setText(isimString);
@@ -79,7 +75,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         hakkimdaText.setText(hakkimdaString);
         String telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         telefonText.setText(telefonString);
-        resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+        ResimlerClass.getInstance(ProfilActivity.this).ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
 
         BilgiDegistirPenceresiTanimlari();
 
@@ -148,7 +144,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         TextView iptalBtn = acilirmenu.findViewById(R.id.iptalBtn);
         TextView kaydetBtn = acilirmenu.findViewById(R.id.kaydetBtn);
         iptalBtn.setOnClickListener(v -> {
-            Metinler.KlavyeKapat(getApplicationContext(), acilirMenuEditText);
+            Metinler.getInstance(getApplicationContext()).KlavyeKapat(acilirMenuEditText);
             acilirMenuDialog.dismiss();
         });
         kaydetBtn.setOnClickListener(v -> {
@@ -156,7 +152,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         });
         acilirMenuDialog.show();
         acilirMenuEditText.selectAll();
-        Metinler.KlavyeAc(getApplicationContext());
+        Metinler.getInstance(getApplicationContext()).KlavyeAc();
     }
 
     private void Kaydet(int degistirilecekBilgi) {
@@ -182,7 +178,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             guncelle.putExtra(finalVeri, acilirMenuEditText.getText().toString());
             LocalBroadcastManager.getInstance(ProfilActivity.this).sendBroadcast(guncelle);
             acilirMenuProgressBar.setVisibility(View.GONE);
-            Metinler.KlavyeKapat(getApplicationContext(), acilirMenuEditText);
+            Metinler.getInstance(getApplicationContext()).KlavyeKapat(acilirMenuEditText);
             acilirMenuDialog.dismiss();
             if (degistirilecekBilgi == DEGISTIRILECEK_ISIM){
                 isimText.setText(acilirMenuEditText.getText().toString());
@@ -204,10 +200,10 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             });
 
     private void KameraIzniVerildi(){
-        resimlerClass.KameradanYukle(resimYukleActivityResult);
+        ResimlerClass.getInstance(ProfilActivity.this).KameradanYukle(resimYukleActivityResult);
     }
     private void KameraIzniVerilmedi(){
-        izinler.ZorunluIzinUyariKutusu(Manifest.permission.CAMERA, kameraIzniResultLauncher);
+        Izinler.getInstance(ProfilActivity.this).ZorunluIzinUyariKutusu(Manifest.permission.CAMERA, kameraIzniResultLauncher);
     }
     ActivityResultLauncher<String> dosyaIzniResultLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
@@ -219,10 +215,10 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
                 }
             });
     private void DosyaIzniVerildi(){
-        resimlerClass.GaleridenYukle(resimYukleActivityResult);
+        ResimlerClass.getInstance(ProfilActivity.this).GaleridenYukle(resimYukleActivityResult);
     }
     private void DosyaIzniVerilmedi(){
-        izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
+        Izinler.getInstance(ProfilActivity.this).ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
     }
     ActivityResultLauncher<Intent> resimYukleActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -231,7 +227,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
                     Intent intent = result.getData();
                     if (intent != null){
                         Uri sonuc = intent.getData();
-                        resimlerClass.ResimKirp(sonuc);
+                        ResimlerClass.getInstance(ProfilActivity.this).ResimKirp(sonuc);
                     }else{
                         Toast.makeText(ProfilActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                     }
@@ -243,7 +239,7 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                resimlerClass.ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
+                ResimlerClass.getInstance(ProfilActivity.this).ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
                     @Override
                     public void Basarili(String resimUrl) {
                         profilResmiString = resimUrl;

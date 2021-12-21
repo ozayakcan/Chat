@@ -47,7 +47,6 @@ public class MesajlarFragment extends Fragment {
     public List<Mesajlar> mesajlarList;
     private RecyclerView mesajlarRW;
     public MesajlarAdapter mesajlarAdapter;
-    private Veritabani veritabani;
     private final MainActivity mainActivity;
     private final ArsivActivity arsivActivity;
     private final Context mContext;
@@ -74,7 +73,6 @@ public class MesajlarFragment extends Fragment {
     }
     public void Init(){
         mesajlarList = new ArrayList<>();
-        veritabani = new Veritabani(mContext);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

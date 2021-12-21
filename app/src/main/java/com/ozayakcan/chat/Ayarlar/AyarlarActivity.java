@@ -33,7 +33,6 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
     private LinearLayout profilLayout;
     private CircleImageView profilResmi;
     private TextView isim, hakkimda;
-    private ResimlerClass resimlerClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
         profilResmi = findViewById(R.id.profilResmi);
         isim = findViewById(R.id.isim);
         hakkimda = findViewById(R.id.hakkimda);
-        resimlerClass = new ResimlerClass(this);
         BilgileriGoruntule();
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.IsimKey);
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.HakkimdaKey);
@@ -83,7 +81,7 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
                 }
                 isim.setText(kullanici.getIsim());
                 hakkimda.setText(kullanici.getHakkimda());
-                resimlerClass.ResimGoster(kullanici.getProfilResmi(), profilResmi, R.drawable.ic_profil_resmi);
+                ResimlerClass.getInstance(AyarlarActivity.this).ResimGoster(kullanici.getProfilResmi(), profilResmi, R.drawable.ic_profil_resmi);
                 profilLayout.setOnClickListener(v -> {
                     Intent intent = new Intent(AyarlarActivity.this, ProfilActivity.class);
                     intent.putExtra(Veritabani.IsimKey, kullanici.getIsim());
@@ -115,7 +113,7 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
                 }
             }else if (intent.getAction().equals(Veritabani.ProfilResmiKey)){
                 if (intent.getStringExtra(Veritabani.ProfilResmiKey) != null && !intent.getStringExtra(Veritabani.ProfilResmiKey).equals("")){
-                    resimlerClass.ResimGoster(intent.getStringExtra(Veritabani.ProfilResmiKey), profilResmi, R.drawable.ic_profil_resmi);
+                    ResimlerClass.getInstance(AyarlarActivity.this).ResimGoster(intent.getStringExtra(Veritabani.ProfilResmiKey), profilResmi, R.drawable.ic_profil_resmi);
                 }
             }
         }

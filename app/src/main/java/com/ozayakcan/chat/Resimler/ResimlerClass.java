@@ -41,6 +41,10 @@ public class ResimlerClass {
 
     public ResimlerClass(Context context) {mContext = context;}
 
+    public static ResimlerClass getInstance(Context context){
+        return new ResimlerClass(context);
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     public void ResimGoster(String resim, ImageView resimIW, int varsayilanResimID){
         Picasso.get().load(resim).networkPolicy(NetworkPolicy.OFFLINE).error(varsayilanResimID).into(resimIW, new Callback() {
@@ -110,22 +114,21 @@ public class ResimlerClass {
                                     ActivityResultLauncher<Intent> activityResultLauncher,
                                     ActivityResultLauncher<String> kameraIzniResultLauncher,
                                     ActivityResultLauncher<String> dosyaIzniResultLauncher) {
-        Izinler izinler = new Izinler(mContext);
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext, R.style.AltMenuTema);
         View altMenuView = LayoutInflater.from(mContext).inflate(R.layout.layout_resim_sec, (LinearLayout) ((Activity) mContext).findViewById(R.id.altMenuLayout));
         altMenuView.findViewById(R.id.resimCek).setOnClickListener(v -> {
-            if (izinler.KontrolEt(Manifest.permission.CAMERA)){
+            if (Izinler.getInstance(mContext).KontrolEt(Manifest.permission.CAMERA)){
                 KameradanYukle(activityResultLauncher);
             }else{
-                izinler.Sor(Manifest.permission.CAMERA, kameraIzniResultLauncher);
+                Izinler.getInstance(mContext).Sor(Manifest.permission.CAMERA, kameraIzniResultLauncher);
             }
             bottomSheetDialog.dismiss();
         });
         altMenuView.findViewById(R.id.galeridenSec).setOnClickListener(v -> {
-            if (izinler.KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            if (Izinler.getInstance(mContext).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
                 GaleridenYukle(activityResultLauncher);
             }else{
-                izinler.Sor(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
+                Izinler.getInstance(mContext).Sor(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
             }
             bottomSheetDialog.dismiss();
         });

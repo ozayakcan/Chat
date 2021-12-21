@@ -55,7 +55,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         holder.mesajText.setMovementMethod(BetterLinkMovementMethod.newInstance());
         Linkify.addLinks(holder.mesajText, Linkify.ALL);
         BetterLinkMovementMethod.linkify(Linkify.ALL, holder.mesajText).setOnLinkLongClickListener((textView, url) -> {
-            Metinler.PanoyaKopyala(mContext, url);
+            Metinler.getInstance(mContext).PanoyaKopyala(url);
             return true;
         });
         holder.saat.setText(DateFormat.format("HH:mm", mesaj.getTarih()).toString());

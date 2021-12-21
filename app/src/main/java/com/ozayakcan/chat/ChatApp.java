@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.text.format.DateFormat;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -40,9 +39,8 @@ public class ChatApp extends Application {
         Picasso.setSingletonInstance(build);
         appContext = getApplicationContext();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Veritabani veritabani = new Veritabani(appContext);
         if (firebaseUser != null){
-            veritabani.DurumKontrol(firebaseUser);
+            Veritabani.getInstance(appContext).DurumKontrol(firebaseUser);
         }
     }
 

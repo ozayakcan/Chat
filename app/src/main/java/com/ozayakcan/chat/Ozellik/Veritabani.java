@@ -71,6 +71,10 @@ public class Veritabani {
         mContext = context;
     }
 
+    public static Veritabani getInstance(Context context){
+        return new Veritabani(context);
+    }
+
     public void TokenYenile(){
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {

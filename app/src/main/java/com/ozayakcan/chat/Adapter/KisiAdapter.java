@@ -23,7 +23,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
 
-    private ResimlerClass resimlerClass;
     List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
     private final Context mContext;
@@ -38,7 +37,6 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
     @Override
     public KisiAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.kisi_listesi, parent, false);
-        resimlerClass = new ResimlerClass(mContext);
         return new ViewHolder(view);
     }
 
@@ -48,12 +46,12 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         holder.kisiAdi.setText(kullanici.getIsim());
         holder.kisiHakkinda.setText(kullanici.getHakkimda());
         if (!kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)){
-            resimlerClass.ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
+            ResimlerClass.getInstance(mContext).ResimGoster(kullanici.getProfilResmi(), holder.profilResmi, R.drawable.varsayilan_arkaplan);
         }
         holder.kisiBasHarfi.setText(kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)
                 ? String.valueOf(kullanici.getIsim().charAt(0)) : "");
         holder.kisiBilgileriLayout.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
-        holder.profilResmiLayout.setOnClickListener(v -> resimlerClass.ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), kullanici.getProfilResmi()));
+        holder.profilResmiLayout.setOnClickListener(v -> ResimlerClass.getInstance(mContext).ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), kullanici.getProfilResmi()));
     }
 
     @Override

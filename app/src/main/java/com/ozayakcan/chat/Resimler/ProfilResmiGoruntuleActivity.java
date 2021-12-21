@@ -33,9 +33,8 @@ public class ProfilResmiGoruntuleActivity extends KullaniciActivity {
         profilResmiLayout.getLayoutParams().height = (int) Math.round(boyut);
         profilResmiLayout.requestLayout();
         baslik.setText(isimString);
-        ResimlerClass resimlerClass = new ResimlerClass(this);
         if (!profilResmiString.equals(Veritabani.VarsayilanDeger)){
-            resimlerClass.ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+            ResimlerClass.getInstance(ProfilResmiGoruntuleActivity.this).ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
         }
     }
 }

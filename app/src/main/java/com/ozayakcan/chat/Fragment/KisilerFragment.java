@@ -33,8 +33,6 @@ import java.util.List;
 
 public class KisilerFragment extends Fragment {
 
-    private Izinler izinler;
-    private Veritabani veritabani;
     private FirebaseUser firebaseUser;
     private LinearLayout progressBarLayout;
     private RecyclerView kisilerRW;
@@ -50,24 +48,22 @@ public class KisilerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kisiler, container, false);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        izinler = new Izinler(getContext());
-        veritabani = new Veritabani(getContext());
         progressBarLayout = view.findViewById(R.id.progressBarLayout);
         kisilerRW = view.findViewById(R.id.kisilerRW);
         kisilerRW.setHasFixedSize(true);
         kisilerRW.setLayoutManager(new LinearLayoutManager(getActivity()));
         kullaniciList = new ArrayList<>();
-        if (izinler.KontrolEt(Manifest.permission.READ_CONTACTS)){
+        if (Izinler.getInstance(getContext()).KontrolEt(Manifest.permission.READ_CONTACTS)){
             KisileriGoster();
         }else{
-            izinler.Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
+            Izinler.getInstance(getContext()).Sor(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
         }
         return view;
     }
 
     public void KisileriYenile() {
         progressBarLayout.setVisibility(View.VISIBLE);
-        veritabani.KisileriEkle(firebaseUser, () -> {
+        Veritabani.getInstance(getContext()).KisileriEkle(firebaseUser, () -> {
             progressBarLayout.setVisibility(View.GONE);
             KisileriGoster();
         });
@@ -110,6 +106,6 @@ public class KisilerFragment extends Fragment {
             });
 
     private void KisiIzniUyariKutusu() {
-        izinler.ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
+        Izinler.getInstance(getContext()).ZorunluIzinUyariKutusu(Manifest.permission.READ_CONTACTS, kisiIzniResultLauncher);
     }
 }

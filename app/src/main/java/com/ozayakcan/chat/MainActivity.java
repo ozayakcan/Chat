@@ -33,7 +33,6 @@ public class MainActivity extends KullaniciAppCompatActivity {
     TabLayout tabLayout;
     MesajlarFragment mesajlarFragment;
     KisilerFragment kisilerFragment;
-    Veritabani veritabani;
     TextView baslik;
 
     @Override
@@ -49,8 +48,7 @@ public class MainActivity extends KullaniciAppCompatActivity {
         baslik = findViewById(R.id.baslik);
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
-        veritabani = new Veritabani(MainActivity.this);
-        veritabani.TokenYenile();
+        Veritabani.getInstance(MainActivity.this).TokenYenile();
         BildirimClass.MesajBildiriminiKaldir(MainActivity.this);
         mesajlarFragment = new MesajlarFragment(MainActivity.this);
         kisilerFragment = new KisilerFragment(MainActivity.this);
