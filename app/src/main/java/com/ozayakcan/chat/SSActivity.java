@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,13 +33,12 @@ public class SSActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        if (BuildConfig.DEBUG){
+        /*if (BuildConfig.DEBUG){
             firebaseAppCheck.installAppCheckProviderFactory(
                     DebugAppCheckProviderFactory.getInstance());
-        }else{
-            firebaseAppCheck.installAppCheckProviderFactory(
-                    SafetyNetAppCheckProviderFactory.getInstance());
-        }
+        }*/
+        firebaseAppCheck.installAppCheckProviderFactory(
+        SafetyNetAppCheckProviderFactory.getInstance());
         KullaniciyiKontrolEt();
     }
 
