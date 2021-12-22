@@ -82,7 +82,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
             mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
             return true;
         });
-        holder.mesajIcerikLayout.setOnLongClickListener(v -> {
+        holder.mesajText.setOnLongClickListener(v -> {
             mesaj.setSecildi(!mesaj.isSecildi());
             ArkaplaniDegistir(holder, mesaj.isSecildi());
             mesajActivity.MesajBasiliTut(true);
@@ -96,7 +96,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
                 mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
             }
         });
-        holder.mesajIcerikLayout.setOnClickListener(v -> {
+        holder.mesajText.setOnClickListener(v -> {
             if (mesajActivity.MesajSecildi){
                 mesaj.setSecildi(!mesaj.isSecildi());
                 ArkaplaniDegistir(holder, mesaj.isSecildi());
