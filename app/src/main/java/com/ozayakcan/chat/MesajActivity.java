@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +29,7 @@ import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
@@ -39,6 +42,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajActivity extends KullaniciAppCompatActivity {
+
+    private Toolbar toolbar;
+    private RelativeLayout kisiBaslik;
+    private TextView secilenMesaj;
 
     private RecyclerView mesajlarRW;
     private TextView gonderText, altUyari;
@@ -65,14 +72,11 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mesaj);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setTitle("");
-        }
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.geri_butonu);
         toolbar.setNavigationOnClickListener(view -> Geri());
+        kisiBaslik = findViewById(R.id.kisiBaslik);
+        secilenMesaj = findViewById(R.id.secilenMesaj);
 
         View view = findViewById(R.id.constraintLayout);
         view.post(() -> klavyePopup.Baslat());
@@ -417,20 +421,102 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
         }
     };
-    private void Geri(){
-        MesajlariGuncelle(false);
-        KisiBilgileriniGoster(false);
-        KisininOnlineDurumunuGuncelle(false);
-        Intent intent;
-        if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
-            intent = new Intent(MesajActivity.this, ArsivActivity.class);
+
+    public boolean MesajSecildi = false;
+    public void MesajBasiliTut(boolean secildi){
+        if (secildi){
+            kisiBaslik.setVisibility(View.GONE);
+            secilenMesaj.setVisibility(View.VISIBLE);
+            toolbar.setNavigationOnClickListener(v -> MesajBasiliTut(false));
+            toolbar.getMenu().clear();
+            toolbar.inflateMenu(R.menu.mesaj_islev);
+            toolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menuSil){
+                    List<Integer> mesajSirasi = new ArrayList<>();
+                    for (int i = 0; i < mesajList.size(); i++) {
+                        Mesaj mesaj = mesajList.get(i);
+                        if (mesaj.isSecildi()) {
+                            mesajSirasi.add(i);
+                        }
+                    }
+                    MesajlariSil(mesajSirasi);
+                }
+                return false;
+            });
         }else{
-            intent = new Intent(MesajActivity.this, MainActivity.class);
+            MesajMenusu();
+            SecilenMesajSayisi = 0;
+            for (int i = 0; i < mesajList.size(); i++) {
+                Mesaj mesaj = mesajList.get(i);
+                if (mesaj.isSecildi()) {
+                    mesajList.get(i).setSecildi(false);
+                    mesajAdapter.notifyItemChanged(i);
+                }
+            }
         }
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
-        overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
-        finish();
+        MesajSecildi = secildi;
+    }
+
+    private int SecilenMesajSayisi = 0;
+    public void SecilenMesajSayisiniGoster(boolean arttir) {
+        if (arttir){
+            SecilenMesajSayisi++;
+        }else{
+            SecilenMesajSayisi--;
+        }
+        if (SecilenMesajSayisi > 0){
+            kisiBaslik.setVisibility(View.GONE);
+            secilenMesaj.setVisibility(View.VISIBLE);
+            secilenMesaj.setText(String.valueOf(SecilenMesajSayisi));
+        }else{
+            MesajBasiliTut(false);
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void MesajlariSil(List<Integer> mesajSirasi){
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MesajActivity.this);
+        builder.setCancelable(true);
+        builder.setTitle(R.string.delete_messages);
+        builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            for (int sira : mesajSirasi){
+                MesajFonksiyonlari.getInstance(MesajActivity.this).MesajSil(telefonString, getirilecekMesaj, sira);
+                mesajList.remove(sira);
+            }
+            mesajAdapter.notifyDataSetChanged();
+            MesajBasiliTut(false);
+        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void MesajMenusu() {
+        toolbar.setNavigationOnClickListener(v -> Geri());
+        toolbar.getMenu().clear();
+        secilenMesaj.setVisibility(View.GONE);
+        kisiBaslik.setVisibility(View.VISIBLE);
+    }
+
+    private void Geri(){
+        if (MesajSecildi){
+            MesajBasiliTut(false);
+        }else{
+            MesajlariGuncelle(false);
+            KisiBilgileriniGoster(false);
+            KisininOnlineDurumunuGuncelle(false);
+            Intent intent;
+            if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
+                intent = new Intent(MesajActivity.this, ArsivActivity.class);
+            }else{
+                intent = new Intent(MesajActivity.this, MainActivity.class);
+            }
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+            overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
+            finish();
+        }
     }
     @Override
     public void onBackPressed() {

@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ozayakcan.chat.ChatApp;
@@ -30,9 +31,10 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     public static  final int MESAJ_TURU_SAG = 1;
     private final Context mContext;
     List<Mesaj> mesajList;
-
+    private MesajActivity mesajActivity;
 
     public MesajAdapter(MesajActivity mesajActivity, List<Mesaj> mesajList){
+        this.mesajActivity = mesajActivity;
         this.mContext = mesajActivity;
         this.mesajList = mesajList;
     }
@@ -43,7 +45,6 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         return new ViewHolder(LayoutInflater.from(mContext).inflate(viewType == MESAJ_TURU_SAG ? R.layout.mesaj_sag : R.layout.mesaj_sol, parent, false));
     }
 
-    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull MesajAdapter.ViewHolder holder, int position) {
         Mesaj mesaj = mesajList.get(position);
@@ -73,20 +74,52 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
                 ? View.VISIBLE
                 : mesaj.getMesajDurumu() == Veritabani.MesajDurumuGonderildi
                 ? View.VISIBLE : View.GONE : View.GONE);
+        ArkaplaniDegistir(holder, mesaj.isSecildi());
+        holder.mesajLayout.setOnLongClickListener(v -> {
+            mesaj.setSecildi(!mesaj.isSecildi());
+            ArkaplaniDegistir(holder, mesaj.isSecildi());
+            mesajActivity.MesajBasiliTut(true);
+            mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
+            return true;
+        });
+        holder.mesajIcerikLayout.setOnLongClickListener(v -> {
+            mesaj.setSecildi(!mesaj.isSecildi());
+            ArkaplaniDegistir(holder, mesaj.isSecildi());
+            mesajActivity.MesajBasiliTut(true);
+            mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
+            return true;
+        });
+        holder.mesajLayout.setOnClickListener(v -> {
+            if (mesajActivity.MesajSecildi){
+                mesaj.setSecildi(!mesaj.isSecildi());
+                ArkaplaniDegistir(holder, mesaj.isSecildi());
+                mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
+            }
+        });
+        holder.mesajIcerikLayout.setOnClickListener(v -> {
+            if (mesajActivity.MesajSecildi){
+                mesaj.setSecildi(!mesaj.isSecildi());
+                ArkaplaniDegistir(holder, mesaj.isSecildi());
+                mesajActivity.SecilenMesajSayisiniGoster(mesaj.isSecildi());
+            }
+        });
     }
-
+    private void ArkaplaniDegistir(ViewHolder holder,boolean ekle){
+        holder.mesajLayout.setBackground(ekle ? ContextCompat.getDrawable(mContext, R.drawable.mesaj_secimi_arkaplan) : null);
+    }
     @Override
     public int getItemCount() {
         return mesajList.size();
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout mesajLayout, tarihLayout, yeniMesajSayisiLayout;
+        RelativeLayout mesajLayout, mesajIcerikLayout, tarihLayout, yeniMesajSayisiLayout;
         TextView mesajText, saat, mesajDurumu, tarihText, yeniMesajSayisiText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mesajLayout = itemView.findViewById(R.id.mesajLayout);
+            mesajIcerikLayout = itemView.findViewById(R.id.mesajIcerikLayout);
             mesajText = itemView.findViewById(R.id.mesajText);
             saat = itemView.findViewById(R.id.saat);
             mesajDurumu = itemView.findViewById(R.id.mesajDurumu);

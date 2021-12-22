@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:padding="8dp">
+    android:background="@android:color/transparent">
     <RelativeLayout
         android:id="@+id/tarihLayout"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/mesaj_tarih"
-        android:layout_marginBottom="8dp"
         android:visibility="gone">
         <TextView
             android:id="@+id/tarihText"
@@ -30,10 +31,11 @@
         android:layout_height="30dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/tarihLayout"
         android:background="@drawable/mesaj_yeni_mesajlar"
-        android:layout_marginBottom="8dp"
         android:visibility="gone">
         <TextView
             android:id="@+id/yeniMesajSayisiText"
@@ -46,37 +48,48 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/mesajLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="5dp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/yeniMesajSayisiLayout"
-        android:background="@drawable/mesaj_arkaplan_sag">
-        <TextView
-            android:id="@+id/mesajText"
+        android:layout_below="@id/yeniMesajSayisiLayout">
+        <RelativeLayout
+            android:id="@+id/mesajIcerikLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="255dp"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:padding="8dp"/>
+            android:minHeight="30dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/mesaj_arkaplan_sag">
+            <TextView
+                android:id="@+id/mesajText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="255dp"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:padding="8dp"/>
+            <TextView
+                android:id="@+id/saat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/mesajText"
+                android:layout_alignBottom="@id/mesajText"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/saatYaziRengi"
+                android:textSize="12sp"
+                android:layout_marginEnd="3dp"/>
+        </RelativeLayout>
         <TextView
-            android:id="@+id/saat"
+            android:id="@+id/mesajDurumu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/mesajText"
-            android:layout_alignBottom="@id/mesajText"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/saatYaziRengi"
-            android:textSize="12sp"
-            android:layout_marginEnd="3dp"/>
+            android:layout_height="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_below="@id/mesajIcerikLayout"
+            android:layout_alignParentEnd="true"
+            android:textSize="11sp"
+            android:textColor="@color/black"
+            android:visibility="gone"/>
     </RelativeLayout>
-    <TextView
-        android:id="@+id/mesajDurumu"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_below="@id/mesajLayout"
-        android:layout_alignParentEnd="true"
-        android:textSize="11sp"
-        android:textColor="@color/black"
-        android:visibility="gone"/>
 </RelativeLayout>

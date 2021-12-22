@@ -59,11 +59,25 @@ public class MesajFonksiyonlari {
     public void MesajDuzenle(String kisi, List<Mesaj> mesajList){
         Gson gson = new Gson();
         String kaydedilecekMesaj = gson.toJson(mesajList);
-        kaydedilecekMesaj = kaydedilecekMesaj.replace("\"tarihGoster\":true", "\"tarihGoster\":false");
+        kaydedilecekMesaj = DegiskenleriDuzenle(kaydedilecekMesaj);
         SharedPreference.getInstance(mContext).KaydetStringOzel(KaydedilecekTur,kisi, kaydedilecekMesaj);
+    }
+    public void MesajDuzenle(String kisi, String duzenlenecekYer, List<Mesaj> mesajList){
+        Gson gson = new Gson();
+        String kaydedilecekMesaj = gson.toJson(mesajList);
+        kaydedilecekMesaj = DegiskenleriDuzenle(kaydedilecekMesaj);
+        SharedPreference.getInstance(mContext).KaydetStringOzel(duzenlenecekYer,kisi, kaydedilecekMesaj);
+    }
+    private String DegiskenleriDuzenle(String mesaj){
+        return mesaj.replace("\"tarihGoster\":true", "\"tarihGoster\":false").replace("\"secildi\":true", "\"secildi\":false");
     }
     public void MesajlariSil(String kisi, String silinecekYer){
         SharedPreference.getInstance(mContext).KaydetStringOzel(silinecekYer, kisi, "");
+    }
+    public void MesajSil(String kisi, String silinecekYer, int sira){
+        List<Mesaj> mesajlar = MesajlariGetir(kisi, silinecekYer);
+        mesajlar.remove(sira);
+        MesajDuzenle(kisi, silinecekYer, mesajlar);
     }
     public void MesajlarArsiv(String kisi, boolean arsivle){
         String arsivMesaj  = SharedPreference.getInstance(mContext).GetirStringOzel(KaydedilecekTurArsiv, kisi, "");

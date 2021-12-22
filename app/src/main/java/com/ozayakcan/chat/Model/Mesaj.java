@@ -12,6 +12,7 @@ public class Mesaj {
     boolean goruldu = false;
     boolean tarihGoster = false;
     int yeniMesajSayisi = 0;
+    boolean secildi = false;
 
     @SuppressWarnings("unused")
     public Mesaj() {
@@ -93,5 +94,13 @@ public class Mesaj {
 
     public void setYeniMesajSayisi(int yeniMesajSayisi) {
         this.yeniMesajSayisi = yeniMesajSayisi;
+    }
+
+    public boolean isSecildi() {
+        return secildi;
+    }
+
+    public void setSecildi(boolean secildi) {
+        this.secildi = secildi;
     }
 }

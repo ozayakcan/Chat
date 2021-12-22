@@ -23,6 +23,7 @@
             app:popupTheme="@style/MenuStil"
             app:contentInsetStartWithNavigation="0dp">
             <RelativeLayout
+                android:id="@+id/kisiBaslik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <RelativeLayout
@@ -68,6 +69,16 @@
                         android:textSize="13sp"/>
                 </LinearLayout>
             </RelativeLayout>
+            <TextView
+                android:id="@+id/secilenMesaj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:visibility="gone"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
