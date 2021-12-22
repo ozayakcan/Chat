@@ -102,4 +102,5 @@
     <string name="notification_tone">Bildirim Sesi</string>
     <string name="gizlilik">Gizlilik</string>
     <string name="gizlik_ayalarini_degistir">Gizlilik ayarlarını dğeiştir.</string>
+    <string name="more">Daha Fazla</string>
 </resources>
