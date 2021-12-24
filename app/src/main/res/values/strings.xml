@@ -105,4 +105,7 @@
     <string name="more">Daha Fazla</string>
     <string name="call">Ara</string>
     <string name="video_call">Görüntülü Ara</string>
+    <string name="speaker">Hoparlör</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="end_call">Aramayı Sonlandır</string>
 </resources>

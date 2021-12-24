@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
+import com.ozayakcan.chat.Arama.AramaActivity;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
@@ -59,7 +60,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private List<Mesaj> mesajList;
     private DatabaseReference kisiBilgileriRef;
     private DatabaseReference onlineDurumuRef;
-    private String idString;
+    private String idString, isimString, profilResmiString;
 
     private String getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
     private int KlavyeYuksekligi = 0;
@@ -82,9 +83,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
         Intent intent = getIntent();
         idString = intent.getStringExtra(Veritabani.IDKey);
-        String isimString = intent.getStringExtra(Veritabani.IsimKey);
+        isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
-        String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
+        profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
         gonderText = findViewById(R.id.gonderText);
         if (intentTabloString != null && !intentTabloString.equals("")){
@@ -500,7 +501,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.inflateMenu(R.menu.mesaj);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menuAra || item.getItemId() == R.id.menuGoruntuluAra){
-                //Arama Fonksiyonu Eklenecek
+                Veritabani.getInstance(MesajActivity.this).AramaActivityAc(idString, telefonString, isimString, profilResmiString, item.getItemId() == R.id.menuGoruntuluAra, true);
+                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
+                overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
             }
             return false;
         });

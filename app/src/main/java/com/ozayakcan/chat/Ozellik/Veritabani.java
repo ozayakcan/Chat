@@ -3,6 +3,7 @@ package com.ozayakcan.chat.Ozellik;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -18,10 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.ozayakcan.chat.Arama.AramaActivity;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.R;
 
 import java.util.HashMap;
 
@@ -60,6 +63,9 @@ public class Veritabani {
     public static long MesajDurumuGonderildi = 1;
     public static long MesajDurumuBendenSilindi = 3;
     public static long MesajDurumuHerkestenSilindi = 4;
+
+    public static String KameraKey = "kamera";
+    public static String AramaKey = "arama";
 
     public static String ProfilResmiDosyaAdi = "profil_resmi";
 
@@ -276,5 +282,16 @@ public class Veritabani {
             durumGuncelleMap.put(SonGorulmeKey, ServerValue.TIMESTAMP);
         }
         durumGuncelle.updateChildren(durumGuncelleMap);
+    }
+
+    public void AramaActivityAc(String idString, String telefonString, String isimString, String profilResmiString, boolean kamera, boolean arama){
+        Intent intent = new Intent(mContext, AramaActivity.class);
+        intent.putExtra(IDKey, idString);
+        intent.putExtra(TelefonKey, telefonString);
+        intent.putExtra(IsimKey, isimString);
+        intent.putExtra(ProfilResmiKey, profilResmiString);
+        intent.putExtra(KameraKey, kamera);
+        intent.putExtra(AramaKey, arama);
+        mContext.startActivity(intent);
     }
 }

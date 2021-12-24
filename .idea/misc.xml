@@ -7,6 +7,7 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/ic_baseline_mic_24.xml" value="0.1015625" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/ic_baseline_mic_off_24.xml" value="0.1015625" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/ic_baseline_notifications_24.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/ic_baseline_videocam_off_disabled_24.xml" value="0.10885416666666667" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/menu_arkaplan.xml" value="0.1015625" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/mesaj_arkaplan_sag.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/mesaj_arkaplan_sol.xml" value="0.1" />
@@ -17,11 +18,12 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/oval_arkaplan_transparan.xml" value="0.17567567567567569" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/oval_arkaplan_yesil.xml" value="0.1015625" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/secimler.xml" value="0.1125" />
-        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_arama.xml" value="0.20563847429519072" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_arama.xml" value="0.25" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_ayarlar.xml" value="0.22" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_bildirim.xml" value="0.25" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_mesaj.xml" value="0.25" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_profil_resmi_goruntule.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/fragment_mesajlar.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/mesaj_sag.xml" value="0.44813278008298757" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/mesaj_sol.xml" value="0.33" />

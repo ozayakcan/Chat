@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    android:animateLayoutChanges="true"
+    tools:context=".Arama.AramaActivity">
+
+    <ImageView
+        android:id="@+id/profilResmi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_profil_resmi"
+        android:contentDescription="@string/profile_picture" />
+    <LinearLayout
+        android:id="@+id/gelenArama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/yanitlaBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="6dp"
+                android:background="@drawable/oval_arkaplan_yesil"
+                android:src="@drawable/ic_baseline_call_24"
+                android:contentDescription="@string/call" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/reddetBtn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="6dp"
+                android:background="@drawable/oval_arkaplan_kirmizi"
+                android:src="@drawable/ic_baseline_call_end_24"
+                android:contentDescription="@string/end_call" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/altKisim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:baselineAligned="false"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/hoparlaruAcKapat"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_baseline_volume_up_24"
+                android:contentDescription="@string/speaker" />
+            <ImageView
+                android:id="@+id/kamerayiAcKapat"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_baseline_videocam_off_disabled_24"
+                android:contentDescription="@string/camera" />
+            <ImageView
+                android:id="@+id/sesiAcKapat"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_baseline_mic_24"
+                android:contentDescription="@string/microphone" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:gravity="end">
+            <ImageView
+                android:id="@+id/aramayiSonlandir"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/oval_arkaplan_kirmizi"
+                android:src="@drawable/ic_baseline_call_end_24"
+                android:contentDescription="@string/end_call" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
