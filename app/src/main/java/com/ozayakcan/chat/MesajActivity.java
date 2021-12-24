@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,7 +27,6 @@ import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
-import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
@@ -139,6 +136,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder());
         MesajlariGoster(0);
+        MesajMenusu();
     }
 
     private boolean YeniMesajlar(boolean temizle, int ekle) {
@@ -497,6 +495,13 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.getMenu().clear();
         secilenMesaj.setVisibility(View.GONE);
         kisiBaslik.setVisibility(View.VISIBLE);
+        toolbar.inflateMenu(R.menu.mesaj);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menuAra || item.getItemId() == R.id.menuGoruntuluAra){
+                //Arama Fonksiyonu Eklenecek
+            }
+            return false;
+        });
     }
 
     private void Geri(){

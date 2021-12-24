@@ -103,4 +103,6 @@
     <string name="gizlilik">Gizlilik</string>
     <string name="gizlik_ayalarini_degistir">Gizlilik ayarlarını dğeiştir.</string>
     <string name="more">Daha Fazla</string>
+    <string name="call">Ara</string>
+    <string name="video_call">Görüntülü Ara</string>
 </resources>
