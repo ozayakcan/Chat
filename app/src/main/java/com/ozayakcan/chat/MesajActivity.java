@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,7 +49,8 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private TextView secilenMesaj;
 
     private RecyclerView mesajlarRW;
-    private TextView gonderText, altUyari;
+    private EditText gonderText;
+    private TextView altUyari;
     private LinearLayout gonderBtnLayout, gonderTextLayout, kaydirBtnLayout;
     private TextView durum;
 
