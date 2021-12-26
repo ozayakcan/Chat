@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -66,11 +67,6 @@ public class BildirimClass {
     public static String MesajKey = "mesaj";
     public static String GorulduKey = "goruldu";
     public static String KisiKey = "kisi";
-    public static String KameraKey = "kamera";
-    public static String AramaKey = "arama";
-    public static String YanitlaKey = "yanitla";
-    public static String ReddetKey = "reddet";
-    public static String MesgulKey = "mesgul";
     public static int MesajBildirimiID = 1923;
     public static int MaxMesajSayisi = 7;
 
@@ -405,7 +401,7 @@ public class BildirimClass {
     }
     public static void MesajBildirimiYolla(String token, BildirimListener bildirimListener){
         RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
-        DataBildirimTuru data = new DataBildirimTuru(MesajKey);
+        DataMesaj data = new DataMesaj(MesajKey);
         Gonder gonder = new Gonder(data, token);
         retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
             @Override
@@ -438,7 +434,7 @@ public class BildirimClass {
     }
     public void GorulduBildirimiYolla(String token, String kisi, String ben){
         RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
-        DataKisi data = new DataKisi(GorulduKey, ben);
+        DataGoruldu data = new DataGoruldu(GorulduKey, ben);
         Gonder gonder = new Gonder(data, token);
         retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
             @Override
@@ -463,60 +459,5 @@ public class BildirimClass {
             }
             MesajFonksiyonlari.getInstance(mContext).MesajDuzenle(kisi, mesajList);
         }
-    }
-
-    public void Arama(FirebaseUser firebaseUser,String bildirimTuru, String kisi, boolean Kamera){
-        DatabaseReference kisiyiBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(kisi);
-        kisiyiBul.keepSynced(true);
-        kisiyiBul.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                if (bildirimTuru.equals(AramaKey)){
-                    if (kisi.equals(ChatApp.AramaKisisiniBul())){
-                        BildirimClass.AramaBildirimYolla(kullanici.getFcmToken(), firebaseUser.getPhoneNumber(), BildirimClass.MesgulKey, "0", new BildirimClass.BildirimListener() {
-                            @Override
-                            public void Gonderildi() {
-
-                            }
-
-                            @Override
-                            public void Gonderilmedi() {
-
-                            }
-                        });
-                    }else{
-                        Veritabani.getInstance(mContext).AramaActivityAc(kullanici.getID(), kullanici.getFcmToken(), kullanici.getTelefon(), "", kullanici.getProfilResmi(), Kamera, false);
-                    }
-                }else{
-                    Intent intent = new Intent(bildirimTuru);
-                    intent.putExtra(KisiKey, kisi);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public static void AramaBildirimYolla(String token, String kisi, String durum, String kamera, BildirimListener bildirimListener){
-        RetrofitAyarlari retrofitAyarlari = RetrofitClient.getClient(FCM_URL).create(RetrofitAyarlari.class);
-        DataArama data = new DataArama(durum, kisi, kamera);
-        Gonder gonder = new Gonder(data, token);
-        retrofitAyarlari.bildirimGonder(gonder).enqueue(new Callback<Sonuc>() {
-            @Override
-            public void onResponse(@NonNull Call<Sonuc> call, @NonNull Response<Sonuc> response) {
-                bildirimListener.Gonderildi();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Sonuc> call, @NonNull Throwable t) {
-                bildirimListener.Gonderilmedi();
-            }
-        });
     }
 }

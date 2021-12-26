@@ -1,13 +1,13 @@
 package com.ozayakcan.chat.Bildirimler;
 
-public class DataBildirimTuru {
+public class DataMesaj {
     private String bildirimTuru;
 
     @SuppressWarnings("unused")
-    public DataBildirimTuru() {
+    public DataMesaj() {
     }
 
-    public DataBildirimTuru(String bildirimTuru) {
+    public DataMesaj(String bildirimTuru) {
         this.bildirimTuru = bildirimTuru;
     }
 

@@ -4,10 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Model.Mesajlar;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
@@ -46,8 +48,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private TextView secilenMesaj;
 
     private RecyclerView mesajlarRW;
-    private EditText gonderText;
-    private TextView altUyari;
+    private TextView gonderText, altUyari;
     private LinearLayout gonderBtnLayout, gonderTextLayout, kaydirBtnLayout;
     private TextView durum;
 
@@ -59,7 +60,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private List<Mesaj> mesajList;
     private DatabaseReference kisiBilgileriRef;
     private DatabaseReference onlineDurumuRef;
-    private String idString, isimString, profilResmiString;
+    private String idString;
 
     private String getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
     private int KlavyeYuksekligi = 0;
@@ -82,9 +83,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
         Intent intent = getIntent();
         idString = intent.getStringExtra(Veritabani.IDKey);
-        isimString = intent.getStringExtra(Veritabani.IsimKey);
+        String isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
-        profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
+        String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
         gonderText = findViewById(R.id.gonderText);
         if (intentTabloString != null && !intentTabloString.equals("")){
@@ -138,7 +139,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder());
         MesajlariGoster(0);
-        MesajMenusu();
     }
 
     private boolean YeniMesajlar(boolean temizle, int ekle) {
@@ -497,28 +497,6 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.getMenu().clear();
         secilenMesaj.setVisibility(View.GONE);
         kisiBaslik.setVisibility(View.VISIBLE);
-        toolbar.inflateMenu(R.menu.mesaj);
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.menuAra || item.getItemId() == R.id.menuGoruntuluAra){
-                DatabaseReference kisiyBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
-                kisiyBul.keepSynced(true);
-                kisiyBul.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                        Veritabani.getInstance(MesajActivity.this).AramaActivityAc(idString, kullanici.getFcmToken(), telefonString, isimString, profilResmiString, item.getItemId() == R.id.menuGoruntuluAra, true);
-                        Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                        overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-            return false;
-        });
     }
 
     private void Geri(){
