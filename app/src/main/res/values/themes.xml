@@ -20,7 +20,7 @@
     </style>
     <style name="MenuStil" parent="@style/Theme.MaterialComponents.Light.Bridge">
         <item name="android:colorBackground">@android:color/transparent</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:background">@drawable/menu_arkaplan</item>
     </style>
     <style name="EditTextThemeDefault" parent="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
