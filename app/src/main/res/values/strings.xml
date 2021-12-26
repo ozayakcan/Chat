@@ -108,4 +108,8 @@
     <string name="speaker">Hoparlör</string>
     <string name="microphone">Mikrofon</string>
     <string name="end_call">Aramayı Sonlandır</string>
+    <string name="busy">Bu kişi şuanda başka bir görüşme yapıyor.</string>
+    <string name="call_failed">Arama başarısız daha sonra tekrar deneyin.</string>
+    <string name="s_dialing">%s kişisi arıyor.</string>
+    <string name="s_calling">%s kişisi aranıyor.</string>
 </resources>

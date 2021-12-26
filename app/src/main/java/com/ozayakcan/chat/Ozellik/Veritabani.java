@@ -284,14 +284,16 @@ public class Veritabani {
         durumGuncelle.updateChildren(durumGuncelleMap);
     }
 
-    public void AramaActivityAc(String idString, String telefonString, String isimString, String profilResmiString, boolean kamera, boolean arama){
+    public void AramaActivityAc(String idString, String token, String telefonString, String isimString, String profilResmiString, boolean kamera, boolean arama){
         Intent intent = new Intent(mContext, AramaActivity.class);
         intent.putExtra(IDKey, idString);
+        intent.putExtra(FCMTokenKey, token);
         intent.putExtra(TelefonKey, telefonString);
         intent.putExtra(IsimKey, isimString);
         intent.putExtra(ProfilResmiKey, profilResmiString);
         intent.putExtra(KameraKey, kamera);
         intent.putExtra(AramaKey, arama);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 }

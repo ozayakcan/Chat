@@ -24,9 +24,7 @@
         android:theme="@style/Theme.Chat">
         <activity
             android:name=".Arama.AramaActivity"
-            android:screenOrientation="portrait"
-            android:exported="false"
-            tools:ignore="LockedOrientationActivity" />
+            android:exported="false"/>
         <activity
             android:name=".Ayarlar.GizlilikAyarlariActivity"
             android:exported="false" />

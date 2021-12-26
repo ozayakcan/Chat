@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.MesajAdapter;
-import com.ozayakcan.chat.Arama.AramaActivity;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
@@ -501,9 +500,22 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.inflateMenu(R.menu.mesaj);
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menuAra || item.getItemId() == R.id.menuGoruntuluAra){
-                Veritabani.getInstance(MesajActivity.this).AramaActivityAc(idString, telefonString, isimString, profilResmiString, item.getItemId() == R.id.menuGoruntuluAra, true);
-                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+                DatabaseReference kisiyBul = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(telefonString);
+                kisiyBul.keepSynced(true);
+                kisiyBul.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                        Veritabani.getInstance(MesajActivity.this).AramaActivityAc(idString, kullanici.getFcmToken(), telefonString, isimString, profilResmiString, item.getItemId() == R.id.menuGoruntuluAra, true);
+                        Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
+                        overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
             return false;
         });

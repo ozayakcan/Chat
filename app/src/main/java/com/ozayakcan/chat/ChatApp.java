@@ -69,8 +69,19 @@ public class ChatApp extends Application {
     public static String SuankiKisiyiBul(){
         return suankiKisi;
     }
+
     public static void SuankiKisiyiAyarla(String kisi){
         suankiKisi = kisi;
+    }
+
+    private static String aramaKisisi = "";
+
+    public static String AramaKisisiniBul(){
+        return aramaKisisi;
+    }
+
+    public static void AramaKisisiniAyarla(String kisi){
+        aramaKisisi = kisi;
     }
 
     public static String MesajBol(String mesaj, int bolunecek){

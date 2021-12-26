@@ -1,16 +1,18 @@
 package com.ozayakcan.chat.Bildirimler;
 
-public class DataGoruldu {
+public class DataArama{
     private String bildirimTuru;
     private String kisi;
+    private String kamera;
 
     @SuppressWarnings("unused")
-    public DataGoruldu() {
+    public DataArama() {
     }
 
-    public DataGoruldu(String bildirimTuru, String kisi) {
+    public DataArama(String bildirimTuru, String kisi, String kamera) {
         this.bildirimTuru = bildirimTuru;
         this.kisi = kisi;
+        this.kamera = kamera;
     }
 
     @SuppressWarnings("unused")
@@ -31,5 +33,15 @@ public class DataGoruldu {
     @SuppressWarnings("unused")
     public void setKisi(String kisi) {
         this.kisi = kisi;
+    }
+
+    @SuppressWarnings("unused")
+    public String getKamera() {
+        return kamera;
+    }
+
+    @SuppressWarnings("unused")
+    public void setKamera(String kamera) {
+        this.kamera = kamera;
     }
 }
