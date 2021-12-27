@@ -166,6 +166,7 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
 
     private void Geri() {
         finish();
+        overridePendingTransition(R.anim.soldan_saga_giris, R.anim.soldan_saga_cikis);
     }
 
     @Override

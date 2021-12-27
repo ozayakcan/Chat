@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AyarlarActivity extends KullaniciAppCompatActivity {
 
-    private LinearLayout profilLayout;
+    private RelativeLayout profilLayout;
     private CircleImageView profilResmi;
     private TextView isim, hakkimda;
 
@@ -49,16 +50,15 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.HakkimdaKey);
         ChatApp.registerBroadcastReceiver(verileriGuncelle, Veritabani.ProfilResmiKey);
         LinearLayout bildirimLayout = findViewById(R.id.bildirimLayout);
-        bildirimLayout.setOnClickListener(v -> {
-            startActivity(new Intent(AyarlarActivity.this, BildirimActivity.class));
-            overridePendingTransition(0,0);
-        });
+        bildirimLayout.setOnClickListener(v -> AyariAc(new Intent(AyarlarActivity.this, BildirimActivity.class)));
 
         LinearLayout gizlilikLayout = findViewById(R.id.gizlilikLayout);
-        gizlilikLayout.setOnClickListener(v -> {
-            startActivity(new Intent(AyarlarActivity.this, GizlilikAyarlariActivity.class));
-            overridePendingTransition(0,0);
-        });
+        gizlilikLayout.setOnClickListener(v -> AyariAc(new Intent(AyarlarActivity.this, GuvenlikAyarlariActivity.class)));
+    }
+
+    private void AyariAc(Intent intent){
+        startActivity(intent);
+        overridePendingTransition(R.anim.sagdan_sola_giris,R.anim.sagdan_sola_cikis);
     }
 
     @Override
