@@ -219,7 +219,7 @@ public class BildirimClass {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    private void MesajBildirimiGoster(List<BildirimMesaj> bildirimMesajList) {
+    public void MesajBildirimiGoster(List<BildirimMesaj> bildirimMesajList) {
         Collections.sort(bildirimMesajList);
         List<BildirimMesaj> bildirimMesajSayisi;
         bildirimMesajSayisi = bildirimMesajList;

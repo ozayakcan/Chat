@@ -216,6 +216,25 @@
                     android:layout_alignParentTop="true"
                     android:theme="@style/SwitchCompatVarsayilan"/>
             </RelativeLayout>
+            <Button
+                android:id="@+id/bildirimTest1"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:text="@string/test_notification1"/>
+            <Button
+                android:id="@+id/bildirimTest2"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/test_notification2"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

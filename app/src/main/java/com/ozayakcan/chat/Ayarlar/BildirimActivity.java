@@ -8,6 +8,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,12 +24,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ozayakcan.chat.Bildirimler.BildirimClass;
+import com.ozayakcan.chat.Model.BildirimMesaj;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BildirimActivity extends KullaniciAppCompatActivity {
 
@@ -74,6 +80,29 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         bildirimOncelikSwitch.setChecked(SharedPreference.getInstance(BildirimActivity.this).GetirBoolean(Veritabani.BildirimOncelikKey, true));
         RelativeLayout bildirimOncelik = findViewById(R.id.bildirimOncelik);
         bildirimOncelik.setOnClickListener(v -> BildirimOncelik());
+
+        //Bildirim Test
+        Button bildirimTest1 = findViewById(R.id.bildirimTest1);
+        bildirimTest1.setOnClickListener(v -> BildirimTest(false));
+        Button bildirimTest2 = findViewById(R.id.bildirimTest2);
+        bildirimTest2.setOnClickListener(v -> BildirimTest(true));
+    }
+
+    private void BildirimTest(boolean cogul){
+        List<BildirimMesaj> bildirimMesajList = new ArrayList<>();
+        long tarih = System.currentTimeMillis();
+        int mesajSayisi = 1;
+        if (cogul){
+            mesajSayisi = 2;
+        }
+        BildirimMesaj bildirimMesaj = new BildirimMesaj("zEDyZKmPWqcc7jbDsdeUr92ZeOv2", "kişi Adı", "https://firebasestorage.googleapis.com/v0/b/chat-1d11c.appspot.com/o/nafMeeEx2CWp3KktLSNttBEiC6S2%2Fprofil_resmi.jpg?alt=media&token=1462141d-bcd5-4687-aada-4579e7bb3c53", "+905555555555", "Test mesaj", tarih, mesajSayisi);
+        bildirimMesajList.add(bildirimMesaj);
+        if (cogul){
+            long tarih2 = System.currentTimeMillis();
+            BildirimMesaj bildirimMesaj2 = new BildirimMesaj("zEDyZKmPWqcc7jbDsdeUr92ZeOv2", "kişi Adı 2", "varsayılan", "+905555555556", "Test mesaj2", tarih2, mesajSayisi);
+            bildirimMesajList.add(bildirimMesaj2);
+        }
+        BildirimClass.getInstance(BildirimActivity.this).MesajBildirimiGoster(bildirimMesajList);
     }
 
     private void BildirimSesiDegistir() {
