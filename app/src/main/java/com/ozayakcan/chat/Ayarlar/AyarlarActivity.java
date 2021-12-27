@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +22,7 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
-import com.ozayakcan.chat.Resimler.ResimlerClass;
+import com.ozayakcan.chat.Resim.ResimlerClass;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

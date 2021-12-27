@@ -32,7 +32,7 @@ import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
-import com.ozayakcan.chat.Resimler.ResimlerClass;
+import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.yalantis.ucrop.UCrop;
 
 import java.util.HashMap;

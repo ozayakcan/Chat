@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Resimler;
+package com.ozayakcan.chat.Resim;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

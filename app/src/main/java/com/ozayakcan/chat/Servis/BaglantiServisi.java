@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Servisler;
+package com.ozayakcan.chat.Servis;
 
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;

@@ -1,4 +1,4 @@
-package com.ozayakcan.chat.Resimler;
+package com.ozayakcan.chat.Resim;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ozayakcan.chat.Ozellik.KullaniciActivity;
-import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 

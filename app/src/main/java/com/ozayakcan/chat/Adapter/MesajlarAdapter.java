@@ -16,7 +16,7 @@ import com.ozayakcan.chat.ArsivActivity;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Mesajlar;
-import com.ozayakcan.chat.Resimler.ResimlerClass;
+import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 

@@ -34,7 +34,7 @@
             android:name=".Ayarlar.ProfilActivity"
             android:exported="false" />
         <activity
-            android:name=".Resimler.ProfilResmiGoruntuleActivity"
+            android:name=".Resim.ProfilResmiGoruntuleActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" />
         <activity
@@ -90,7 +90,7 @@
             android:resource="@color/colorPrimary" />
 
         <service
-            android:name=".Servisler.BaglantiServisi"
+            android:name=".Servis.BaglantiServisi"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />

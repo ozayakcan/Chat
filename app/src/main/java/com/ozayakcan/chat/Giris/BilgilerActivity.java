@@ -33,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
-import com.ozayakcan.chat.Resimler.ResimlerClass;
+import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
