@@ -479,9 +479,13 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         builder.setTitle(R.string.delete_messages);
         builder.setMessage(R.string.are_you_sure_you_want_to_delete_messages);
         builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            for (int sira : mesajSirasi){
+            for (int i = 0 ; i < mesajSirasi.size(); i++){
+                int sira = mesajSirasi.get(i) - i;
                 MesajFonksiyonlari.getInstance(MesajActivity.this).MesajSil(telefonString, getirilecekMesaj, sira);
                 mesajList.remove(sira);
+            }
+            if (mesajList.size() > 0){
+                mesajList.get(0).setTarihGoster(true);
             }
             mesajAdapter.notifyDataSetChanged();
             MesajBasiliTut(false);

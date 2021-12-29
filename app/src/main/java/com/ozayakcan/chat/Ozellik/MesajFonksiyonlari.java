@@ -76,7 +76,9 @@ public class MesajFonksiyonlari {
     }
     public void MesajSil(String kisi, String silinecekYer, int sira){
         List<Mesaj> mesajlar = MesajlariGetir(kisi, silinecekYer);
-        mesajlar.remove(sira);
+        if (sira < mesajlar.size()){
+            mesajlar.remove(sira);
+        }
         MesajDuzenle(kisi, silinecekYer, mesajlar);
     }
     public void MesajlarArsiv(String kisi, boolean arsivle){
