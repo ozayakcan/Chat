@@ -17,6 +17,9 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/oval_arkaplan_kirmizi.xml" value="0.1015625" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/oval_arkaplan_transparan.xml" value="0.17567567567567569" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/oval_arkaplan_yesil.xml" value="0.1015625" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/rounded_corners_15_white.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/rounded_corners_25.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/rounded_corners_25_white.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/drawable/secimler.xml" value="0.1125" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_arama.xml" value="0.28059332509270707" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_ayarlar.xml" value="0.22" />
@@ -24,7 +27,7 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_gizlilik_ayarlari.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_guvenlik_ayarlari.xml" value="0.2" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_mesaj.xml" value="0.16613756613756614" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_mesaj.xml" value="0.27140255009107467" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_profil.xml" value="0.18" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/activity_profil_resmi_goruntule.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/dosya_gonder.xml" value="0.33" />

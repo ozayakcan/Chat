@@ -31,6 +31,7 @@ import com.ozayakcan.chat.Adapter.MesajAdapter;
 import com.ozayakcan.chat.Bildirimler.BildirimClass;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.Ozellik.Animasyonlar;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
@@ -105,7 +106,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 dosyaGonder.setVisibility(gonderText.getText().toString().length() > 0 ? View.GONE : View.VISIBLE);
-                DosyaGonderimiPenceresi(false);
+                if (dosyaGonderLayoutEtkin){
+                    DosyaGonderimiPenceresi(false);
+                }
             }
 
             @Override
@@ -164,16 +167,20 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder(Veritabani.MesajTuruYazi));
 
-        dosyaGonder.setOnClickListener(v -> {
-            DosyaGonderimiPenceresi(!dosyaGonderLayoutEtkin);
-        });
+        dosyaGonder.setOnClickListener(v -> DosyaGonderimiPenceresi(!dosyaGonderLayoutEtkin));
 
         MesajlariGoster(0);
     }
 
     private void DosyaGonderimiPenceresi(boolean goster) {
         dosyaGonderLayoutEtkin = goster;
-        dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
+        long sure = 200;
+        if (goster){
+            Animasyonlar.Buyut(MesajActivity.this, dosyaGonderLayout, sure);
+        }else{
+            Animasyonlar.Kucult(MesajActivity.this, dosyaGonderLayout, sure);
+        }
+        //dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
         LinearLayout resimCek = findViewById(R.id.resimCek);
         LinearLayout galeridenSec = findViewById(R.id.galeridenSec);
         resimCek.setOnClickListener(v -> {
@@ -554,7 +561,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     }
 
     private void Geri(){
-        if (MesajSecildi){
+        if (dosyaGonderLayoutEtkin){
+            DosyaGonderimiPenceresi(false);
+        } else if (MesajSecildi){
             MesajBasiliTut(false);
         }else{
             MesajlariGuncelle(false);
