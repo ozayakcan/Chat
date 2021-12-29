@@ -15,7 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.text.SpannableString;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -113,7 +113,7 @@ public class BildirimClass {
                                                         for (DataSnapshot mesajlarDataSnapshot : mesajlarSnapshot.getChildren()){
                                                             Mesaj mesaj = mesajlarDataSnapshot.getValue(Mesaj.class);
                                                             if (mesaj != null && !mesaj.getMesaj().equals("")){
-                                                                MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), finalKullanici.getTelefon(), mesaj.getMesaj(), Veritabani.MesajDurumuGonderildi, false);
+                                                                MesajFonksiyonlari.getInstance(mContext).MesajiKaydet(mesajlarDataSnapshot.getKey(), finalKullanici.getTelefon(), mesaj.getMesaj(), mesaj.getMesajTuru(), Veritabani.MesajDurumuGonderildi, false);
                                                             }
                                                         }
                                                         mesajlarSnapshot.getRef().setValue(null);
@@ -187,7 +187,7 @@ public class BildirimClass {
                                 if (!kisiMesajListesi.get(i).isGonderen() && !kisiMesajListesi.get(i).isGoruldu()){
                                     mesajSayisi++;
                                     Mesaj mesajlar123 = kisiMesajListesi.get(i);
-                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), isim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getTarih(), mesajSayisi);
+                                    BildirimMesaj bildirimMesaj = new BildirimMesaj(kullanici.getID(), isim, kullanici.getProfilResmi(), kullanici.getTelefon(), mesajlar123.getMesaj(), mesajlar123.getMesajTuru(), mesajlar123.getTarih(), mesajSayisi);
                                     bildirimMesajList.add(bildirimMesaj);
                                 }
                             }
@@ -368,10 +368,11 @@ public class BildirimClass {
             baslangic = bildirimMesajList.size() - MaxMesajSayisi;
         }
         for (int i = baslangic; i < bildirimMesajList.size(); i++) {
+            SpannableString asilMesaj = MesajFonksiyonlari.getInstance(mContext).MesajiGoster(bildirimMesajList.get(i).getMesaj(), bildirimMesajList.get(i).getMesajTuru());
             if (birKisi){
-                inbox.addLine(bildirimMesajList.get(i).getMesaj());
+                inbox.addLine(asilMesaj);
             }else{
-                inbox.addLine(bildirimMesajList.get(i).getIsim() + ": " + bildirimMesajList.get(i).getMesaj());
+                inbox.addLine(bildirimMesajList.get(i).getIsim() + ": " + asilMesaj);
             }
         }
         if (birKisi){

@@ -1,10 +1,15 @@
 package com.ozayakcan.chat.Ozellik;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ozayakcan.chat.Model.Mesaj;
+import com.ozayakcan.chat.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +29,9 @@ public class MesajFonksiyonlari {
     public static final String KaydedilecekTur= "MESAJLAR";
     public static final String KaydedilecekTurArsiv= "ARSIVMESAJLAR";
     public static final String BildirimGonderilecekKisiler = "BILDIRIMGONDERILECEKKISI";
-    public Mesaj MesajiKaydet(String key, String kisi, String mesaj, long mesajDurumu, boolean gonderen){
+    public Mesaj MesajiKaydet(String key, String kisi, String mesaj, long mesajTuru, long mesajDurumu, boolean gonderen){
         List<Mesaj> mesajList;
-        Mesaj mesaj1 = new Mesaj(key, mesaj, System.currentTimeMillis(), mesajDurumu, gonderen, false, false, 0);
+        Mesaj mesaj1 = new Mesaj(key, mesaj, mesajTuru, System.currentTimeMillis(), mesajDurumu, gonderen, false, false, 0);
         Gson gson = new Gson();
         String mesajlar = SharedPreference.getInstance(mContext).GetirStringOzel(KaydedilecekTur, kisi, "");
         if (mesajlar.equals("")){
@@ -123,5 +128,23 @@ public class MesajFonksiyonlari {
     }
     public void BildirimGonderilecekKisiyiSil(String telefon){
         SharedPreference.getInstance(mContext).TemizleOzel(BildirimGonderilecekKisiler, telefon);
+    }
+
+    public SpannableString MesajiGoster(String mesaj, long mesajTuru) {
+        SpannableString spanString;
+        if (mesajTuru == Veritabani.MesajTuruResim || mesajTuru == Veritabani.MesajTuruVideo || mesajTuru == Veritabani.MesajTuruBelge){
+            if (mesajTuru == Veritabani.MesajTuruResim){
+                spanString = new SpannableString( mContext.getString(R.string.photo));
+            }else if(mesajTuru == Veritabani.MesajTuruVideo){
+                spanString = new SpannableString( mContext.getString(R.string.video));
+            }else{
+                spanString = new SpannableString( mContext.getString(R.string.file));
+            }
+            spanString.setSpan(new StyleSpan(Typeface.ITALIC), 0, spanString.length(), 0);
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+        }else{
+            spanString = new SpannableString(mesaj);
+        }
+        return spanString;
     }
 }

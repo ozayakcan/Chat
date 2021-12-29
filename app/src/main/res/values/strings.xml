@@ -105,4 +105,8 @@
     <string name="more">Daha Fazla</string>
     <string name="test_notification1">Bildirimi Test Et 1</string>
     <string name="test_notification2">Bildirimi Test Et 2</string>
+    <string name="photo">Fotoğraf</string>
+    <string name="video">Video</string>
+    <string name="file">Dosya</string>
+    <string name="send_media">Dosya Gönder</string>
 </resources>

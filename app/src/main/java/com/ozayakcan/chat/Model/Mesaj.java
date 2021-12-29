@@ -6,6 +6,7 @@ public class Mesaj {
 
     String mesajKey = "";
     String mesaj = "";
+    long mesajTuru = Veritabani.MesajTuruYazi;
     long tarih = 0;
     long mesajDurumu = Veritabani.MesajDurumuGonderiliyor;
     boolean gonderen = true;
@@ -18,7 +19,7 @@ public class Mesaj {
     public Mesaj() {
     }
 
-    public Mesaj(String mesajKey, String mesaj, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean tarihGoster, int yeniMesajSayisi) {
+    public Mesaj(String mesajKey, String mesaj, long mesajTuru, long tarih, long mesajDurumu, boolean gonderen, boolean goruldu, boolean tarihGoster, int yeniMesajSayisi) {
         this.mesajKey = mesajKey;
         this.mesaj = mesaj;
         this.tarih = tarih;
@@ -27,6 +28,7 @@ public class Mesaj {
         this.goruldu = goruldu;
         this.tarihGoster = tarihGoster;
         this.yeniMesajSayisi = yeniMesajSayisi;
+        this.mesajTuru = mesajTuru;
     }
 
     @SuppressWarnings("unused")
@@ -61,6 +63,14 @@ public class Mesaj {
 
     public void setMesajDurumu(long mesajDurumu) {
         this.mesajDurumu = mesajDurumu;
+    }
+
+    public long getMesajTuru() {
+        return mesajTuru;
+    }
+
+    public void setMesajTuru(long mesajTuru) {
+        this.mesajTuru = mesajTuru;
     }
 
     public boolean isGonderen() {

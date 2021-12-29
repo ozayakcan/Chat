@@ -95,11 +95,11 @@ public class BildirimActivity extends KullaniciAppCompatActivity {
         if (cogul){
             mesajSayisi = 2;
         }
-        BildirimMesaj bildirimMesaj = new BildirimMesaj("1", "Kişi Adı", "https://firebasestorage.googleapis.com/v0/b/chat-1d11c.appspot.com/o/nafMeeEx2CWp3KktLSNttBEiC6S2%2Fprofil_resmi.jpg?alt=media&token=1462141d-bcd5-4687-aada-4579e7bb3c53", "+905555555555", "Test mesaj", tarih, mesajSayisi);
+        BildirimMesaj bildirimMesaj = new BildirimMesaj("1", "Kişi Adı", "https://firebasestorage.googleapis.com/v0/b/chat-1d11c.appspot.com/o/nafMeeEx2CWp3KktLSNttBEiC6S2%2Fprofil_resmi.jpg?alt=media&token=1462141d-bcd5-4687-aada-4579e7bb3c53", "+905555555555", "Test mesaj", Veritabani.MesajTuruYazi, tarih, mesajSayisi);
         bildirimMesajList.add(bildirimMesaj);
         if (cogul){
             long tarih2 = System.currentTimeMillis();
-            BildirimMesaj bildirimMesaj2 = new BildirimMesaj("2", "Kişi Adı 2", "varsayılan", "+905555555556", "Test mesaj 2", tarih2, mesajSayisi);
+            BildirimMesaj bildirimMesaj2 = new BildirimMesaj("2", "Kişi Adı 2", "varsayılan", "+905555555556", "Test mesaj 2", Veritabani.MesajTuruResim, tarih2, mesajSayisi);
             bildirimMesajList.add(bildirimMesaj2);
         }
         BildirimClass.getInstance(BildirimActivity.this).MesajBildirimiGoster(bildirimMesajList);

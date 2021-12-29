@@ -13,6 +13,8 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
 
     private String mesaj = "";
 
+    private long mesajTuru = 0;
+
     private long tarih = 0;
 
     private long mesajSayisi = 0;
@@ -21,12 +23,13 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
     public BildirimMesaj() {
     }
 
-    public BildirimMesaj(String ID, String isim, String profilResmi, String telefon, String mesaj, long tarih, long mesajSayisi) {
+    public BildirimMesaj(String ID, String isim, String profilResmi, String telefon, String mesaj, long mesajTuru, long tarih, long mesajSayisi) {
         this.ID = ID;
         this.isim = isim;
         this.profilResmi = profilResmi;
         this.telefon = telefon;
         this.mesaj = mesaj;
+        this.mesajTuru = mesajTuru;
         this.tarih = tarih;
         this.mesajSayisi = mesajSayisi;
     }
@@ -71,6 +74,14 @@ public class BildirimMesaj implements Comparable<BildirimMesaj>{
 
     public void setMesaj(String mesaj) {
         this.mesaj = mesaj;
+    }
+
+    public long getMesajTuru() {
+        return mesajTuru;
+    }
+
+    public void setMesajTuru(long mesajTuru) {
+        this.mesajTuru = mesajTuru;
     }
 
     public long getTarih() {

@@ -2,6 +2,7 @@ package com.ozayakcan.chat.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.ozayakcan.chat.ArsivActivity;
 import com.ozayakcan.chat.ChatApp;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Mesajlar;
+import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
@@ -57,7 +59,12 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         Mesajlar mesajlar = mesajlarList.get(position);
         holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
         holder.kisiAdi.setText(mesajlar.getIsim().equals("") ? mesajlar.getKullanici().getTelefon() : mesajlar.getIsim());
-        holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
+        if (mesajlar.getMesaj().getMesajTuru() == Veritabani.MesajTuruYazi){
+            holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
+        }else{
+            SpannableString mesajSpan = MesajFonksiyonlari.getInstance(mContext).MesajiGoster(mesajlar.getMesaj().getMesaj(), mesajlar.getMesaj().getMesajTuru());
+            holder.sonMesaj.setText(mesajSpan);
+        }
         holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih(), true));
         holder.okunmamisMesaj.setText(mesajlar.getOkumamisMesaj() > 0
                 ? mesajlar.getOkumamisMesaj() >= 99

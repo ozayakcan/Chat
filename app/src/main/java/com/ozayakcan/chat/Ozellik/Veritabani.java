@@ -52,14 +52,21 @@ public class Veritabani {
     public static String FCMTokenKey = "fcmToken";
 
     public static String MesajKey = "mesaj";
+    public static String MesajTuru = "mesajTuru";
     public static String TarihKey = "tarih";
     public static String MesajDurumuKey = "mesajDurumu";
     public static String GonderenKey = "gonderen";
     public static String GorulduKey = "goruldu";
+
     public static long MesajDurumuGonderiliyor = 0;
     public static long MesajDurumuGonderildi = 1;
     public static long MesajDurumuBendenSilindi = 3;
     public static long MesajDurumuHerkestenSilindi = 4;
+
+    public static long MesajTuruYazi = 0;
+    public static long MesajTuruResim = 1;
+    public static long MesajTuruVideo = 2;
+    public static long MesajTuruBelge = 3;
 
     public static String ProfilResmiDosyaAdi = "profil_resmi";
 
@@ -201,10 +208,11 @@ public class Veritabani {
             }
         });
     }
-    public void MesajGonder(Mesaj normalMesaj, int sira, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
+    public void MesajGonder(Mesaj normalMesaj, long mesajTuru, int sira, String gonderilecekTelefon, FirebaseUser firebaseUser, MesajActivity mesajActivity){
         DatabaseReference ekleBir = FirebaseDatabase.getInstance().getReference(Veritabani.MesajTablosu).child(gonderilecekTelefon).child(firebaseUser.getPhoneNumber());
         ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
+        mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
         mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
         MesajFonksiyonlari.getInstance(mContext).BildirimGonderilecekKisiyiEkle(gonderilecekTelefon);
         DatabaseReference ekleBirPush = ekleBir.push();

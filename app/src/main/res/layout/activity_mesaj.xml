@@ -88,6 +88,19 @@
         app:layout_constraintTop_toBottomOf="@id/barLayout"
         app:layout_constraintBottom_toTopOf="@id/altUyariLayout" />
     <LinearLayout
+        android:id="@+id/dosyaGonderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gonderTextLayout1">
+        <include layout="@layout/dosya_gonder"/>
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/kaydirBtnLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -132,7 +145,6 @@
             android:text="@string/you_cannot_send_messages_in_the_archive"
             android:visibility="gone"/>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/gonderTextLayout1"
         android:layout_width="0dp"
@@ -140,7 +152,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/gonderBtnLayout1">
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/gonderTextLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,7 +177,16 @@
                 android:background="@color/white"
                 android:textSize="15sp"
                 android:importantForAutofill="no"/>
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/dosyaGonder"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="3dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_baseline_attach_file_24"
+                android:contentDescription="@string/send_media" />
+        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/gonderBtnLayout1"

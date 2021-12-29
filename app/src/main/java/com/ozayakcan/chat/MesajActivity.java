@@ -5,9 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,8 +51,12 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private RecyclerView mesajlarRW;
     private EditText gonderText;
     private TextView altUyari;
-    private LinearLayout gonderBtnLayout, gonderTextLayout, kaydirBtnLayout;
+    private LinearLayout gonderBtnLayout, kaydirBtnLayout;
+    private RelativeLayout gonderTextLayout;
     private TextView durum;
+    private View dosyaGonderLayout;
+    private ImageView dosyaGonder;
+    private boolean dosyaGonderLayoutEtkin = false;
 
     private boolean ilkAcilis = true;
 
@@ -86,7 +93,26 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
+        dosyaGonder = findViewById(R.id.dosyaGonder);
+        dosyaGonderLayout = findViewById(R.id.dosyaGonderLayout);
         gonderText = findViewById(R.id.gonderText);
+        gonderText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                dosyaGonder.setVisibility(gonderText.getText().toString().length() > 0 ? View.GONE : View.VISIBLE);
+                DosyaGonderimiPenceresi(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         if (intentTabloString != null && !intentTabloString.equals("")){
             tabloString = intentTabloString;
             if (tabloString.equals(Veritabani.ArsivTablosu)){
@@ -136,8 +162,33 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        gonderBtnLayout.setOnClickListener(v -> MesajGonder());
+        gonderBtnLayout.setOnClickListener(v -> MesajGonder(Veritabani.MesajTuruYazi));
+
+        dosyaGonder.setOnClickListener(v -> {
+            DosyaGonderimiPenceresi(!dosyaGonderLayoutEtkin);
+        });
+
         MesajlariGoster(0);
+    }
+
+    private void DosyaGonderimiPenceresi(boolean goster) {
+        dosyaGonderLayoutEtkin = goster;
+        dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
+        LinearLayout resimCek = findViewById(R.id.resimCek);
+        LinearLayout galeridenSec = findViewById(R.id.galeridenSec);
+        resimCek.setOnClickListener(v -> {
+            if (goster){
+                Toast.makeText(MesajActivity.this, "Kameradan resim çekme eklenecek.", Toast.LENGTH_SHORT).show();
+                DosyaGonderimiPenceresi(false);
+            }
+        });
+        galeridenSec.setOnClickListener(v -> {
+            if (goster){
+                Toast.makeText(MesajActivity.this, "Galeriden resim seçme eklenecek.", Toast.LENGTH_SHORT).show();
+                DosyaGonderimiPenceresi(false);
+            }
+        });
+
     }
 
     private boolean YeniMesajlar(boolean temizle, int ekle) {
@@ -331,14 +382,14 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    private void MesajGonder() {
+    private void MesajGonder(long mesajTuru) {
         if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
             return;
         }
         String mesaj = gonderText.getText().toString();
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
-            Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajDurumuGonderiliyor,true);
+            Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajTuruYazi, Veritabani.MesajDurumuGonderiliyor,true);
             if (mesajList.size() > 0){
                 if (!ChatApp.MesajTarihiBul(mesajClass.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
                     mesajClass.setTarihGoster(true);
@@ -349,7 +400,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             mesajList.add(mesajClass);
             mesajAdapter.notifyDataSetChanged();
             mesajlarRW.scrollToPosition(mesajList.size() - 1);
-            Veritabani.getInstance(MesajActivity.this).MesajGonder(mesajClass, mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
+            Veritabani.getInstance(MesajActivity.this).MesajGonder(mesajClass, mesajTuru,mesajList.size()-1, telefonString, firebaseUser, MesajActivity.this);
             gonderText.setText("");
         }else{
             Toast.makeText(MesajActivity.this, getString(R.string.you_cannot_send_empty_messages), Toast.LENGTH_SHORT).show();
@@ -569,6 +620,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     @Override
     protected void onDestroy() {
         ChatApp.SuankiKisiyiAyarla("");
+        Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
         super.onDestroy();
         klavyePopup.Durdur();
     }
