@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -558,6 +560,17 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.getMenu().clear();
         secilenMesaj.setVisibility(View.GONE);
         kisiBaslik.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Rect rect = new Rect();
+        dosyaGonderLayout.getGlobalVisibleRect(rect);
+        if (dosyaGonderLayoutEtkin && !rect.contains((int) ev.getRawX(), (int) ev.getRawY())){
+                DosyaGonderimiPenceresi(false);
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void Geri(){
