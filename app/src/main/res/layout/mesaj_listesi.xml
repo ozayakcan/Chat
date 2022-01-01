@@ -24,7 +24,7 @@
             android:id="@+id/secim"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@drawable/oval_arkaplan_yesil"
+            android:background="@drawable/yuvarlak_arkaplan_yesil"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:padding="1dp"

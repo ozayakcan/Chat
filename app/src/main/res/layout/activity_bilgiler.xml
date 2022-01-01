@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_corners_15"
+            android:background="@drawable/yuvarlak_koseler_15"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/done"
             android:textColor="@color/white" />
