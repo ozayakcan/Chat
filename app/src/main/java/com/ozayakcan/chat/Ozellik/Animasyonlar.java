@@ -8,8 +8,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.ozayakcan.chat.R;
-
 public class Animasyonlar {
 
     public static int varsayilanAnimasyonSuresi = 300;
@@ -42,48 +40,22 @@ public class Animasyonlar {
         Boyut(gosterilecekView, 0, layoutBoyutu, false);
     }
 
-    public interface AnimasyonListener{
-        void Basladi(Animation animation);
-        void Bitti(Animation animation);
-    }
-    public static void Buyut(Context context, View view, long sure){
-        OzelAnimasyon(context, view, sure, R.anim.buyut, new AnimasyonListener() {
-            @Override
-            public void Basladi(Animation animation) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void Bitti(Animation animation) {
-
-            }
-        });
-    }
-    public static void Kucult(Context context, View view, long sure){
-        OzelAnimasyon(context, view, sure, R.anim.kucult, new AnimasyonListener() {
-            @Override
-            public void Basladi(Animation animation) {
-
-            }
-
-            @Override
-            public void Bitti(Animation animation) {
-                view.setVisibility(View.GONE);
-            }
-        });
-    }
-    public static void OzelAnimasyon(Context context, View view, long sure, int animasyonID, AnimasyonListener animasyonListener){
+    public static void GosterGizle(Context context, boolean goster, View view, long sure, int animasyonID){
         Animation animation = AnimationUtils.loadAnimation(context, animasyonID);
         animation.setDuration(sure);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                animasyonListener.Basladi(animation);
+                if (goster){
+                    view.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                animasyonListener.Bitti(animation);
+                if (!goster){
+                    view.setVisibility(View.GONE);
+                }
             }
 
             @Override

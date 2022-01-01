@@ -177,11 +177,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private void DosyaGonderimiPenceresi(boolean goster) {
         dosyaGonderLayoutEtkin = goster;
         long sure = 200;
-        if (goster){
-            Animasyonlar.Buyut(MesajActivity.this, dosyaGonderLayout, sure);
-        }else{
-            Animasyonlar.Kucult(MesajActivity.this, dosyaGonderLayout, sure);
-        }
+        Animasyonlar.GosterGizle(MesajActivity.this, goster, dosyaGonderLayout, sure, goster ? R.anim.buyut_x90 : R.anim.kucult_x90);
         //dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
         LinearLayout resimCek = findViewById(R.id.resimCek);
         LinearLayout galeridenSec = findViewById(R.id.galeridenSec);
