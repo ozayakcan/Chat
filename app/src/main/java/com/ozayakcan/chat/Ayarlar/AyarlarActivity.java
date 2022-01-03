@@ -52,8 +52,6 @@ public class AyarlarActivity extends KullaniciAppCompatActivity {
         LinearLayout bildirimLayout = findViewById(R.id.bildirimLayout);
         bildirimLayout.setOnClickListener(v -> AyariAc(new Intent(AyarlarActivity.this, BildirimActivity.class)));
 
-        LinearLayout gizlilikLayout = findViewById(R.id.gizlilikLayout);
-        gizlilikLayout.setOnClickListener(v -> AyariAc(new Intent(AyarlarActivity.this, GuvenlikAyarlariActivity.class)));
     }
 
     private void AyariAc(Intent intent){

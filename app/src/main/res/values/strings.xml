@@ -100,8 +100,6 @@
     <string name="blue">Mavi</string>
     <string name="light">Işık</string>
     <string name="notification_tone">Bildirim Sesi</string>
-    <string name="security">Güvenlik</string>
-    <string name="change_security_settings">Güvenlik ayarlarını değiştir.</string>
     <string name="more">Daha Fazla</string>
     <string name="test_notification1">Bildirimi Test Et 1</string>
     <string name="test_notification2">Bildirimi Test Et 2</string>

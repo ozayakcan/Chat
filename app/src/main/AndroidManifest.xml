@@ -22,9 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat">
         <activity
-            android:name=".Ayarlar.GuvenlikAyarlariActivity"
-            android:exported="false" />
-        <activity
             android:name=".Ayarlar.BildirimActivity"
             android:exported="false" />
         <activity
