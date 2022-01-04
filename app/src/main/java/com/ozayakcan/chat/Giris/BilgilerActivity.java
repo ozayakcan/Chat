@@ -37,6 +37,7 @@ import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+import com.ozayakcan.chat.SSActivity;
 import com.yalantis.ucrop.UCrop;
 
 import java.util.HashMap;
@@ -249,9 +250,9 @@ public class BilgilerActivity extends AppCompatActivity {
 
     private void Tamamlandi() {
         SharedPreference.getInstance(BilgilerActivity.this).KaydetBoolean(SharedPreference.kullaniciKaydedildi, true);
-        overridePendingTransition(0,0);
-        startActivity(new Intent(BilgilerActivity.this, MainActivity.class));
+        startActivity(new Intent(BilgilerActivity.this, SSActivity.class));
         finish();
+        overridePendingTransition(0,0);
     }
 
 

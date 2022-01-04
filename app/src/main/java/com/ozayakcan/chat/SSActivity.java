@@ -39,6 +39,11 @@ public class SSActivity extends AppCompatActivity {
         }*/
         firebaseAppCheck.installAppCheckProviderFactory(
         SafetyNetAppCheckProviderFactory.getInstance());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         KullaniciyiKontrolEt();
     }
 
@@ -60,7 +65,12 @@ public class SSActivity extends AppCompatActivity {
                     }else{
                         if (SharedPreference.getInstance(SSActivity.this).GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                             //Kaydedildi
-                            startActivity(new Intent(SSActivity.this, MainActivity.class));
+                            new Thread(() -> {
+                                Veritabani.getInstance(SSActivity.this).KisileriEkle(user, () -> {
+
+                                });
+                                startActivity(new Intent(SSActivity.this, MainActivity.class));
+                            }).start();
                         }else{
                             //Kaydedilmedi
                             Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);

@@ -61,6 +61,7 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".SSActivity"
+            android:theme="@style/SSTema"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

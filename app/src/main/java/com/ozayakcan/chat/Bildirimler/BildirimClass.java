@@ -19,6 +19,7 @@ import android.text.SpannableString;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -259,6 +260,7 @@ public class BildirimClass {
         }else{
             mBuilder.setSmallIcon(R.drawable.varsayilan_bildirim_simgesi).setContentTitle(mContext.getString(R.string.app_name));
         }
+        mBuilder.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         mBuilder.setWhen(0)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);

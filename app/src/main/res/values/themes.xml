@@ -12,6 +12,15 @@
         <!-- Customize your theme here. -->
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar</item>
     </style>
+    <style name="SSTema" parent="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:windowBackground">@drawable/ss</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
     <style name="AltMenuTema" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AltMenuStil</item>
     </style>
