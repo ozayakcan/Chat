@@ -61,7 +61,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/yuvarlak_arkaplan"
+        android:background="@drawable/yuvarlak_arkaplan_birincil"
         android:padding="5dp"
         android:src="@drawable/ic_baseline_add_24" />
 </RelativeLayout>
