@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -28,12 +29,11 @@ import java.util.List;
 
 public class MainActivity extends KullaniciAppCompatActivity {
 
-    ViewPager2 viewPager;
-    Toolbar toolbar;
-    TabLayout tabLayout;
-    MesajlarFragment mesajlarFragment;
-    KisilerFragment kisilerFragment;
-    TextView baslik;
+    private Toolbar toolbar;
+    private MesajlarFragment mesajlarFragment;
+    private KisilerFragment kisilerFragment;
+    private TextView baslik;
+    private ImageView yeniMesaj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,13 @@ public class MainActivity extends KullaniciAppCompatActivity {
         Button testActivityBtn = findViewById(R.id.testActivityBtn);
         testActivityBtn.setVisibility(View.GONE);
         testActivityBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
+
+
         BaglantiServisi.ServisiBaslat(MainActivity.this);
         toolbar = findViewById(R.id.toolbar);
         baslik = findViewById(R.id.baslik);
-        viewPager = findViewById(R.id.viewPager);
-        tabLayout = findViewById(R.id.tabLayout);
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         Veritabani.getInstance(MainActivity.this).TokenYenile();
         BildirimClass.MesajBildiriminiKaldir(MainActivity.this);
         mesajlarFragment = new MesajlarFragment(MainActivity.this);
@@ -56,6 +58,7 @@ public class MainActivity extends KullaniciAppCompatActivity {
         vpAdapter.fragmentEkle(mesajlarFragment, getString(R.string.messages));
         vpAdapter.fragmentEkle(kisilerFragment, getString(R.string.contacts));
         viewPager.setAdapter(vpAdapter);
+        yeniMesaj = findViewById(R.id.yeniMesaj);
         MesajMenusu();
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -75,6 +78,10 @@ public class MainActivity extends KullaniciAppCompatActivity {
         });
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(vpAdapter.baslikGetir(position))).attach();
+        yeniMesaj.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, KisilerActivity.class));
+            overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+        });
     }
 
     @Override
@@ -91,6 +98,7 @@ public class MainActivity extends KullaniciAppCompatActivity {
 
     public void MesajMenusu(){
         MesajBasiliTut(false);
+        yeniMesaj.setVisibility(View.VISIBLE);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.mesajlar);
         toolbar.setOnMenuItemClickListener(item -> {
@@ -106,6 +114,7 @@ public class MainActivity extends KullaniciAppCompatActivity {
     }
     public void KisilerMenusu(){
         MesajBasiliTut(false);
+        yeniMesaj.setVisibility(View.GONE);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.kisiler);
         toolbar.setOnMenuItemClickListener(item -> {

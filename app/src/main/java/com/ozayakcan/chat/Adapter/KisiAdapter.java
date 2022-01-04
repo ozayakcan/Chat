@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ozayakcan.chat.KisilerActivity;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Resim.ResimlerClass;
@@ -25,11 +26,19 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
 
     List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
+    private final KisilerActivity kisilerActivity;
     private final Context mContext;
 
     public KisiAdapter( List<Kullanici> kullaniciList, MainActivity mainActivity){
+        this.kisilerActivity = null;
         this.mainActivity = mainActivity;
         this.mContext = mainActivity;
+        this.kullaniciList = kullaniciList;
+    }
+    public KisiAdapter(List<Kullanici> kullaniciList, KisilerActivity kisilerActivity){
+        this.mainActivity = null;
+        this.kisilerActivity = kisilerActivity;
+        this.mContext = kisilerActivity;
         this.kullaniciList = kullaniciList;
     }
 
@@ -50,7 +59,13 @@ public class KisiAdapter extends RecyclerView.Adapter<KisiAdapter.ViewHolder> {
         }
         holder.kisiBasHarfi.setText(kullanici.getProfilResmi().equals(Veritabani.VarsayilanDeger)
                 ? String.valueOf(kullanici.getIsim().charAt(0)) : "");
-        holder.kisiBilgileriLayout.setOnClickListener(v -> mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi()));
+        holder.kisiBilgileriLayout.setOnClickListener(v -> {
+            if (mainActivity != null){
+                mainActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi());
+            }else if (kisilerActivity != null){
+                kisilerActivity.MesajGoster(kullanici.getID(), kullanici.getIsim(), kullanici.getTelefon(), kullanici.getProfilResmi());
+            }
+        });
         holder.profilResmiLayout.setOnClickListener(v -> ResimlerClass.getInstance(mContext).ProfilResmiGoruntule(holder.kisiAdi.getText().toString(), kullanici.getProfilResmi()));
     }
 

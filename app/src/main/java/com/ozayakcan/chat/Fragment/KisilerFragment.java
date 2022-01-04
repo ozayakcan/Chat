@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ozayakcan.chat.Adapter.KisiAdapter;
+import com.ozayakcan.chat.KisilerActivity;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
@@ -39,8 +40,15 @@ public class KisilerFragment extends Fragment {
     private KisiAdapter kisiAdapter;
     private List<Kullanici> kullaniciList;
     private final MainActivity mainActivity;
+    private final KisilerActivity kisilerActivity;
     public KisilerFragment(MainActivity mainActivity) {
+        this.kisilerActivity = null;
         this.mainActivity = mainActivity;
+    }
+
+    public KisilerFragment(KisilerActivity kisilerActivity){
+        this.mainActivity = null;
+        this.kisilerActivity = kisilerActivity;
     }
 
     @Override
@@ -81,6 +89,9 @@ public class KisilerFragment extends Fragment {
                     if (kullanici != null){
                         kullaniciList.add(kullanici);
                     }
+                }
+                if (kisilerActivity != null){
+                    kisiAdapter = new KisiAdapter(kullaniciList, kisilerActivity);
                 }
                 if (mainActivity != null){
                     kisiAdapter = new KisiAdapter(kullaniciList, mainActivity);
