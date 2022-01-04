@@ -135,13 +135,7 @@ public class MainActivity extends KullaniciAppCompatActivity {
     }
 
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
-        Intent intent = new Intent(MainActivity.this, MesajActivity.class);
-        intent.putExtra(Veritabani.IDKey, id);
-        intent.putExtra(Veritabani.IsimKey, isim);
-        intent.putExtra(Veritabani.TelefonKey, telefon);
-        intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
-        intent.putExtra(Veritabani.MesajTablosu, Veritabani.MesajTablosu);
-        startActivity(intent);
+        startActivity(ChatApp.MesajIntent(MainActivity.this, id, isim, telefon, profilResmi));
         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
     }

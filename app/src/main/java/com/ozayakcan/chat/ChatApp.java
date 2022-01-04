@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.format.DateFormat;
 
@@ -86,6 +87,17 @@ public class ChatApp extends Application {
             return mesaj;
         }
     }
+
+    public static Intent MesajIntent(Context context, String id, String isim, String telefon, String profilResmi){
+        Intent intent = new Intent(context, MesajActivity.class);
+        intent.putExtra(Veritabani.IDKey, id);
+        intent.putExtra(Veritabani.IsimKey, isim);
+        intent.putExtra(Veritabani.TelefonKey, telefon);
+        intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
+        intent.putExtra(Veritabani.MesajTablosu, Veritabani.MesajTablosu);
+        return intent;
+    }
+
     public static String MesajTarihiBul(long tarih, boolean saatiGoster){
         String tarihStr = DateFormat.format(TarihFormati, tarih).toString();
         String bugunTarih = DateFormat.format(TarihFormati, System.currentTimeMillis()).toString();

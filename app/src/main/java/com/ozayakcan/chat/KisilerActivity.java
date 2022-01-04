@@ -1,6 +1,5 @@
 package com.ozayakcan.chat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
@@ -8,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ozayakcan.chat.Fragment.KisilerFragment;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
-import com.ozayakcan.chat.Ozellik.Veritabani;
 
 public class KisilerActivity extends KullaniciAppCompatActivity {
 
@@ -26,13 +24,7 @@ public class KisilerActivity extends KullaniciAppCompatActivity {
         getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).add(R.id.kisilerFragmentContainer, kisilerFragment, null).commit();
     }
     public void MesajGoster(String id, String isim, String telefon, String profilResmi){
-        Intent intent = new Intent(KisilerActivity.this, MesajActivity.class);
-        intent.putExtra(Veritabani.IDKey, id);
-        intent.putExtra(Veritabani.IsimKey, isim);
-        intent.putExtra(Veritabani.TelefonKey, telefon);
-        intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
-        intent.putExtra(Veritabani.MesajTablosu, Veritabani.MesajTablosu);
-        startActivity(intent);
+        startActivity(ChatApp.MesajIntent(KisilerActivity.this, id, isim, telefon, profilResmi));
         overridePendingTransition(R.anim.sagdan_sola_giris, R.anim.sagdan_sola_cikis);
         finish();
     }
