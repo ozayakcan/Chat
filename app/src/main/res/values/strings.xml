@@ -26,7 +26,6 @@
     <string name="camera">Kamera</string>
     <string name="gallery">Galeri</string>
     <string name="remove">Kaldır</string>
-    <string name="remove_photo">Fotoğrafı Kaldır</string>
     <string name="crop_profile_photo">Profil Fotoğrafını Kırp</string>
     <string name="upload_in_progress">Şuanda bir yükleme işlemi mevcut.</string>
     <string name="uploading">Yükleniyor</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/altMenuLayout"
     android:background="@drawable/alt_menu_arkaplan"
     android:orientation="vertical"
@@ -26,11 +27,16 @@
             android:layout_width="80dp"
             android:layout_height="90dp"
             android:orientation="vertical"
-            android:padding="10dp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
+            android:padding="10dp"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_kameradan_sec"/>
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/yuvarlak_arkaplan_yesil"
+                android:src="@drawable/ic_baseline_photo_camera_24"
+                android:contentDescription="@string/camera" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -43,11 +49,16 @@
             android:layout_width="80dp"
             android:layout_height="90dp"
             android:orientation="vertical"
-            android:padding="10dp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
+            android:padding="10dp"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_galeriden_sec"/>
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/yuvarlak_arkaplan_mor"
+                android:src="@drawable/ic_baseline_image_24"
+                android:contentDescription="@string/gallery" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -60,16 +71,21 @@
             android:layout_width="80dp"
             android:layout_height="90dp"
             android:orientation="vertical"
-            android:padding="10dp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
+            android:padding="10dp"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_kaldir"/>
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/yuvarlak_arkaplan_kirmizi"
+                android:src="@drawable/ic_baseline_delete_24"
+                android:contentDescription="@string/remove" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:textAlignment="center"
-                android:text="@string/remove_photo"
+                android:text="@string/remove"
                 android:textColor="@color/black"/>
         </LinearLayout>
     </LinearLayout>
