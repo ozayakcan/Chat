@@ -51,6 +51,11 @@ public class Veritabani {
     public static String SonGorulmeKey = "sonGorulme";
     public static String FCMTokenKey = "fcmToken";
 
+    public static String FotografCek = "fotografCek";
+    public static String Fotograf = "fotograf";
+    public static String VideoCek = "videoCek";
+    public static String Video = "video";
+
     public static String MesajKey = "mesaj";
     public static String MesajTuru = "mesajTuru";
     public static String TarihKey = "tarih";

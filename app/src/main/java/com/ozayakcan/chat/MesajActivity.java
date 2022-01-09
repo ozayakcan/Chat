@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,9 +39,11 @@ import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.ozayakcan.chat.Resim.KameraActivity;
 import com.ozayakcan.chat.Resim.ResimlerClass;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -167,8 +170,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         onlineDurumuRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         KisiBilgileriniGoster(true);
         KisininOnlineDurumunuGuncelle(true);
-        gonderBtnLayout.setOnClickListener(v -> MesajGonder(Veritabani.MesajTuruYazi));
+        gonderBtnLayout.setOnClickListener(v -> MesajGonder(Veritabani.MesajTuruYazi, ""));
 
+        ChatApp.registerBroadcastReceiver(mDosyaBroadcastReceiver, Veritabani.FotografCek);
         dosyaGonder.setOnClickListener(v -> DosyaGonderimiPenceresi(!dosyaGonderLayoutEtkin));
 
         MesajlariGoster(0);
@@ -179,23 +183,49 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         long sure = 200;
         Animasyonlar.GosterGizle(MesajActivity.this, goster, dosyaGonderLayout, sure, goster ? R.anim.buyut_x90 : R.anim.kucult_x90);
         //dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
-        LinearLayout resimCek = findViewById(R.id.resimCek);
-        LinearLayout galeridenSec = findViewById(R.id.galeridenSec);
-        resimCek.setOnClickListener(v -> {
+        LinearLayout kameraAc = findViewById(R.id.kameraAc);
+        LinearLayout resimGaleri = findViewById(R.id.resimGaleri);
+        LinearLayout videoGaleri = findViewById(R.id.videoGaleri);
+        kameraAc.setOnClickListener(v -> {
             if (goster){
-                Toast.makeText(MesajActivity.this, "Kameradan resim çekme eklenecek.", Toast.LENGTH_SHORT).show();
+                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
+                startActivity(new Intent(MesajActivity.this, KameraActivity.class));
+                overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
                 DosyaGonderimiPenceresi(false);
             }
         });
-        galeridenSec.setOnClickListener(v -> {
+        resimGaleri.setOnClickListener(v -> {
             if (goster){
+                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
                 Toast.makeText(MesajActivity.this, "Galeriden resim seçme eklenecek.", Toast.LENGTH_SHORT).show();
+                DosyaGonderimiPenceresi(false);
+            }
+        });
+        videoGaleri.setOnClickListener(v -> {
+            if (goster){
+                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
+                Toast.makeText(MesajActivity.this, "Galeriden video seçme eklenecek.", Toast.LENGTH_SHORT).show();
                 DosyaGonderimiPenceresi(false);
             }
         });
 
     }
+    private final BroadcastReceiver mDosyaBroadcastReceiver = new BroadcastReceiver() {
 
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Foto", "Açıldı");
+            if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
+                if(intent.getAction().equals(Veritabani.FotografCek)){
+                    byte[] bytes = intent.getByteArrayExtra(Veritabani.Fotograf);
+                    if (bytes != null){
+                        //Resim Gönderilecek
+                    }
+                }
+            }
+        }
+    };
     private boolean YeniMesajlar(boolean temizle, int ekle) {
         for (int i = mesajList.size() - 1; i >= 0; i--){
             Mesaj mesaj = mesajList.get(i);
@@ -387,11 +417,16 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    private void MesajGonder(long mesajTuru) {
+    private void MesajGonder(long mesajTuru, String resim) {
         if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTurArsiv)){
             return;
         }
-        String mesaj = gonderText.getText().toString();
+        String mesaj;
+        if (resim.equals("")){
+            mesaj = gonderText.getText().toString();
+        }else{
+            mesaj = resim;
+        }
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
             Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajTuruYazi, Veritabani.MesajDurumuGonderiliyor,true);
@@ -633,12 +668,14 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisiBilgileriniGoster(false);
         KisininOnlineDurumunuGuncelle(false);
         ChatApp.SuankiKisiyiAyarla("");
+        Metinler.getInstance(this).KlavyeKapat(gonderText);
     }
 
     @Override
     protected void onDestroy() {
         ChatApp.SuankiKisiyiAyarla("");
         Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
+        ChatApp.unregisterBroadcastReceiver(mDosyaBroadcastReceiver);
         super.onDestroy();
         klavyePopup.Durdur();
     }

@@ -60,6 +60,8 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp:2.4.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.github.yalantis:ucrop:2.2.6'
+    //Kamera
+    implementation 'com.otaliastudios:cameraview:2.7.2'
     //Firebase
     implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta04'
     androidTestImplementation 'com.google.firebase:firebase-appcheck-debug-testing:16.0.0-beta04'
