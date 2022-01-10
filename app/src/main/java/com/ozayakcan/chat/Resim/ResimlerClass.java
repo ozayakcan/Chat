@@ -43,6 +43,7 @@ public class ResimlerClass {
     public String MedyaKonumu(){
         return mContext.getExternalFilesDir("Media").getAbsolutePath();
     }
+    public static String Sticker_Dosya_Adi = "stickers";
 
     public ResimlerClass(Context context) {mContext = context;}
 
