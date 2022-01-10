@@ -124,18 +124,18 @@ public class KameraActivity extends AppCompatActivity {
 
             @Override
             public void VideoyuBaslat() {
-                kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_kirmizi));
+                /*kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_kirmizi));
                 kamera.setMode(Mode.VIDEO);
                 VIDEO_DOSYA_ADI = System.currentTimeMillis()+".mp4";
-                kamera.takeVideoSnapshot(new File(ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/"+VIDEO_DOSYA_ADI));
+                kamera.takeVideoSnapshot(new File(ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/"+VIDEO_DOSYA_ADI));*/
             }
 
             @Override
             public void VideoyuDurdur() {
-                kamera.postDelayed(() -> {
+                /*kamera.postDelayed(() -> {
                     kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_beyaz));
                     kamera.stopVideo();
-                }, 500);
+                }, 500);*/
             }
         });
 
