@@ -111,4 +111,5 @@
     <string name="could_not_send_image">Fotoğraf gönderilemedi!</string>
     <string name="could_not_update_profile_photo">Profil resmi güncellenemedi!</string>
     <string name="sending_media">Medya gönderiliyor</string>
+    <string name="flash">Flash</string>
 </resources>
