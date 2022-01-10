@@ -31,6 +31,7 @@ public class ImageEditor {
 
     private final String imagePath;
     private Activity context;
+    private String stickerFolderName;
     private boolean enabledEditorText = true;
     private boolean enabledEditorPaint = true;
     private boolean enabledEditorSticker = false;
@@ -41,7 +42,11 @@ public class ImageEditor {
       this.context = context;
       this.imagePath = imagePath;
     }
-
+    public Builder setStickerAssets(String folderName){
+      this.stickerFolderName = folderName;
+      enabledEditorSticker = true;
+      return this;
+    }
     public Builder disable(int editorType){
       if(editorType==EDITOR_TEXT){
         enabledEditorText = false;
@@ -58,6 +63,7 @@ public class ImageEditor {
     public void open(){
       if(imagePath!=null && (new File(imagePath).exists())) {
         Intent intent = new Intent(context, ImageEditActivity.class);
+        intent.putExtra(ImageEditor.EXTRA_STICKER_FOLDER_NAME, stickerFolderName);
         intent.putExtra(ImageEditor.EXTRA_IS_PAINT_MODE, enabledEditorPaint);
         intent.putExtra(ImageEditor.EXTRA_IS_STICKER_MODE, enabledEditorSticker);
         intent.putExtra(ImageEditor.EXTRA_IS_TEXT_MODE, enabledEditorText);
