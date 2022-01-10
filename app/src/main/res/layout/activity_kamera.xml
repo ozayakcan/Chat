@@ -16,27 +16,46 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
-        <ImageView
-            android:id="@+id/flashBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_baseline_flash_on_24"
-            android:contentDescription="@string/flash" />
-        <ImageView
-            android:id="@+id/kameraBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/yuvarlak_arkaplan_beyaz"
-            android:contentDescription="@string/photo" />
-        <ImageView
-            android:id="@+id/kameraDegistirBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_baseline_switch_camera_24"
-            android:contentDescription="@string/photo" />
+        android:gravity="center"
+        android:baselineAligned="false">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/flashBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_baseline_flash_on_24"
+                android:contentDescription="@string/flash" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/kameraBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/yuvarlak_arkaplan_beyaz"
+                android:contentDescription="@string/photo" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/kameraDegistirBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_baseline_switch_camera_24"
+                android:contentDescription="@string/photo" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
