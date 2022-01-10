@@ -76,6 +76,20 @@ public class ImageEditActivity extends BaseImageEditActivity
 
   @Override
   public void onBackPressed() {
+    ResmiSil();
     super.onBackPressed();
+  }
+
+  @Override
+  protected void onDestroy() {
+    ResmiSil();
+    super.onDestroy();
+  }
+
+  private void ResmiSil() {
+    File oldImage = new File(oldImagePath);
+    if (oldImage.exists()){
+      boolean b = oldImage.delete();
+    }
   }
 }
