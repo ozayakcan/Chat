@@ -31,7 +31,7 @@
         app:srcCompat="@drawable/ic_done"
         android:padding="3dp"
         android:layout_margin="5dp"
-        android:layout_gravity="right|end"
+        android:layout_gravity="end"
         android:visibility="gone"
         />
 
@@ -45,7 +45,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="3dp"
-        android:text="None"
+        android:text="@string/none"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:textStyle="bold"

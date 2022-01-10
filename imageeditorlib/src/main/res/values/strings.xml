@@ -3,4 +3,7 @@
   <!-- TODO: Remove or change this placeholder text -->
     <string name="invalid_image_path">Geçersiz dosya konumu.</string>
     <string name="please_wait_for_the_image_to_load">Lütfen resmin yüklenmesini bekleyin!</string>
+    <string name="cancel">İPTAL</string>
+  <string name="done">BİTTİ</string>
+  <string name="none">Hiçbiri</string>
 </resources>
