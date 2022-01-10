@@ -1,10 +1,12 @@
 package com.ozayakcan.chat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,9 +44,10 @@ import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.Resim.KameraActivity;
 import com.ozayakcan.chat.Resim.ResimlerClass;
+import com.passiondroid.imageeditorlib.ImageEditor;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,6 +84,8 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     boolean kaydir = true;
     private int sonMesaj = 0;
 
+    private LinearLayout progressBarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +95,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> Geri());
         kisiBaslik = findViewById(R.id.kisiBaslik);
         secilenMesaj = findViewById(R.id.secilenMesaj);
+        progressBarLayout = findViewById(R.id.progressBarLayout);
 
         View view = findViewById(R.id.constraintLayout);
         view.post(() -> klavyePopup.Baslat());
@@ -172,7 +179,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         KisininOnlineDurumunuGuncelle(true);
         gonderBtnLayout.setOnClickListener(v -> MesajGonder(Veritabani.MesajTuruYazi, ""));
 
-        ChatApp.registerBroadcastReceiver(mDosyaBroadcastReceiver, Veritabani.FotografCek);
+        ChatApp.registerBroadcastReceiver(mDosyaYukleBroadcastReceiver, Veritabani.FotografCek);
         dosyaGonder.setOnClickListener(v -> DosyaGonderimiPenceresi(!dosyaGonderLayoutEtkin));
 
         MesajlariGoster(0);
@@ -189,7 +196,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         kameraAc.setOnClickListener(v -> {
             if (goster){
                 Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                startActivity(new Intent(MesajActivity.this, KameraActivity.class));
+                Intent intent = new Intent(MesajActivity.this, KameraActivity.class);
+                intent.putExtra(Veritabani.Fotograf, telefonString);
+                startActivity(intent);
                 overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
                 DosyaGonderimiPenceresi(false);
             }
@@ -210,22 +219,48 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         });
 
     }
-    private final BroadcastReceiver mDosyaBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mDosyaYukleBroadcastReceiver = new BroadcastReceiver() {
 
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Foto", "Açıldı");
             if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
                 if(intent.getAction().equals(Veritabani.FotografCek)){
-                    byte[] bytes = intent.getByteArrayExtra(Veritabani.Fotograf);
-                    if (bytes != null){
-                        //Resim Gönderilecek
-                    }
+                    new ImageEditor.Builder(MesajActivity.this, intent.getStringExtra(Veritabani.Fotograf), telefonString).open();
                 }
             }
         }
     };
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case ImageEditor.RC_IMAGE_EDITOR:
+                if (resultCode == Activity.RESULT_OK && data != null){
+                    String onCekiResimUrl = data.getStringExtra(ImageEditor.EXTRA_IMAGE_PATH);
+                    File oncekiResim = new File(onCekiResimUrl);
+                    String resimUrl = data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH);
+                    File resim = new File(resimUrl);
+                    if (oncekiResim.exists()){
+                        boolean b = oncekiResim.delete();
+                    }
+                    ResimlerClass.getInstance(MesajActivity.this).ResimYukle(Uri.fromFile(resim), firebaseUser.getUid() + "/" + Veritabani.MesajTablosu + "/"+ telefonString + "/" + System.currentTimeMillis() + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
+                        @Override
+                        public void Basarili(String resimUrl) {
+                            MesajGonder(Veritabani.MesajTuruResim, resimUrl);
+                        }
+
+                        @Override
+                        public void Basarisiz(String hata) {
+                            Log.e("Resim", hata);
+                            Toast.makeText(MesajActivity.this, getString(R.string.could_not_send_image), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                break;
+        }
+    }
+
     private boolean YeniMesajlar(boolean temizle, int ekle) {
         for (int i = mesajList.size() - 1; i >= 0; i--){
             Mesaj mesaj = mesajList.get(i);
@@ -675,7 +710,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     protected void onDestroy() {
         ChatApp.SuankiKisiyiAyarla("");
         Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-        ChatApp.unregisterBroadcastReceiver(mDosyaBroadcastReceiver);
+        ChatApp.unregisterBroadcastReceiver(mDosyaYukleBroadcastReceiver);
         super.onDestroy();
         klavyePopup.Durdur();
     }

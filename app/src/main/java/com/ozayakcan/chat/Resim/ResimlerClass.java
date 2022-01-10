@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,10 @@ public class ResimlerClass {
     public UploadTask resimYukleUploadTask;
     public static final String VarsayilanResimUzantisi = ".jpg";
 
+    public String MedyaKonumu(){
+        return mContext.getExternalFilesDir("Media").getAbsolutePath();
+    }
+
     public ResimlerClass(Context context) {mContext = context;}
 
     public static ResimlerClass getInstance(Context context){
@@ -61,11 +66,11 @@ public class ResimlerClass {
     }
     public interface ResimYukleSonuc{
         void Basarili(String resimUrl);
-        void Basarisiz();
+        void Basarisiz(String hata);
     }
-    public void ResimYukle(FirebaseUser firebaseUser, Uri resim, ImageView gosterilecekIW, String konum, LinearLayout progressBarLayout, ResimYukleSonuc resimYukleSonuc){
+    public void ResimYukle(Uri resim, String konum, LinearLayout progressBarLayout, ResimYukleSonuc resimYukleSonuc){
         if (resimYukleUploadTask != null && resimYukleUploadTask.isInProgress()) {
-            resimYukleSonuc.Basarisiz();
+            resimYukleSonuc.Basarisiz(mContext.getString(R.string.upload_in_progress));
             Toast.makeText(mContext, R.string.upload_in_progress, Toast.LENGTH_SHORT).show();
         } else {
             progressBarLayout.setVisibility(View.VISIBLE);
@@ -74,8 +79,7 @@ public class ResimlerClass {
                 resimYukleUploadTask = storageReference.putFile(resim);
                 resimYukleUploadTask.continueWithTask(task -> {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                        resimYukleSonuc.Basarisiz();
+                        resimYukleSonuc.Basarisiz(task.getException().getLocalizedMessage() == null ? "" : task.getException().getLocalizedMessage());
                         throw task.getException();
                     }
                     return storageReference.getDownloadUrl();
@@ -84,26 +88,17 @@ public class ResimlerClass {
                         Uri downloadUri = task.getResult();
                         String resimKonumu = downloadUri.toString();
 
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
-						reference.keepSynced(true);
-                        reference.setValue(resimKonumu);
-                        if (gosterilecekIW != null){
-                            ResimGoster(resimKonumu, gosterilecekIW, R.drawable.ic_profil_resmi);
-                        }
                         resimYukleSonuc.Basarili(resimKonumu);
                     } else {
-                        resimYukleSonuc.Basarisiz();
-                        Toast.makeText(mContext, R.string.failed, Toast.LENGTH_SHORT).show();
+                        resimYukleSonuc.Basarisiz(mContext.getString(R.string.something_went_wrong));
                     }
                     progressBarLayout.setVisibility(View.GONE);
                 }).addOnFailureListener(e -> {
-                    resimYukleSonuc.Basarisiz();
-                    Toast.makeText(mContext, mContext.getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                    resimYukleSonuc.Basarisiz(e.getLocalizedMessage());
                     progressBarLayout.setVisibility(View.GONE);
                 });
             }else{
-                resimYukleSonuc.Basarisiz();
-                Toast.makeText(mContext, mContext.getString(R.string.no_image_selected), Toast.LENGTH_SHORT).show();
+                resimYukleSonuc.Basarisiz(mContext.getString(R.string.no_image_selected));
                 progressBarLayout.setVisibility(View.GONE);
             }
         }

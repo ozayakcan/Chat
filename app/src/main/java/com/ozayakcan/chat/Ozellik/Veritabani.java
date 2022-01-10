@@ -53,6 +53,7 @@ public class Veritabani {
 
     public static String FotografCek = "fotografCek";
     public static String Fotograf = "fotograf";
+
     public static String VideoCek = "videoCek";
     public static String Video = "video";
 
@@ -218,7 +219,7 @@ public class Veritabani {
         ekleBir.keepSynced(true);
         HashMap<String, Object> mapBir = new HashMap<>();
         mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
-        mapBir.put(Veritabani.MesajKey, normalMesaj.getMesaj());
+        mapBir.put(Veritabani.MesajTuru, mesajTuru);
         MesajFonksiyonlari.getInstance(mContext).BildirimGonderilecekKisiyiEkle(gonderilecekTelefon);
         DatabaseReference ekleBirPush = ekleBir.push();
         ekleBirPush.keepSynced(true);

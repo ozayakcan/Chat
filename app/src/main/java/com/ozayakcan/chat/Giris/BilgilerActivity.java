@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ozayakcan.chat.Ayarlar.ProfilActivity;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
@@ -182,15 +183,22 @@ public class BilgilerActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                ResimlerClass.getInstance(BilgilerActivity.this).ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
+                ResimlerClass.getInstance(BilgilerActivity.this).ResimYukle(resimUri, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
                     @Override
                     public void Basarili(String resimUrl) {
                         resimBaglantisi = resimUrl;
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
+                        reference.keepSynced(true);
+                        reference.setValue(resimBaglantisi);
+                        if (profilResmi != null){
+                            ResimlerClass.getInstance(BilgilerActivity.this).ResimGoster(resimBaglantisi, profilResmi, R.drawable.ic_profil_resmi);
+                        }
                     }
 
                     @Override
-                    public void Basarisiz() {
-
+                    public void Basarisiz(String hata) {
+                        Log.e("Resim", hata);
+                        Toast.makeText(BilgilerActivity.this, getString(R.string.could_not_update_profile_photo), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

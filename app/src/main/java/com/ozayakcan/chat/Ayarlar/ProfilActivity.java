@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.Metinler;
@@ -239,18 +241,26 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (data != null){
                 Uri resimUri = UCrop.getOutput(data);
-                ResimlerClass.getInstance(ProfilActivity.this).ResimYukle(firebaseUser, resimUri, profilResmi, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
+                ResimlerClass.getInstance(ProfilActivity.this).ResimYukle(resimUri, firebaseUser.getUid() + "/" + Veritabani.ProfilResmiDosyaAdi + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
                     @Override
                     public void Basarili(String resimUrl) {
                         profilResmiString = resimUrl;
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu).child(firebaseUser.getPhoneNumber()).child(Veritabani.ProfilResmiKey);
+                        reference.keepSynced(true);
+                        reference.setValue(profilResmiString);
+                        if (profilResmi != null){
+                            ResimlerClass.getInstance(ProfilActivity.this).ResimGoster(profilResmiString, profilResmi, R.drawable.ic_profil_resmi);
+                        }
                         Intent guncelle = new Intent(Veritabani.ProfilResmiKey);
                         guncelle.putExtra(Veritabani.ProfilResmiKey, resimUrl);
                         LocalBroadcastManager.getInstance(ProfilActivity.this).sendBroadcast(guncelle);
+
                     }
 
                     @Override
-                    public void Basarisiz() {
-
+                    public void Basarisiz(String hata) {
+                        Log.e("Resim", hata);
+                        Toast.makeText(ProfilActivity.this, getString(R.string.could_not_update_profile_photo), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -38,13 +38,13 @@ android {
 }
 
 dependencies {
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleDependency
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     //noinspection GradleDependency
     implementation 'androidx.core:core-ktx:1.0.2'
-    //noinspection GradleDependency
+    //noinspection GradleDependency,DifferentStdlibGradleVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.annotation:annotation:1.3.0'
@@ -60,6 +60,7 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp:2.4.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.github.yalantis:ucrop:2.2.6'
+    implementation project(':imageeditorlib')
     //Kamera
     implementation 'com.otaliastudios:cameraview:2.7.2'
     //Firebase
