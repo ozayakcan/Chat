@@ -6,4 +6,8 @@
     <string name="cancel">İPTAL</string>
   <string name="done">BİTTİ</string>
   <string name="none">Hiçbiri</string>
+    <string name="reset">Sıfırla</string>
+  <string name="are_you_sure_you_want_to_reset_changes">Değişiklikleri sıfırlamak istediğinize emin misiniz?\nBu işlemi geri alamazsınız!</string>
+  <string name="yes">Evet</string>
+  <string name="no">Hayır</string>
 </resources>

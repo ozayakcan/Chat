@@ -113,6 +113,7 @@ public class PhotoEditorView extends FrameLayout implements ViewTouchListener,
     recyclerView.setVisibility(GONE);
     inputTextET.setVisibility(GONE);
     Utility.hideSoftKeyboard((Activity) getContext());
+    customPaintView.setCanDraw(true);
     customPaintView.bringToFront();
   }
 
@@ -133,6 +134,7 @@ public class PhotoEditorView extends FrameLayout implements ViewTouchListener,
   }
 
   public void hidePaintView() {
+    customPaintView.setCanDraw(false);
     containerView.bringToFront();
   }
 

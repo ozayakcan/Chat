@@ -26,6 +26,8 @@ public class CustomPaintView extends View {
   private int mColor;
   private RectF bounds;
 
+  private boolean canDraw = true;
+
   public CustomPaintView(Context context) {
     super(context);
     init(context);
@@ -39,6 +41,10 @@ public class CustomPaintView extends View {
   public CustomPaintView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context);
+  }
+
+  public void setCanDraw(boolean canDraw) {
+    this.canDraw = canDraw;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -111,16 +117,16 @@ public class CustomPaintView extends View {
     boolean ret = super.onTouchEvent(event);
     float x = event.getX();
     float y = event.getY();
+    if (canDraw){
+      switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+          ret = true;
+          last_x = x;
+          last_y = y;
 
-    switch (event.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        ret = true;
-        last_x = x;
-        last_y = y;
-
-        break;
-      case MotionEvent.ACTION_MOVE:
-        ret = true;
+          break;
+        case MotionEvent.ACTION_MOVE:
+          ret = true;
           if (bounds.contains(x, y) && bounds.contains(last_x, last_y)) {
             mPaintCanvas.drawLine(last_x, last_y, x, y, eraser ? mEraserPaint : mPaint);
           }
@@ -129,12 +135,14 @@ public class CustomPaintView extends View {
 
           this.postInvalidate();
 
-        break;
-      case MotionEvent.ACTION_CANCEL:
-      case MotionEvent.ACTION_UP:
-        ret = false;
-        break;
+          break;
+        case MotionEvent.ACTION_CANCEL:
+        case MotionEvent.ACTION_UP:
+          ret = false;
+          break;
+      }
     }
+
     return ret;
   }
 

@@ -1,6 +1,7 @@
 package com.passiondroid.imageeditorlib;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -35,6 +38,7 @@ public class PhotoEditorFragment extends BaseFragment
     implements View.OnClickListener, ViewTouchListener {
 
   ImageViewTouch mainImageView;
+  TextView resetButton;
   ImageView cropButton;
   ImageView stickerButton;
   ImageView addTextButton;
@@ -159,6 +163,7 @@ public class PhotoEditorFragment extends BaseFragment
   protected void initView(View view) {
     mainImageView = view.findViewById(R.id.image_iv);
     cropButton = view.findViewById(R.id.crop_btn);
+    resetButton = view.findViewById(R.id.reset_btn);
     stickerButton = view.findViewById(R.id.stickers_btn);
     addTextButton = view.findViewById(R.id.add_text_btn);
     deleteButton = view.findViewById(R.id.delete_view);
@@ -225,6 +230,7 @@ public class PhotoEditorFragment extends BaseFragment
 
 
       photoEditorView.setImageView(mainImageView, deleteButton, this);
+      resetButton.setOnClickListener(this);
       cropButton.setOnClickListener(this);
       stickerButton.setOnClickListener(this);
       addTextButton.setOnClickListener(this);
@@ -271,7 +277,13 @@ public class PhotoEditorFragment extends BaseFragment
   public void onClick(final View view) {
     int id = view.getId();
 
-    if (id == R.id.crop_btn) {
+    if (id == R.id.reset_btn) {
+      if (imageLoaded) {
+        ResetAlertDialog();
+      }else{
+        ErrorMsg(view.getContext());
+      }
+    } else if (id == R.id.crop_btn) {
       if (imageLoaded) {
         mListener.onCropClicked(getBitmapCache(originalBitmap));
         photoEditorView.hidePaintView();
@@ -319,6 +331,20 @@ public class PhotoEditorFragment extends BaseFragment
       photoEditorView.animate().scaleY(1f);
       //touchView.setVisibility(View.GONE);
     }
+  }
+
+  private void ResetAlertDialog() {
+    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+    builder.setCancelable(true);
+    builder.setTitle(R.string.reset);
+    builder.setMessage(R.string.are_you_sure_you_want_to_reset_changes);
+    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+      reset();
+      dialog.dismiss();
+    });
+    builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+    AlertDialog dialog = builder.create();
+    dialog.show();
   }
 
   private void ErrorMsg(Context context) {

@@ -44,31 +44,40 @@
       android:layout_height="wrap_content"
       android:padding="5dp"
       >
-
     <ImageView
         android:id="@+id/back_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:padding="10dp"
         android:src="@drawable/ic_cam_back"
         />
 
 
+    <TextView
+        android:id="@+id/reset_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="5dp"
+        android:layout_toStartOf="@+id/crop_btn"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:text="@string/reset"
+        android:gravity="center"/>
+
     <ImageView
         android:id="@+id/crop_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="5dp"
         android:layout_toStartOf="@+id/stickers_btn"
         android:padding="8dp"
-        android:src="@drawable/ic_cam_crop_rotate"
-        />
+        android:src="@drawable/ic_cam_crop_rotate" />
 
 
     <ImageView
         android:id="@+id/stickers_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="5dp"
         android:layout_toStartOf="@+id/add_text_btn"
         android:padding="8dp"
@@ -78,8 +87,8 @@
 
     <ImageView
         android:id="@+id/add_text_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="5dp"
         android:layout_toStartOf="@+id/paint_btn"
         android:padding="8dp"
@@ -88,8 +97,8 @@
 
     <ImageView
         android:id="@+id/paint_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
