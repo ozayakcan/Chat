@@ -16,6 +16,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingStart="0dp"
+        android:layout_alignParentTop="true"
+        android:gravity="end">
+        <ImageView
+            android:id="@+id/flashBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:gravity="center">
         <ImageView

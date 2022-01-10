@@ -78,6 +78,16 @@ public class SharedPreference {
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
         return sharedPreference.getLong(key, varsayilanDeger);
     }
+    public void KaydetLongOzel(String tur, String key, long deger){
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putLong(key, deger);
+        editor.apply();
+    }
+    public long GetirLongOzel(String tur, String key, long varsayilanDeger){
+        SharedPreferences sharedPreference = mContext.getSharedPreferences(tur, MODE_PRIVATE);
+        return sharedPreference.getLong(key, varsayilanDeger);
+    }
 
     public void TumunuTemizle(){
         SharedPreferences sharedPreference = mContext.getSharedPreferences(SHARED_PREF_ADI, MODE_PRIVATE);
