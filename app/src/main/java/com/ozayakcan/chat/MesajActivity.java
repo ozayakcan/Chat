@@ -196,9 +196,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         kameraAc.setOnClickListener(v -> {
             if (goster){
                 Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                Intent intent = new Intent(MesajActivity.this, KameraActivity.class);
-                intent.putExtra(Veritabani.Fotograf, telefonString);
-                startActivity(intent);
+                startActivity(new Intent(MesajActivity.this, KameraActivity.class));
                 overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
                 DosyaGonderimiPenceresi(false);
             }
@@ -226,7 +224,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
                 if(intent.getAction().equals(Veritabani.FotografCek)){
-                    new ImageEditor.Builder(MesajActivity.this, intent.getStringExtra(Veritabani.Fotograf), telefonString).open();
+                    new ImageEditor.Builder(MesajActivity.this, intent.getStringExtra(Veritabani.Fotograf)).open();
                 }
             }
         }
@@ -237,23 +235,24 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         switch (requestCode){
             case ImageEditor.RC_IMAGE_EDITOR:
                 if (resultCode == Activity.RESULT_OK && data != null){
-                    String onCekiResimUrl = data.getStringExtra(ImageEditor.EXTRA_IMAGE_PATH);
-                    File oncekiResim = new File(onCekiResimUrl);
                     String resimUrl = data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH);
                     File resim = new File(resimUrl);
-                    if (oncekiResim.exists()){
-                        boolean b = oncekiResim.delete();
-                    }
                     ResimlerClass.getInstance(MesajActivity.this).ResimYukle(Uri.fromFile(resim), firebaseUser.getUid() + "/" + Veritabani.MesajTablosu + "/"+ telefonString + "/" + System.currentTimeMillis() + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
                         @Override
                         public void Basarili(String resimUrl) {
                             MesajGonder(Veritabani.MesajTuruResim, resimUrl);
+                            if (resim.exists()){
+                                boolean b = resim.delete();
+                            }
                         }
 
                         @Override
                         public void Basarisiz(String hata) {
                             Log.e("Resim", hata);
                             Toast.makeText(MesajActivity.this, getString(R.string.could_not_send_image), Toast.LENGTH_SHORT).show();
+                            if (resim.exists()){
+                                boolean b = resim.delete();
+                            }
                         }
                     });
                 }
@@ -464,7 +463,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         }
         String mesajKontrol = mesaj.replace("\n", "");
         if(!mesajKontrol.equals("")){
-            Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, Veritabani.MesajTuruYazi, Veritabani.MesajDurumuGonderiliyor,true);
+            Mesaj mesajClass = MesajFonksiyonlari.getInstance(MesajActivity.this).MesajiKaydet("", telefonString, mesaj, mesajTuru, Veritabani.MesajDurumuGonderiliyor,true);
             if (mesajList.size() > 0){
                 if (!ChatApp.MesajTarihiBul(mesajClass.getTarih(), false).equals(ChatApp.MesajTarihiBul(mesajList.get(mesajList.size()-1).getTarih(), false))){
                     mesajClass.setTarihGoster(true);

@@ -1,22 +1,24 @@
 package com.passiondroid.imageeditorlib;
 
+import static com.passiondroid.imageeditorlib.ImageEditor.EXTRA_IMAGE_PATH;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.passiondroid.imageeditorlib.utils.FragmentUtil;
 
-import static com.passiondroid.imageeditorlib.ImageEditor.EXTRA_IMAGE_PATH;
-import static com.passiondroid.imageeditorlib.ImageEditor.EXTRA_SAVE_PATH;
+import java.io.File;
 
 public class ImageEditActivity extends BaseImageEditActivity
     implements PhotoEditorFragment.OnFragmentInteractionListener,
     CropFragment.OnFragmentInteractionListener {
   private Rect cropRect;
   private String oldImagePath;
-  private String savePath;
   //private View touchView;
 
   @Override
@@ -25,10 +27,9 @@ public class ImageEditActivity extends BaseImageEditActivity
     setContentView(R.layout.activity_image_edit);
 
     oldImagePath = getIntent().getStringExtra(EXTRA_IMAGE_PATH);
-    savePath = getIntent().getStringExtra(EXTRA_SAVE_PATH);
     if (oldImagePath != null) {
       FragmentUtil.addFragment(this, R.id.fragment_container,
-          PhotoEditorFragment.newInstance(oldImagePath, savePath));
+          PhotoEditorFragment.newInstance(oldImagePath));
     }
   }
 
@@ -44,7 +45,10 @@ public class ImageEditActivity extends BaseImageEditActivity
     Intent intent = new Intent();
     intent.putExtra(ImageEditor.EXTRA_EDITED_PATH, imagePath);
     if (oldImagePath != null){
-      intent.putExtra(ImageEditor.EXTRA_IMAGE_PATH, oldImagePath);
+      File oldImage = new File(oldImagePath);
+      if (oldImage.exists()){
+        boolean b = oldImage.delete();
+      }
     }
     setResult(Activity.RESULT_OK, intent);
     finish();

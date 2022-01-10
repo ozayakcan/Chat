@@ -25,15 +25,12 @@ public class KameraActivity extends AppCompatActivity {
 
     CameraView kamera;
     private ImageView kameraBtn;
-    private String klasor = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kamera);
         kamera = findViewById(R.id.camera);
         kameraBtn = findViewById(R.id.kameraBtn);
-        String fotograf = getIntent().getStringExtra(Veritabani.Fotograf);
-        klasor = fotograf != null ? fotograf : "";
         kamera.setLifecycleOwner(this);
         kamera.addCameraListener(new CameraListener() {
             @Override
@@ -41,9 +38,6 @@ public class KameraActivity extends AppCompatActivity {
                 super.onPictureTaken(result);
 
                 String konum = ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/";
-                if (!klasor.equals("")){
-                    konum = konum+klasor+"/";
-                }
                 File klasor = new File(konum);
                 konum = konum+System.currentTimeMillis()+ResimlerClass.VarsayilanResimUzantisi;
                 File dosya = new File(konum);

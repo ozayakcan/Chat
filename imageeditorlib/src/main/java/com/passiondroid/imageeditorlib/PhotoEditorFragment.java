@@ -55,20 +55,19 @@ public class PhotoEditorFragment extends BaseFragment
 
   protected int currentMode;
   private Bitmap originalBitmap;
-  private final String savePath;
 
   private boolean imageLoaded = false;
 
-  public static PhotoEditorFragment newInstance(String imagePath, String savePath) {
+  public static PhotoEditorFragment newInstance(String imagePath) {
     Bundle bundle = new Bundle();
     bundle.putString(ImageEditor.EXTRA_IMAGE_PATH, imagePath);
-    PhotoEditorFragment photoEditorFragment = new PhotoEditorFragment(savePath);
+    PhotoEditorFragment photoEditorFragment = new PhotoEditorFragment();
     photoEditorFragment.setArguments(bundle);
     return photoEditorFragment;
   }
 
-  public PhotoEditorFragment(String savePath) {
-    this.savePath = savePath;
+  public PhotoEditorFragment() {
+
   }
 
   @Override
@@ -284,7 +283,7 @@ public class PhotoEditorFragment extends BaseFragment
       getActivity().onBackPressed();
     }else if (id == R.id.done_btn) {
         if (imageLoaded){
-          new ProcessingImage(getBitmapCache(mainBitmap), Utility.getCacheFilePath(view.getContext(), savePath),
+          new ProcessingImage(getBitmapCache(mainBitmap), Utility.getCacheFilePath(view.getContext()),
                   new TaskCallback<String>() {
                     @Override
                     public void onTaskDone(String data) {

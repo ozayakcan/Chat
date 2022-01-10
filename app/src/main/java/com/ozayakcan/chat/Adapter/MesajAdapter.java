@@ -1,12 +1,12 @@
 package com.ozayakcan.chat.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +20,7 @@ import com.ozayakcan.chat.Model.Mesaj;
 import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+import com.ozayakcan.chat.Resim.ResimlerClass;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
     public static  final int MESAJ_TURU_SAG = 1;
     private final Context mContext;
     List<Mesaj> mesajList;
-    private MesajActivity mesajActivity;
+    private final MesajActivity mesajActivity;
 
     public MesajAdapter(MesajActivity mesajActivity, List<Mesaj> mesajList){
         this.mesajActivity = mesajActivity;
@@ -52,7 +53,23 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         holder.yeniMesajSayisiLayout.setVisibility(mesaj.getYeniMesajSayisi() > 0 ? View.VISIBLE : View.GONE);
         holder.tarihText.setText(mesaj.isTarihGoster() ? ChatApp.MesajTarihiBul(mesaj.getTarih(), false) : "");
         holder.tarihLayout.setVisibility(mesaj.isTarihGoster() ? View.VISIBLE : View.GONE);
-        holder.mesajText.setText(mesaj.getMesaj());
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.saat.getLayoutParams();
+        if (mesaj.getMesajTuru() == Veritabani.MesajTuruResim){
+            params.addRule(RelativeLayout.END_OF, holder.mesajResim.getId());
+            params.addRule(RelativeLayout.ALIGN_BOTTOM, holder.mesajResim.getId());
+            params.setMargins(0, 0, 0, 0);
+            holder.mesajText.setVisibility(View.GONE);
+            ResimlerClass.getInstance(mContext).ResimGoster(mesaj.getMesaj(), holder.mesajResim, R.drawable.arkaplan_beyaz);
+            holder.mesajResim.setVisibility(View.VISIBLE);
+        }else{
+            params.addRule(RelativeLayout.END_OF, holder.mesajText.getId());
+            params.addRule(RelativeLayout.ALIGN_BOTTOM, holder.mesajText.getId());
+            params.setMargins(0, 0, 0, 5);
+            holder.mesajResim.setVisibility(View.GONE);
+            holder.mesajText.setText(mesaj.getMesaj());
+            holder.mesajText.setVisibility(View.VISIBLE);
+        }
+        holder.saat.setLayoutParams(params);
         holder.mesajText.setMovementMethod(BetterLinkMovementMethod.newInstance());
         Linkify.addLinks(holder.mesajText, Linkify.ALL);
         BetterLinkMovementMethod.linkify(Linkify.ALL, holder.mesajText).setOnLinkLongClickListener((textView, url) -> {
@@ -115,11 +132,13 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
 
         RelativeLayout mesajLayout, mesajIcerikLayout, tarihLayout, yeniMesajSayisiLayout;
         TextView mesajText, saat, mesajDurumu, tarihText, yeniMesajSayisiText;
+        ImageView mesajResim;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mesajLayout = itemView.findViewById(R.id.mesajLayout);
             mesajIcerikLayout = itemView.findViewById(R.id.mesajIcerikLayout);
+            mesajResim = itemView.findViewById(R.id.mesajResim);
             mesajText = itemView.findViewById(R.id.mesajText);
             saat = itemView.findViewById(R.id.saat);
             mesajDurumu = itemView.findViewById(R.id.mesajDurumu);

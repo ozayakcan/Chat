@@ -81,12 +81,8 @@ public class Utility {
     }
   }
 
-  public static String getCacheFilePath(Context context, String savePath) {
-    String path = context.getExternalFilesDir("Media").getAbsolutePath()+"/";
-    if (!savePath.equals("")){
-      path = path + savePath + "/";
-    }
-    return path + System.currentTimeMillis() +".jpg";
+  public static String getCacheFilePath(Context context) {
+    return context.getExternalFilesDir("Media").getAbsolutePath() + "/" + System.currentTimeMillis() +".jpg";
   }
 
   public static int calculateInSampleSize(

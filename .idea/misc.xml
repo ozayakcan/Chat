@@ -55,7 +55,7 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/item_profil_resmi.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/layout_resim_sec.xml" value="0.33" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/mesaj_sag.xml" value="0.44813278008298757" />
-        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/mesaj_sol.xml" value="0.33" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/layout/mesaj_sol.xml" value="0.5" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/menu/dosya_gonder.xml" value="0.25" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/menu/kisiler.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/menu/mesaj.xml" value="0.33" />
@@ -64,6 +64,15 @@
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/menu/mesajlar_islev.xml" value="0.5" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/activity_image_edit.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/crop_image_view.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/fragment_crop.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/fragment_photo_editor.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/item_filter_layout.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/photo_editor_view.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/popwindow.xml" value="0.1" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/sticker_view.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/ozaya/Desktop/Projelerim/Android/Sohbet/imageeditorlib/src/main/res/layout/text_editor.xml" value="0.1644021739130435" />
       </map>
     </option>
   </component>

@@ -65,6 +65,16 @@
             android:background="@drawable/mesaj_arkaplan_sol"
             android:clickable="false"
             android:longClickable="false">
+            <ImageView
+                android:id="@+id/mesajResim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="150dp"
+                android:contentDescription="@string/photo"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/mesajText"
                 android:layout_width="wrap_content"

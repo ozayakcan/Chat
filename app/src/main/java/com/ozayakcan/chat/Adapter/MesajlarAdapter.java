@@ -59,11 +59,11 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.ViewHo
         Mesajlar mesajlar = mesajlarList.get(position);
         holder.secim.setVisibility(mesajlar.isSecildi() ? View.VISIBLE : View.GONE);
         holder.kisiAdi.setText(mesajlar.getIsim().equals("") ? mesajlar.getKullanici().getTelefon() : mesajlar.getIsim());
-        if (mesajlar.getMesaj().getMesajTuru() == Veritabani.MesajTuruYazi){
-            holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
-        }else{
+        if (mesajlar.getMesaj().getMesajTuru() == Veritabani.MesajTuruResim){
             SpannableString mesajSpan = MesajFonksiyonlari.getInstance(mContext).MesajiGoster(mesajlar.getMesaj().getMesaj(), mesajlar.getMesaj().getMesajTuru());
             holder.sonMesaj.setText(mesajSpan);
+        }else{
+            holder.sonMesaj.setText(ChatApp.MesajBol(mesajlar.getMesaj().getMesaj(), ChatApp.MaxMesajKarakterSayisi));
         }
         holder.tarih.setText(ChatApp.MesajTarihiBul(mesajlar.getMesaj().getTarih(), true));
         holder.okunmamisMesaj.setText(mesajlar.getOkumamisMesaj() > 0

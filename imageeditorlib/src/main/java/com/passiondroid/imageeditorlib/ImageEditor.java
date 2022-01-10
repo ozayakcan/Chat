@@ -20,7 +20,6 @@ public class ImageEditor {
   public static final String EXTRA_IS_CROP_MODE ="EXTRA_IS_CROP_MODE";
   public static final String EXTRA_HAS_FILTERS ="EXTRA_HAS_FILTERS";
   public static final String EXTRA_IMAGE_PATH="EXTRA_IMAGE_PATH";
-  public static final String EXTRA_SAVE_PATH="EXTRA_SAVE_PATH";
   public static final String EXTRA_ORIGINAL="EXTRA_ORIGINAL";
   public static final String EXTRA_CROP_RECT="EXTRA_CROP_RECT";
 
@@ -31,7 +30,6 @@ public class ImageEditor {
   public static class Builder{
 
     private final String imagePath;
-    private final String savePath;
     private Activity context;
     private boolean enabledEditorText = true;
     private boolean enabledEditorPaint = true;
@@ -39,10 +37,9 @@ public class ImageEditor {
     private boolean enableEditorCrop = false;
     private boolean enableFilters = true;
 
-    public Builder(Activity context, String imagePath, String saveFolder) {
+    public Builder(Activity context, String imagePath) {
       this.context = context;
       this.imagePath = imagePath;
-      this.savePath = saveFolder;
     }
 
     public Builder disable(int editorType){
@@ -67,7 +64,6 @@ public class ImageEditor {
         intent.putExtra(ImageEditor.EXTRA_IS_CROP_MODE, enableEditorCrop);
         intent.putExtra(ImageEditor.EXTRA_HAS_FILTERS, enableFilters);
         intent.putExtra(ImageEditor.EXTRA_IMAGE_PATH, imagePath);
-        intent.putExtra(ImageEditor.EXTRA_SAVE_PATH, savePath);
         context.startActivityForResult(intent, RC_IMAGE_EDITOR);
       }
       else{
