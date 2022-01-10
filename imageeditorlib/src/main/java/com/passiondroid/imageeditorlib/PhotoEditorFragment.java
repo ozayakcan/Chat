@@ -270,29 +270,46 @@ public class PhotoEditorFragment extends BaseFragment
   @Override
   public void onClick(final View view) {
     int id = view.getId();
+
     if (id == R.id.crop_btn) {
+      if (imageLoaded) {
         mListener.onCropClicked(getBitmapCache(originalBitmap));
         photoEditorView.hidePaintView();
+      }else{
+        ErrorMsg(view.getContext());
+      }
     } else if (id == R.id.stickers_btn) {
-      setMode(MODE_STICKER);
+      if (imageLoaded) {
+        setMode(MODE_STICKER);
+      }else{
+        ErrorMsg(view.getContext());
+      }
     } else if (id == R.id.add_text_btn) {
-      setMode(MODE_ADD_TEXT);
+      if (imageLoaded) {
+        setMode(MODE_ADD_TEXT);
+      }else{
+        ErrorMsg(view.getContext());
+      }
     } else if (id == R.id.paint_btn) {
-      setMode(MODE_PAINT);
+      if (imageLoaded) {
+        setMode(MODE_PAINT);
+      }else{
+        ErrorMsg(view.getContext());
+      }
     } else if (id == R.id.back_iv) {
       getActivity().onBackPressed();
     }else if (id == R.id.done_btn) {
-        if (imageLoaded){
-          new ProcessingImage(getBitmapCache(mainBitmap), Utility.getCacheFilePath(view.getContext()),
-                  new TaskCallback<String>() {
-                    @Override
-                    public void onTaskDone(String data) {
-                      mListener.onDoneClicked(data);
-                    }
-                  }).execute();
-        }else{
-          Toast.makeText(view.getContext(), view.getContext().getString(R.string.please_wait_for_the_image_to_load), Toast.LENGTH_SHORT).show();
-        }
+      if (imageLoaded) {
+        new ProcessingImage(getBitmapCache(mainBitmap), Utility.getCacheFilePath(view.getContext()),
+                new TaskCallback<String>() {
+                  @Override
+                  public void onTaskDone(String data) {
+                    mListener.onDoneClicked(data);
+                  }
+                }).execute();
+      }else{
+        ErrorMsg(view.getContext());
+      }
     }
 
     if (currentMode != MODE_NONE) {
@@ -302,6 +319,10 @@ public class PhotoEditorFragment extends BaseFragment
       photoEditorView.animate().scaleY(1f);
       //touchView.setVisibility(View.GONE);
     }
+  }
+
+  private void ErrorMsg(Context context) {
+    Toast.makeText(context, context.getString(R.string.please_wait_for_the_image_to_load), Toast.LENGTH_SHORT).show();
   }
 
   private void onAddTextMode(boolean status) {
