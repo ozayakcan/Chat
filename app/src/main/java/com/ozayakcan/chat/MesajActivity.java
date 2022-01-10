@@ -224,18 +224,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (getirilecekMesaj.equals(MesajFonksiyonlari.KaydedilecekTur)){
                 if(intent.getAction().equals(Veritabani.FotografCek)){
-                    new ImageEditor.Builder(MesajActivity.this, intent.getStringExtra(Veritabani.Fotograf)).open();
-                }
-            }
-        }
-    };
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case ImageEditor.RC_IMAGE_EDITOR:
-                if (resultCode == Activity.RESULT_OK && data != null){
-                    String resimUrl = data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH);
+                    String resimUrl = intent.getStringExtra(Veritabani.Fotograf);
                     File resim = new File(resimUrl);
                     ResimlerClass.getInstance(MesajActivity.this).ResimYukle(Uri.fromFile(resim), firebaseUser.getUid() + "/" + Veritabani.MesajTablosu + "/"+ telefonString + "/" + System.currentTimeMillis() + ResimlerClass.VarsayilanResimUzantisi, progressBarLayout, new ResimlerClass.ResimYukleSonuc() {
                         @Override
@@ -256,9 +245,9 @@ public class MesajActivity extends KullaniciAppCompatActivity {
                         }
                     });
                 }
-                break;
+            }
         }
-    }
+    };
 
     private boolean YeniMesajlar(boolean temizle, int ekle) {
         for (int i = mesajList.size() - 1; i >= 0; i--){

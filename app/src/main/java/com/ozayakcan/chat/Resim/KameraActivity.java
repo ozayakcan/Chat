@@ -1,25 +1,38 @@
 package com.ozayakcan.chat.Resim;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.VideoResult;
+import com.otaliastudios.cameraview.controls.AudioCodec;
 import com.otaliastudios.cameraview.controls.Facing;
 import com.otaliastudios.cameraview.controls.Flash;
+import com.otaliastudios.cameraview.controls.Mode;
+import com.otaliastudios.cameraview.controls.VideoCodec;
+import com.ozayakcan.chat.MesajActivity;
+import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
+import com.passiondroid.imageeditorlib.ImageEditor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +57,9 @@ public class KameraActivity extends AppCompatActivity {
 
     private long KAMERA_DURUMU = KAMERA_ARKA;
 
+    private int VIDEO_SURESI = 30000;
+    private String VIDEO_DOSYA_ADI = System.currentTimeMillis()+".mp4";
+
     CameraView kamera;
     private ImageView flashBtn;
 
@@ -52,10 +68,19 @@ public class KameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kamera);
         kamera = findViewById(R.id.camera);
-        ImageView kameraBtn = findViewById(R.id.kameraBtn);
-
+        KameraButonView kameraBtn = findViewById(R.id.kameraBtn);
+        if (Izinler.getInstance(KameraActivity.this).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            String medyaKlasoru = ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/";
+            File klasor = new File(medyaKlasoru);
+            if (klasor.exists()){
+                MedyalariSil(klasor);
+            }
+        }
         //Kamera Fonksiyonları
         kamera.setLifecycleOwner(this);
+        kamera.setVideoMaxDuration(VIDEO_SURESI);
+        kamera.setVideoCodec(VideoCodec.DEVICE_DEFAULT);
+        kamera.setAudioCodec(AudioCodec.DEVICE_DEFAULT);
         kamera.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(@NonNull PictureResult result) {
@@ -77,10 +102,7 @@ public class KameraActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(dosya);
                     fos.write(result.getData());
                     fos.close();
-                    Intent intent = new Intent(Veritabani.FotografCek);
-                    intent.putExtra(Veritabani.Fotograf, dosya.getAbsolutePath());
-                    LocalBroadcastManager.getInstance(KameraActivity.this).sendBroadcast(intent);
-                    Geri();
+                    new ImageEditor.Builder(KameraActivity.this, dosya.getAbsolutePath()).open();
                 } catch (IOException e) {
                     Toast.makeText(KameraActivity.this, getString(R.string.could_not_take_a_photo), Toast.LENGTH_SHORT).show();
                     Geri();
@@ -91,8 +113,31 @@ public class KameraActivity extends AppCompatActivity {
             public void onVideoTaken(@NonNull VideoResult result) {
                 super.onVideoTaken(result);
             }
+
         });
-        kameraBtn.setOnClickListener(v -> kamera.takePicture());
+        kameraBtn.setKameraButonListener(new KameraButonView.KameraButonListener() {
+            @Override
+            public void FotografCek() {
+                kamera.setMode(Mode.PICTURE);
+                kamera.takePicture();
+            }
+
+            @Override
+            public void VideoyuBaslat() {
+                kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_kirmizi));
+                kamera.setMode(Mode.VIDEO);
+                VIDEO_DOSYA_ADI = System.currentTimeMillis()+".mp4";
+                kamera.takeVideoSnapshot(new File(ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/"+VIDEO_DOSYA_ADI));
+            }
+
+            @Override
+            public void VideoyuDurdur() {
+                kamera.postDelayed(() -> {
+                    kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_beyaz));
+                    kamera.stopVideo();
+                }, 500);
+            }
+        });
 
         //Flash
         flashBtn = findViewById(R.id.flashBtn);
@@ -105,7 +150,6 @@ public class KameraActivity extends AppCompatActivity {
         KameraAyarla(KAMERA_DURUMU);
         kameraDegistirBtn.setOnClickListener(v -> KameraDegistir(KAMERA_DURUMU));
     }
-
     private void FlashiAyarla(long flash_durumu) {
         if (flash_durumu == FLASH_KAPALI){
             flashBtn.setImageResource(R.drawable.ic_baseline_flash_off_24);
@@ -143,6 +187,28 @@ public class KameraActivity extends AppCompatActivity {
         KameraAyarla(KAMERA_DURUMU);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ImageEditor.RC_IMAGE_EDITOR){
+            if (resultCode == Activity.RESULT_OK && data != null){
+                Intent intent = new Intent(Veritabani.FotografCek);
+                intent.putExtra(Veritabani.Fotograf, data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH));
+                LocalBroadcastManager.getInstance(KameraActivity.this).sendBroadcast(intent);
+                Geri();
+            }
+        }
+    }
+
+    private void MedyalariSil(File klasor) {
+        if (klasor.isDirectory()){
+            for (File dosya : klasor.listFiles()){
+                MedyalariSil(dosya);
+            }
+        }
+        boolean b = klasor.delete();
+        Log.d("Silindi", b+"");
+    }
     private void Geri() {
         finish();
         overridePendingTransition(R.anim.yukaridan_asagi_giris, R.anim.yukaridan_asagi_cikis);
