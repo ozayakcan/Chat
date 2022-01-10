@@ -59,7 +59,7 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
             params.addRule(RelativeLayout.ALIGN_BOTTOM, holder.mesajResim.getId());
             params.setMargins(0, 0, 0, 0);
             holder.mesajText.setVisibility(View.GONE);
-            ResimlerClass.getInstance(mContext).ResimGoster(mesaj.getMesaj(), holder.mesajResim, R.drawable.arkaplan_beyaz);
+            ResimlerClass.getInstance(mContext).ResimGoster(mesaj.getMesaj(), holder.mesajResim, R.drawable.ic_baseline_image_100);
             holder.mesajResim.setVisibility(View.VISIBLE);
         }else{
             params.addRule(RelativeLayout.END_OF, holder.mesajText.getId());
