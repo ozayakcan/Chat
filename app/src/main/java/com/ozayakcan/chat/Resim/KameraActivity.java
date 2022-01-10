@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -118,16 +120,26 @@ public class KameraActivity extends AppCompatActivity {
         kameraBtn.setKameraButonListener(new KameraButonView.KameraButonListener() {
             @Override
             public void FotografCek() {
-                kamera.setMode(Mode.PICTURE);
-                kamera.takePicture();
+                if (Izinler.getInstance(KameraActivity.this).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    kamera.setMode(Mode.PICTURE);
+                    kamera.takePicture();
+                }else{
+                    Toast.makeText(KameraActivity.this, getString(R.string.you_must_grant_file_permission), Toast.LENGTH_SHORT).show();
+                    Izinler.getInstance(KameraActivity.this).Sor(Manifest.permission.READ_EXTERNAL_STORAGE, kameraIzniResultLauncher);
+                }
             }
 
             @Override
             public void VideoyuBaslat() {
-                /*kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_kirmizi));
-                kamera.setMode(Mode.VIDEO);
-                VIDEO_DOSYA_ADI = System.currentTimeMillis()+".mp4";
-                kamera.takeVideoSnapshot(new File(ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/"+VIDEO_DOSYA_ADI));*/
+                /*if (Izinler.getInstance(KameraActivity.this).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                    kameraBtn.setBackground(ContextCompat.getDrawable(KameraActivity.this, R.drawable.yuvarlak_arkaplan_kirmizi));
+                    kamera.setMode(Mode.VIDEO);
+                    VIDEO_DOSYA_ADI = System.currentTimeMillis()+".mp4";
+                    kamera.takeVideoSnapshot(new File(ResimlerClass.getInstance(KameraActivity.this).MedyaKonumu()+"/"+VIDEO_DOSYA_ADI));
+                }else{
+                    Toast.makeText(KameraActivity.this, getString(R.string.you_must_grant_file_permission), Toast.LENGTH_SHORT).show();
+                    Izinler.getInstance(KameraActivity.this).Sor(Manifest.permission.READ_EXTERNAL_STORAGE, kameraIzniResultLauncher);
+                }*/
             }
 
             @Override
@@ -150,6 +162,7 @@ public class KameraActivity extends AppCompatActivity {
         KameraAyarla(KAMERA_DURUMU);
         kameraDegistirBtn.setOnClickListener(v -> KameraDegistir(KAMERA_DURUMU));
     }
+
     private void FlashiAyarla(long flash_durumu) {
         if (flash_durumu == FLASH_KAPALI){
             flashBtn.setImageResource(R.drawable.ic_baseline_flash_off_24);
@@ -185,6 +198,17 @@ public class KameraActivity extends AppCompatActivity {
             KAMERA_DURUMU = KAMERA_ON;
         }
         KameraAyarla(KAMERA_DURUMU);
+    }
+    ActivityResultLauncher<String> kameraIzniResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (!result){
+                    KameraIzniVerilmedi();
+                }
+            });
+
+    private void KameraIzniVerilmedi() {
+        Izinler.getInstance(KameraActivity.this).ZorunluIzinUyariKutusu(Manifest.permission.READ_EXTERNAL_STORAGE, kameraIzniResultLauncher);
     }
 
     @Override

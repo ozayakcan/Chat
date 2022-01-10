@@ -112,4 +112,5 @@
     <string name="could_not_update_profile_photo">Profil resmi güncellenemedi!</string>
     <string name="sending_media">Medya gönderiliyor</string>
     <string name="flash">Flash</string>
+    <string name="you_must_grant_file_permission">Bu işlem için dosya izni vermelisiniz!</string>
 </resources>
