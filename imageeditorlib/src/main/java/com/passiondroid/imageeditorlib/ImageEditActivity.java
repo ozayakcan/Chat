@@ -15,9 +15,7 @@ import com.passiondroid.imageeditorlib.utils.FragmentUtil;
 import java.io.File;
 
 public class ImageEditActivity extends BaseImageEditActivity
-    implements PhotoEditorFragment.OnFragmentInteractionListener,
-    CropFragment.OnFragmentInteractionListener {
-  private Rect cropRect;
+    implements PhotoEditorFragment.OnFragmentInteractionListener {
   private String oldImagePath;
   //private View touchView;
 
@@ -31,12 +29,6 @@ public class ImageEditActivity extends BaseImageEditActivity
       FragmentUtil.addFragment(this, R.id.fragment_container,
           PhotoEditorFragment.newInstance(oldImagePath));
     }
-  }
-
-  @Override
-  public void onCropClicked(Bitmap bitmap) {
-    FragmentUtil.replaceFragment(this, R.id.fragment_container,
-        CropFragment.newInstance(bitmap, cropRect));
   }
 
   @Override
@@ -55,38 +47,18 @@ public class ImageEditActivity extends BaseImageEditActivity
   }
 
   @Override
-  public void onImageCropped(Bitmap bitmap, Rect cropRect) {
-    this.cropRect = cropRect;
-    PhotoEditorFragment photoEditorFragment =
-        (PhotoEditorFragment) FragmentUtil.getFragmentByTag(this,
-            PhotoEditorFragment.class.getSimpleName());
-    if (photoEditorFragment != null) {
-      photoEditorFragment.setImageWithRect(cropRect);
-      photoEditorFragment.reset();
-      FragmentUtil.removeFragment(this,
-          (BaseFragment) FragmentUtil.getFragmentByTag(this, CropFragment.class.getSimpleName()));
-    }
-  }
-
-  @Override
-  public void onCancelCrop() {
-    FragmentUtil.removeFragment(this,
-        (BaseFragment) FragmentUtil.getFragmentByTag(this, CropFragment.class.getSimpleName()));
-  }
-
-  @Override
   public void onBackPressed() {
-    ResmiSil();
+    DeletePhoto();
     super.onBackPressed();
   }
 
   @Override
   protected void onDestroy() {
-    ResmiSil();
+    DeletePhoto();
     super.onDestroy();
   }
 
-  private void ResmiSil() {
+  private void DeletePhoto() {
     File oldImage = new File(oldImagePath);
     if (oldImage.exists()){
       boolean b = oldImage.delete();

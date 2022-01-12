@@ -58,21 +58,11 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="5dp"
-        android:layout_toStartOf="@+id/crop_btn"
+        android:layout_toStartOf="@+id/stickers_btn"
         android:padding="8dp"
         android:textColor="@color/white"
         android:text="@string/reset"
         android:gravity="center"/>
-
-    <ImageView
-        android:id="@+id/crop_btn"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="5dp"
-        android:layout_toStartOf="@+id/stickers_btn"
-        android:padding="8dp"
-        android:src="@drawable/ic_cam_crop_rotate" />
-
 
     <ImageView
         android:id="@+id/stickers_btn"

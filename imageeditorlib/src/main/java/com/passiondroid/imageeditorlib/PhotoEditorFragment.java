@@ -39,7 +39,6 @@ public class PhotoEditorFragment extends BaseFragment
 
   ImageViewTouch mainImageView;
   TextView resetButton;
-  ImageView cropButton;
   ImageView stickerButton;
   ImageView addTextButton;
   PhotoEditorView photoEditorView;
@@ -101,7 +100,6 @@ public class PhotoEditorFragment extends BaseFragment
 
 
   public interface OnFragmentInteractionListener {
-    void onCropClicked(Bitmap bitmap);
 
     void onDoneClicked(String imagePath);
   }
@@ -117,52 +115,12 @@ public class PhotoEditorFragment extends BaseFragment
     });
   }
 
-  public void setImageWithRect(Rect rect) {
-    mainBitmap = getScaledBitmap(getCroppedBitmap(getBitmapCache(originalBitmap), rect));
-    mainImageView.setImageBitmap(mainBitmap);
-    mainImageView.post(new Runnable() {
-      @Override
-      public void run() {
-        photoEditorView.setBounds(mainImageView.getBitmapRect());
-      }
-    });
-
-//    new GetFiltersTask(new TaskCallback<ArrayList<ImageFilter>>() {
-//      @Override public void onTaskDone(ArrayList<ImageFilter> data) {
-//        FilterImageAdapter filterImageAdapter = (FilterImageAdapter) filterRecylerview.getAdapter();
-//        if (filterImageAdapter != null) {
-//          filterImageAdapter.setData(data);
-//          filterImageAdapter.notifyDataSetChanged();
-//        }
-//      }
-//    }, mainBitmap).execute();
-  }
-
-  private Bitmap getScaledBitmap(Bitmap resource){
-    int currentBitmapWidth = resource.getWidth();
-    int currentBitmapHeight = resource.getHeight();
-    int ivWidth = mainImageView.getWidth();
-    int newHeight = (int) Math.floor(
-        (double) currentBitmapHeight * ((double) ivWidth / (double) currentBitmapWidth));
-    return Bitmap.createScaledBitmap(resource, ivWidth, newHeight, true);
-  }
-
-  private Bitmap getCroppedBitmap(Bitmap srcBitmap, Rect rect){
-    // Crop the subset from the original Bitmap.
-    return Bitmap.createBitmap(srcBitmap,
-        rect.left,
-        rect.top,
-        (rect.right-rect.left),
-        (rect.bottom-rect.top));
-  }
-
   public void reset(){
     photoEditorView.reset();
   }
 
   protected void initView(View view) {
     mainImageView = view.findViewById(R.id.image_iv);
-    cropButton = view.findViewById(R.id.crop_btn);
     resetButton = view.findViewById(R.id.reset_btn);
     stickerButton = view.findViewById(R.id.stickers_btn);
     addTextButton = view.findViewById(R.id.add_text_btn);
@@ -224,14 +182,12 @@ public class PhotoEditorFragment extends BaseFragment
 
       Intent intent = getActivity().getIntent();
       setVisibility(addTextButton,intent.getBooleanExtra(ImageEditor.EXTRA_IS_TEXT_MODE, false));
-      setVisibility(cropButton,intent.getBooleanExtra(ImageEditor.EXTRA_IS_CROP_MODE, false));
       setVisibility(stickerButton,intent.getBooleanExtra(ImageEditor.EXTRA_IS_STICKER_MODE, false));
       setVisibility(paintButton,intent.getBooleanExtra(ImageEditor.EXTRA_IS_PAINT_MODE, false));
 
 
       photoEditorView.setImageView(mainImageView, deleteButton, this);
       resetButton.setOnClickListener(this);
-      cropButton.setOnClickListener(this);
       stickerButton.setOnClickListener(this);
       addTextButton.setOnClickListener(this);
       paintButton.setOnClickListener(this);
@@ -283,13 +239,6 @@ public class PhotoEditorFragment extends BaseFragment
       }else{
         ErrorMsg(view.getContext());
       }
-    } else if (id == R.id.crop_btn) {
-      if (imageLoaded) {
-        mListener.onCropClicked(getBitmapCache(originalBitmap));
-        photoEditorView.hidePaintView();
-      }else{
-        ErrorMsg(view.getContext());
-      }
     } else if (id == R.id.stickers_btn) {
       if (imageLoaded) {
         setMode(MODE_STICKER);
@@ -313,12 +262,7 @@ public class PhotoEditorFragment extends BaseFragment
     }else if (id == R.id.done_btn) {
       if (imageLoaded) {
         new ProcessingImage(getBitmapCache(mainBitmap), Utility.getCacheFilePath(view.getContext()),
-                new TaskCallback<String>() {
-                  @Override
-                  public void onTaskDone(String data) {
-                    mListener.onDoneClicked(data);
-                  }
-                }).execute();
+                data -> mListener.onDoneClicked(data)).executeAsync();
       }else{
         ErrorMsg(view.getContext());
       }

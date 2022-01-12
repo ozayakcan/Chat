@@ -10,18 +10,15 @@ public class ImageEditor {
   public static final int EDITOR_STICKER = 1;
   public static final int EDITOR_TEXT = 2;
   public static final int EDITOR_PAINT = 3;
-  public static final int EDITOR_CROP = 4;
   public static final int EDITOR_FILTERS = 5;
 
   public static final String EXTRA_STICKER_FOLDER_NAME="EXTRA_STICKER_FOLDER_NAME";
   public static final String EXTRA_IS_TEXT_MODE="EXTRA_IS_TEXT_MODE";
   public static final String EXTRA_IS_PAINT_MODE="EXTRA_IS_PAINT_MODE";
   public static final String EXTRA_IS_STICKER_MODE="EXTRA_IS_STICKER_MODE";
-  public static final String EXTRA_IS_CROP_MODE ="EXTRA_IS_CROP_MODE";
   public static final String EXTRA_HAS_FILTERS ="EXTRA_HAS_FILTERS";
   public static final String EXTRA_IMAGE_PATH="EXTRA_IMAGE_PATH";
   public static final String EXTRA_ORIGINAL="EXTRA_ORIGINAL";
-  public static final String EXTRA_CROP_RECT="EXTRA_CROP_RECT";
 
   public static final String EXTRA_EDITED_PATH ="EXTRA_EDITED_PATH";
 
@@ -35,7 +32,6 @@ public class ImageEditor {
     private boolean enabledEditorText = true;
     private boolean enabledEditorPaint = true;
     private boolean enabledEditorSticker = false;
-    private boolean enableEditorCrop = false;
     private boolean enableFilters = true;
 
     public Builder(Activity context, String imagePath) {
@@ -54,9 +50,6 @@ public class ImageEditor {
       else if(editorType==EDITOR_PAINT){
         enabledEditorPaint = false;
       }
-      else if(editorType==EDITOR_CROP){
-        enableEditorCrop = false;
-      }
       return this;
     }
 
@@ -67,7 +60,6 @@ public class ImageEditor {
         intent.putExtra(ImageEditor.EXTRA_IS_PAINT_MODE, enabledEditorPaint);
         intent.putExtra(ImageEditor.EXTRA_IS_STICKER_MODE, enabledEditorSticker);
         intent.putExtra(ImageEditor.EXTRA_IS_TEXT_MODE, enabledEditorText);
-        intent.putExtra(ImageEditor.EXTRA_IS_CROP_MODE, enableEditorCrop);
         intent.putExtra(ImageEditor.EXTRA_HAS_FILTERS, enableFilters);
         intent.putExtra(ImageEditor.EXTRA_IMAGE_PATH, imagePath);
         context.startActivityForResult(intent, RC_IMAGE_EDITOR);
