@@ -2,14 +2,19 @@ package com.passiondroid.imageeditorlib.utils;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Insets;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowInsets;
 import android.view.WindowManager.LayoutParams;
+import android.view.WindowMetrics;
 import android.widget.PopupWindow;
 import com.passiondroid.imageeditorlib.R;
 
@@ -45,6 +50,7 @@ public class KeyboardHeightProvider extends PopupWindow {
      * 
      * @param activity The parent activity
      */
+    @SuppressWarnings("deprecation")
     public KeyboardHeightProvider(Activity activity) {
         super(activity);
         this.activity = activity;
@@ -52,8 +58,9 @@ public class KeyboardHeightProvider extends PopupWindow {
         LayoutInflater inflator = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         this.popupView = inflator.inflate(R.layout.popwindow, null, false);
         setContentView(popupView);
-
-        setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE | LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE | LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
         setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 
         parentView = activity.findViewById(android.R.id.content);
@@ -119,11 +126,23 @@ public class KeyboardHeightProvider extends PopupWindow {
      * The keyboard can then be calculated by extracting the popup view bottom 
      * from the activity window height. 
      */
+    @SuppressWarnings("deprecation")
     private void handleOnGlobalLayout() {
 
         Point screenSize = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
-
+        //activity.getWindowManager().getDefaultDisplay().getSize(screenSize);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            screenSize.x = windowMetrics.getBounds().width() - insets.left - insets.right;
+            screenSize.y = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            screenSize.x = displayMetrics.widthPixels;
+            screenSize.y = displayMetrics.heightPixels;
+        }
         Rect rect = new Rect();
         popupView.getWindowVisibleDisplayFrame(rect);
 
