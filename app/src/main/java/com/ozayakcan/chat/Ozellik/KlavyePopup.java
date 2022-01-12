@@ -38,6 +38,7 @@ public class KlavyePopup extends PopupWindow {
 
     private final Activity activity;
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     public KlavyePopup(Activity activity) {
         super(activity);
