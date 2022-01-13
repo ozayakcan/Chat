@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
@@ -51,7 +52,6 @@ public class ResimlerClass {
         return new ResimlerClass(context);
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     public void ResimGoster(String resim, ImageView resimIW, int varsayilanResimID){
         Picasso.get().load(resim).networkPolicy(NetworkPolicy.OFFLINE).error(varsayilanResimID).into(resimIW, new Callback() {
             @Override
@@ -65,6 +65,21 @@ public class ResimlerClass {
             }
         });
     }
+    public void ResimGoster(File dosya, ImageView resimIW, int varsayilanResimID){
+        Picasso.get().load(dosya).error(varsayilanResimID).into(resimIW);
+    }
+    public void GaleriyiAc(String isim) {
+        Intent intent = new Intent(mContext, GaleriActivity.class);
+        intent.putExtra(Veritabani.IsimKey, isim);
+        mContext.startActivity(intent);
+        ((Activity) mContext).overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+    }
+
+    public void KamerayiAc() {
+        mContext.startActivity(new Intent(mContext, KameraActivity.class));
+        ((Activity) mContext).overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+    }
+
     public interface ResimYukleSonuc{
         void Basarili(String resimUrl);
         void Basarisiz(String hata);

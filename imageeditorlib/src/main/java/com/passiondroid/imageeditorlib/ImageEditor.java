@@ -18,6 +18,7 @@ public class ImageEditor {
   public static final String EXTRA_IS_STICKER_MODE="EXTRA_IS_STICKER_MODE";
   public static final String EXTRA_HAS_FILTERS ="EXTRA_HAS_FILTERS";
   public static final String EXTRA_IMAGE_PATH="EXTRA_IMAGE_PATH";
+  public static final String EXTRA_CACHE="EXTRA_CACHE";
   public static final String EXTRA_ORIGINAL="EXTRA_ORIGINAL";
 
   public static final String EXTRA_EDITED_PATH ="EXTRA_EDITED_PATH";
@@ -29,14 +30,16 @@ public class ImageEditor {
     private final String imagePath;
     private Activity context;
     private String stickerFolderName;
+    private boolean isCache = true;
     private boolean enabledEditorText = true;
     private boolean enabledEditorPaint = true;
     private boolean enabledEditorSticker = false;
     private boolean enableFilters = true;
 
-    public Builder(Activity context, String imagePath) {
+    public Builder(Activity context, String imagePath, boolean isCache) {
       this.context = context;
       this.imagePath = imagePath;
+      this.isCache = isCache;
     }
     public Builder setStickerAssets(String folderName){
       this.stickerFolderName = folderName;
@@ -62,6 +65,7 @@ public class ImageEditor {
         intent.putExtra(ImageEditor.EXTRA_IS_TEXT_MODE, enabledEditorText);
         intent.putExtra(ImageEditor.EXTRA_HAS_FILTERS, enableFilters);
         intent.putExtra(ImageEditor.EXTRA_IMAGE_PATH, imagePath);
+        intent.putExtra(ImageEditor.EXTRA_CACHE, isCache);
         context.startActivityForResult(intent, RC_IMAGE_EDITOR);
       }
       else{

@@ -113,4 +113,7 @@
     <string name="sending_media">Medya gönderiliyor</string>
     <string name="flash">Flash</string>
     <string name="you_must_grant_file_permission">Bu işlem için dosya izni vermelisiniz!</string>
+    <string name="send_s">Gönder: %s</string>
+    <string name="image">Resim</string>
+    <string name="image_not_found">Resim bulunamadı.</string>
 </resources>

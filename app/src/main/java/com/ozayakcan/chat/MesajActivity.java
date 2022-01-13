@@ -42,6 +42,7 @@ import com.ozayakcan.chat.Ozellik.KullaniciAppCompatActivity;
 import com.ozayakcan.chat.Ozellik.MesajFonksiyonlari;
 import com.ozayakcan.chat.Ozellik.Metinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
+import com.ozayakcan.chat.Resim.GaleriActivity;
 import com.ozayakcan.chat.Resim.KameraActivity;
 import com.ozayakcan.chat.Resim.ResimlerClass;
 import com.passiondroid.imageeditorlib.ImageEditor;
@@ -71,6 +72,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
     private boolean ilkAcilis = true;
 
     private String telefonString;
+    private String isimString;
     private String tabloString = Veritabani.MesajTablosu;
     private MesajAdapter mesajAdapter;
     private List<Mesaj> mesajList;
@@ -102,7 +104,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
 
         Intent intent = getIntent();
         idString = intent.getStringExtra(Veritabani.IDKey);
-        String isimString = intent.getStringExtra(Veritabani.IsimKey);
+        isimString = intent.getStringExtra(Veritabani.IsimKey);
         telefonString = intent.getStringExtra(Veritabani.TelefonKey);
         String profilResmiString = intent.getStringExtra(Veritabani.ProfilResmiKey);
         String intentTabloString = intent.getStringExtra(Veritabani.MesajTablosu);
@@ -192,26 +194,17 @@ public class MesajActivity extends KullaniciAppCompatActivity {
         //dosyaGonderLayout.setVisibility(goster ? View.VISIBLE : View.GONE);
         LinearLayout kameraAc = findViewById(R.id.kameraAc);
         LinearLayout resimGaleri = findViewById(R.id.resimGaleri);
-        LinearLayout videoGaleri = findViewById(R.id.videoGaleri);
         kameraAc.setOnClickListener(v -> {
             if (goster){
                 Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                startActivity(new Intent(MesajActivity.this, KameraActivity.class));
-                overridePendingTransition(R.anim.asagidan_yukari_giris, R.anim.asagidan_yukari_cikis);
+                ResimlerClass.getInstance(MesajActivity.this).KamerayiAc();
                 DosyaGonderimiPenceresi(false);
             }
         });
         resimGaleri.setOnClickListener(v -> {
             if (goster){
                 Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                Toast.makeText(MesajActivity.this, "Galeriden resim seçme eklenecek.", Toast.LENGTH_SHORT).show();
-                DosyaGonderimiPenceresi(false);
-            }
-        });
-        videoGaleri.setOnClickListener(v -> {
-            if (goster){
-                Metinler.getInstance(MesajActivity.this).KlavyeKapat(gonderText);
-                Toast.makeText(MesajActivity.this, "Galeriden video seçme eklenecek.", Toast.LENGTH_SHORT).show();
+                ResimlerClass.getInstance(MesajActivity.this).GaleriyiAc(isimString.equals("") ? telefonString : isimString);
                 DosyaGonderimiPenceresi(false);
             }
         });

@@ -17,14 +17,17 @@ import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatApp extends Application {
 
     private static Context appContext;
     public static int MaxMesajKarakterSayisi = 20;
-    public static String TarihSaatFormati = "dd/MM/yyyy HH:mm";
+    public static String TarihSaatFormati = "dd/MM/yyyy HH:mm:ss";
     public static String TarihFormati = "dd/MM/yyyy";
     public static String SaatFormati = "HH:mm";
 
@@ -118,6 +121,10 @@ public class ChatApp extends Application {
         }else{
             return tarihStr;
         }
+    }
+    public static long DateToMillis(Date date){
+
+        return date.getTime();
     }
     public static void registerBroadcastReceiver(BroadcastReceiver broadcastReceiver, String intentaction) {
         LocalBroadcastManager.getInstance(getAppContext()).registerReceiver(broadcastReceiver,
