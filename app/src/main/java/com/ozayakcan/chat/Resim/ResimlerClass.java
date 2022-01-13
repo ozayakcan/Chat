@@ -1,13 +1,14 @@
 package com.ozayakcan.chat.Resim;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ozayakcan.chat.MesajActivity;
 import com.ozayakcan.chat.Ozellik.Izinler;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
@@ -34,6 +34,13 @@ import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ResimlerClass {
 
@@ -194,5 +201,36 @@ public class ResimlerClass {
         intent.putExtra(Veritabani.IsimKey, isim);
         intent.putExtra(Veritabani.ProfilResmiKey, profilResmi);
         mContext.startActivity(intent);
+    }
+    public interface KopyalaListener{
+        void Tamamlandi(String konum);
+        void Tamamlanamadi(String hata);
+    }
+    public void Kopyala(File kaynak, File hedef, String kopyalanacakKonum, KopyalaListener kopyalaListener) {
+        Executor executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                File klasor = new File(kopyalanacakKonum);
+                if (!klasor.exists()) {
+                    boolean b = klasor.mkdirs();
+                    Log.d("Kopyala", b+"");
+                }
+                try (InputStream inputStream = new FileInputStream(kaynak)) {
+                    try (OutputStream out = new FileOutputStream(hedef)) {
+                        byte[] bytes = new byte[(int) kaynak.length()];
+                        int uzunluk;
+                        while ((uzunluk = inputStream.read(bytes)) > 0) {
+                            out.write(bytes, 0, uzunluk);
+                        }
+                    }
+                } catch (IOException e) {
+                    handler.post(() -> kopyalaListener.Tamamlanamadi(e.getLocalizedMessage()));
+                }finally {
+                    handler.post(() -> kopyalaListener.Tamamlandi(hedef.getAbsolutePath()));
+                }
+            }
+        });
     }
 }

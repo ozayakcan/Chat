@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.ozayakcan.chat.R;
 import com.passiondroid.imageeditorlib.ImageEditor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -41,6 +43,7 @@ public class GaleriActivity extends AppCompatActivity {
     private Handler handler;
 
     private List<Resim> resimlerList;
+    private ResimAdapter resimAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +118,7 @@ public class GaleriActivity extends AppCompatActivity {
             }
             cursor.close();
             handler.post(() -> {
-                ResimAdapter resimAdapter = new ResimAdapter(GaleriActivity.this, resimlerList);
+                resimAdapter = new ResimAdapter(GaleriActivity.this, resimlerList);
                 resimlerGW.setAdapter(resimAdapter);
                 resimlerGW.setOnItemClickListener((parent, view, position, id) -> {
                     if (resimlerList.size() > position){
@@ -123,6 +126,8 @@ public class GaleriActivity extends AppCompatActivity {
                         ResimGonder(resim.getKonum());
                     }
                 });
+                resimAdapter.notifyDataSetChanged();
+                resimlerGW.invalidate();
             });
         });
     }
@@ -136,12 +141,30 @@ public class GaleriActivity extends AppCompatActivity {
                     Geri();
                 }
             });
-    public void ResimGonder(String konum){
-        if (new File(konum).exists()){
-            new ImageEditor.Builder(GaleriActivity.this, konum, false).setStickerAssets(ResimlerClass.Sticker_Dosya_Adi).open();
+    public void ResimGonder(String resimKonumu){
+        if (Izinler.getInstance(GaleriActivity.this).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            File resim = new File(resimKonumu);
+            if (resim.exists()){
+                String kopyalanacakKlasor = ResimlerClass.getInstance(GaleriActivity.this).MedyaKonumu()+"/";
+                File yeniKonum = new File(kopyalanacakKlasor+System.currentTimeMillis()+ResimlerClass.VarsayilanResimUzantisi);
+                ResimlerClass.getInstance(GaleriActivity.this).Kopyala(resim, yeniKonum, kopyalanacakKlasor, new ResimlerClass.KopyalaListener() {
+                    @Override
+                    public void Tamamlandi(String konum) {
+                        new ImageEditor.Builder(GaleriActivity.this, konum).setStickerAssets(ResimlerClass.Sticker_Dosya_Adi).open();
+                    }
+
+                    @Override
+                    public void Tamamlanamadi(String hata) {
+                        Toast.makeText(GaleriActivity.this, getString(R.string.image_could_not_open), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(GaleriActivity.this, getString(R.string.image_not_found), Toast.LENGTH_SHORT).show();
+            }
         }else{
-            Toast.makeText(GaleriActivity.this, getString(R.string.image_not_found), Toast.LENGTH_SHORT).show();
+            Izinler.getInstance(GaleriActivity.this).Sor(Manifest.permission.READ_EXTERNAL_STORAGE, dosyaIzniResultLauncher);
         }
+
     }
 
     @Override
@@ -176,5 +199,11 @@ public class GaleriActivity extends AppCompatActivity {
         else{
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ResimleriGoster();
     }
 }

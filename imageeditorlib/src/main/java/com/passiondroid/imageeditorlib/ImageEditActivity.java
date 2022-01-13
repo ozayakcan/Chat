@@ -1,12 +1,9 @@
 package com.passiondroid.imageeditorlib;
 
-import static com.passiondroid.imageeditorlib.ImageEditor.EXTRA_CACHE;
 import static com.passiondroid.imageeditorlib.ImageEditor.EXTRA_IMAGE_PATH;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,7 +15,6 @@ import java.io.File;
 public class ImageEditActivity extends BaseImageEditActivity
     implements PhotoEditorFragment.OnFragmentInteractionListener {
   private String oldImagePath;
-  private boolean isCache = true;
   //private View touchView;
 
   @Override
@@ -27,7 +23,6 @@ public class ImageEditActivity extends BaseImageEditActivity
     setContentView(R.layout.activity_image_edit);
 
     oldImagePath = getIntent().getStringExtra(EXTRA_IMAGE_PATH);
-    isCache = getIntent().getBooleanExtra(EXTRA_CACHE, true);
     if (oldImagePath != null) {
       FragmentUtil.addFragment(this, R.id.fragment_container,
           PhotoEditorFragment.newInstance(oldImagePath));
@@ -62,11 +57,9 @@ public class ImageEditActivity extends BaseImageEditActivity
   }
 
   private void DeletePhoto() {
-    if (isCache){
-      File oldImage = new File(oldImagePath);
-      if (oldImage.exists()){
-        boolean b = oldImage.delete();
-      }
+    File oldImage = new File(oldImagePath);
+    if (oldImage.exists()){
+      boolean b = oldImage.delete();
     }
   }
 }

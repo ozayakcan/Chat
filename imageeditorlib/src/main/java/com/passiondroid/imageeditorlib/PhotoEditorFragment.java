@@ -1,12 +1,10 @@
 package com.passiondroid.imageeditorlib;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.LruCache;
@@ -27,7 +25,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.passiondroid.imageeditorlib.filter.ProcessingImage;
 import com.passiondroid.imageeditorlib.utils.Matrix3;
-import com.passiondroid.imageeditorlib.utils.TaskCallback;
 import com.passiondroid.imageeditorlib.utils.Utility;
 import com.passiondroid.imageeditorlib.views.PhotoEditorView;
 import com.passiondroid.imageeditorlib.views.VerticalSlideColorPicker;

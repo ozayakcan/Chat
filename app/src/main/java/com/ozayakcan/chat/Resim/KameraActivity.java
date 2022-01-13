@@ -104,7 +104,7 @@ public class KameraActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(dosya);
                     fos.write(result.getData());
                     fos.close();
-                    new ImageEditor.Builder(KameraActivity.this, dosya.getAbsolutePath(), true).setStickerAssets(ResimlerClass.Sticker_Dosya_Adi).open();
+                    new ImageEditor.Builder(KameraActivity.this, dosya.getAbsolutePath()).setStickerAssets(ResimlerClass.Sticker_Dosya_Adi).open();
                 } catch (IOException e) {
                     Toast.makeText(KameraActivity.this, getString(R.string.could_not_take_a_photo), Toast.LENGTH_SHORT).show();
                     Geri();
