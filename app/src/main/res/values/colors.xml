@@ -15,4 +15,5 @@
     <!--- Mesajlar -->
     <color name="tarihYaziRengi">#DAD5D5</color>
     <color name="saatYaziRengi">#9f9f9f</color>
+    <color name="saatGolgeRengi">#EB000000</color>
 </resources>

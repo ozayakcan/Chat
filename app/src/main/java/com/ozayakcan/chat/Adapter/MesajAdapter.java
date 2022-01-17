@@ -1,6 +1,7 @@
 package com.ozayakcan.chat.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -54,10 +55,15 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
         holder.tarihText.setText(mesaj.isTarihGoster() ? ChatApp.MesajTarihiBul(mesaj.getTarih(), false) : "");
         holder.tarihLayout.setVisibility(mesaj.isTarihGoster() ? View.VISIBLE : View.GONE);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.saat.getLayoutParams();
+        params.removeRule(RelativeLayout.END_OF);
+        params.removeRule(RelativeLayout.ALIGN_BOTTOM);
+        params.removeRule(RelativeLayout.ALIGN_END);
         if (mesaj.getMesajTuru() == Veritabani.MesajTuruResim){
-            params.addRule(RelativeLayout.END_OF, holder.mesajResim.getId());
+            params.addRule(RelativeLayout.ALIGN_END, holder.mesajResim.getId());
             params.addRule(RelativeLayout.ALIGN_BOTTOM, holder.mesajResim.getId());
             params.setMargins(0, 0, 0, 0);
+            holder.saat.setTextColor(Color.WHITE);
+            holder.saat.setShadowLayer(1.6f, 1.5f, 1.5f, ContextCompat.getColor(mContext, R.color.saatGolgeRengi));
             holder.mesajText.setVisibility(View.GONE);
             ResimlerClass.getInstance(mContext).ResimGoster(mesaj.getMesaj(), holder.mesajResim, R.drawable.ic_baseline_image_100);
             holder.mesajResim.setVisibility(View.VISIBLE);
@@ -66,6 +72,8 @@ public class MesajAdapter extends RecyclerView.Adapter<MesajAdapter.ViewHolder> 
             params.addRule(RelativeLayout.ALIGN_BOTTOM, holder.mesajText.getId());
             params.setMargins(0, 0, 0, 5);
             holder.mesajResim.setVisibility(View.GONE);
+            holder.saat.setTextColor(ContextCompat.getColor(mContext, R.color.saatYaziRengi));
+            holder.saat.setShadowLayer(0f,0f,0f, Color.WHITE);
             holder.mesajText.setText(mesaj.getMesaj());
             holder.mesajText.setVisibility(View.VISIBLE);
         }
