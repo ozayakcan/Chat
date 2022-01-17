@@ -33,9 +33,9 @@ public class Metinler {
         Toast.makeText(mContext, mContext.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show();
     }
 
-    public void KlavyeAc(){
+    public void KlavyeAc(EditText editText){
         InputMethodManager inputMethodManager = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        editText.postDelayed(() -> inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED), 200);
     }
 
     public void KlavyeKapat(EditText editText){

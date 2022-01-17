@@ -153,8 +153,8 @@ public class ProfilActivity extends KullaniciAppCompatActivity {
             Kaydet(degistirilecekBilgi);
         });
         acilirMenuDialog.show();
+        Metinler.getInstance(getApplicationContext()).KlavyeAc(acilirMenuEditText);
         acilirMenuEditText.selectAll();
-        Metinler.getInstance(getApplicationContext()).KlavyeAc();
     }
 
     private void Kaydet(int degistirilecekBilgi) {

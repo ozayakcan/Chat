@@ -137,7 +137,7 @@ public class MesajActivity extends KullaniciAppCompatActivity {
             }else{
                 getirilecekMesaj = MesajFonksiyonlari.KaydedilecekTur;
                 gonderText.requestFocus();
-                Metinler.getInstance(MesajActivity.this).KlavyeAc();
+                Metinler.getInstance(MesajActivity.this).KlavyeAc(gonderText);
             }
         }
         mesajlarRW = findViewById(R.id.mesajlarRW);
