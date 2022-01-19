@@ -1,9 +1,12 @@
 package com.ozayakcan.chat.Ozellik;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
 
@@ -24,6 +27,8 @@ import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Model.Mesaj;
 
 import java.util.HashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Veritabani {
 
@@ -133,11 +138,13 @@ public class Veritabani {
     public interface KisilerListener{
         void Tamamlandi();
     }
+    @SuppressLint("Range")
     public void KisileriEkle(FirebaseUser firebaseUser, KisilerListener kisilerListener){
         //Veritabanındaki kişiler siliniyor
         KisiSil(firebaseUser.getPhoneNumber());
-        //Rehberdeki kişiler veritabanına ekleniyor
-        ((Activity) mContext).runOnUiThread(() -> {
+        Executor executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
             if (cursor != null) {
@@ -164,18 +171,21 @@ public class Veritabani {
                                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        Kullanici kullanici = snapshot.getValue(Kullanici.class);
-                                        if (kullanici != null){
-                                            if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
-                                                kullanici.setIsim(isim);
-                                                KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
+                                        handler.post(() -> {
+                                            Kullanici kullanici = snapshot.getValue(Kullanici.class);
+                                            if (kullanici != null){
+                                                if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
+                                                    kullanici.setIsim(isim);
+                                                    KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
+                                                }
                                             }
-                                        }
+                                        });
+
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        kisilerListener.Tamamlandi();
+                                        handler.post(kisilerListener::Tamamlandi);
                                     }
                                 });
                             }
@@ -185,6 +195,10 @@ public class Veritabani {
                 }
                 cursor.close();
             }
+        });
+        //Rehberdeki kişiler veritabanına ekleniyor
+        ((Activity) mContext).runOnUiThread(() -> {
+
         });
     }
     public static void KisiEkle(Kullanici kullanici, String telefon, KisilerListener kisilerListener) {

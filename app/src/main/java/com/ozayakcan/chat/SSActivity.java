@@ -65,12 +65,7 @@ public class SSActivity extends AppCompatActivity {
                     }else{
                         if (SharedPreference.getInstance(SSActivity.this).GetirBoolean(SharedPreference.kullaniciKaydedildi, false)){
                             //Kaydedildi
-                            new Thread(() -> {
-                                Veritabani.getInstance(SSActivity.this).KisileriEkle(user, () -> {
-
-                                });
-                                startActivity(new Intent(SSActivity.this, MainActivity.class));
-                            }).start();
+                            startActivity(new Intent(SSActivity.this, MainActivity.class));
                         }else{
                             //Kaydedilmedi
                             Intent intent = new Intent(SSActivity.this, BilgilerActivity.class);

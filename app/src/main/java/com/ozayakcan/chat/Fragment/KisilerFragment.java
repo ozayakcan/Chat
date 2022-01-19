@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,6 +27,7 @@ import com.ozayakcan.chat.KisilerActivity;
 import com.ozayakcan.chat.MainActivity;
 import com.ozayakcan.chat.Model.Kullanici;
 import com.ozayakcan.chat.Ozellik.Izinler;
+import com.ozayakcan.chat.Ozellik.SharedPreference;
 import com.ozayakcan.chat.Ozellik.Veritabani;
 import com.ozayakcan.chat.R;
 
@@ -70,14 +72,34 @@ public class KisilerFragment extends Fragment {
     }
 
     public void KisileriYenile() {
-        progressBarLayout.setVisibility(View.VISIBLE);
-        Veritabani.getInstance(getContext()).KisileriEkle(firebaseUser, () -> {
-            progressBarLayout.setVisibility(View.GONE);
-            KisileriGoster();
-        });
+        if (Izinler.getInstance(getContext()).KontrolEt(Manifest.permission.READ_CONTACTS)){
+            progressBarLayout.setVisibility(View.VISIBLE);
+            Veritabani.getInstance(getContext()).KisileriEkle(firebaseUser, () -> {
+                progressBarLayout.setVisibility(View.GONE);
+                KisileriGoster();
+            });
+        }else{
+            Izinler.getInstance(getContext()).Sor(Manifest.permission.READ_CONTACTS, kisiIzniYenileResultLauncher);
+        }
     }
-
+    ActivityResultLauncher<String> kisiIzniYenileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result){
+                    KisileriYenile();
+                }else{
+                    Toast.makeText(getContext(), getString(R.string.you_must_grant_contact_permission), Toast.LENGTH_SHORT).show();;
+                }
+            });
+    private final String KisilerYenilendi = "kisilerYenilendi";
     private void KisileriGoster() {
+        if (!SharedPreference.getInstance(getContext()).GetirBoolean(KisilerYenilendi, false)){
+            Veritabani.getInstance(getContext()).KisileriEkle(firebaseUser, () -> {
+                SharedPreference.getInstance(getContext()).KaydetBoolean(KisilerYenilendi, true);
+                KisileriGoster();
+            });
+            return;
+        }
         DatabaseReference kisilerRef = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu + "/" + firebaseUser.getPhoneNumber() + "/" + Veritabani.KisiTablosu);
         kisilerRef.keepSynced(true);
         kisilerRef.addListenerForSingleValueEvent(new ValueEventListener() {
