@@ -176,7 +176,7 @@ public class Veritabani {
                                             if (kullanici != null){
                                                 if (!kullanici.getTelefon().equals(firebaseUser.getPhoneNumber())){
                                                     kullanici.setIsim(isim);
-                                                    KisiEkle(kullanici, firebaseUser.getPhoneNumber(), kisilerListener);
+                                                    KisiEkle(firebaseUser.getPhoneNumber(), kullanici.getID(), isim, kullanici.getTelefon(), kullanici.getProfilResmi(), kullanici.getHakkimda(), kisilerListener);
                                                 }
                                             }
                                         });
@@ -194,23 +194,32 @@ public class Veritabani {
                     }
                 }
                 cursor.close();
+                handler.post(() -> {
+                    //Test Kullanıcısı
+                    KisiEkle(firebaseUser.getPhoneNumber(),
+                            "zEDyZKmPWqcc7jbDsdeUr92ZeOv2",
+                            "Test Kullanıcısı",
+                            "+905555555555",
+                            "https://firebasestorage.googleapis.com/v0/b/chat-1d11c.appspot.com/o/Ijasdhxcmndashweqwaszx%2Fprofil_resmi.jpg?alt=media&token=4952be77-653e-4fc5-9c6e-dfa6d94866f8",
+                            "Merhaba bende bu uygulamayı kullanıyorum.",
+                            kisilerListener);
+                    kisilerListener.Tamamlandi();
+                });
             }
         });
-        //Rehberdeki kişiler veritabanına ekleniyor
-        ((Activity) mContext).runOnUiThread(() -> {
-
-        });
     }
-    public static void KisiEkle(Kullanici kullanici, String telefon, KisilerListener kisilerListener) {
+    public static void KisiEkle(String kullanici, String id, String isim, String telefon, String profilResmi, String hakkimda, KisilerListener kisilerListener) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(Veritabani.IDKey, kullanici.getID());
-        map.put(Veritabani.IsimKey, kullanici.getIsim());
-        map.put(Veritabani.TelefonKey, kullanici.getTelefon());
-        map.put(Veritabani.ProfilResmiKey, kullanici.getProfilResmi());
-        map.put(Veritabani.HakkimdaKey, kullanici.getHakkimda());
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+telefon+"/"+Veritabani.KisiTablosu).child(kullanici.getTelefon());
+        map.put(Veritabani.IDKey, id);
+        map.put(Veritabani.IsimKey, isim);
+        map.put(Veritabani.TelefonKey, telefon);
+        map.put(Veritabani.ProfilResmiKey, profilResmi);
+        map.put(Veritabani.HakkimdaKey, hakkimda);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(Veritabani.KullaniciTablosu+"/"+kullanici+"/"+Veritabani.KisiTablosu).child(telefon);
 		databaseReference.keepSynced(true);
-        databaseReference.updateChildren(map, (error, ref) -> kisilerListener.Tamamlandi());
+        databaseReference.updateChildren(map, (error, ref) -> {
+            kisilerListener.Tamamlandi();
+        });
     }
 
     public static void KisiSil(String telefon) {
