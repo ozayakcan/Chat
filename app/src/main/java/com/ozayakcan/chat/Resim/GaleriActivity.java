@@ -204,6 +204,8 @@ public class GaleriActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ResimleriGoster();
+        if (Izinler.getInstance(GaleriActivity.this).KontrolEt(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            ResimleriGoster();
+        }
     }
 }
