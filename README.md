@@ -1,10 +1,4 @@
-﻿Kodları indirmek için kullanılacak git komutu
-
-```
-git clone https://github.com/ozayakcan/Chat.git
-```
-
-
+﻿
 Uygulama bir emulatörde çalıştırılacaksa emülatorde Google Play Services etkin olmalıdır.
 
 **Uygulamanın çalışabilmesi için:**
